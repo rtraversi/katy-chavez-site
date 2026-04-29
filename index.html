@@ -33,17 +33,21 @@
     body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.7; }
 
     /* ─── LANGUAGE SYSTEM ─── */
-    .en, .es { display: none; }
-    body.lang-en .en { display: revert; }
+    /* English shows by default; JS switches to Spanish when needed */
+    .es { display: none; }
+    .en { display: revert; }
     body.lang-es .es { display: revert; }
+    body.lang-es .en { display: none; }
     /* block-level overrides */
-    body.lang-en p.en, body.lang-en div.en, body.lang-en h1.en,
-    body.lang-en h2.en, body.lang-en h3.en, body.lang-en li.en { display: block; }
+    p.en, div.en, h1.en, h2.en, h3.en, li.en { display: block; }
     body.lang-es p.es, body.lang-es div.es, body.lang-es h1.es,
     body.lang-es h2.es, body.lang-es h3.es, body.lang-es li.es { display: block; }
+    body.lang-es p.en, body.lang-es div.en, body.lang-es h1.en,
+    body.lang-es h2.en, body.lang-es h3.en, body.lang-es li.en { display: none; }
     /* inline overrides */
-    body.lang-en span.en, body.lang-en a.en, body.lang-en strong.en { display: inline; }
+    span.en, a.en, strong.en { display: inline; }
     body.lang-es span.es, body.lang-es a.es, body.lang-es strong.es { display: inline; }
+    body.lang-es span.en, body.lang-es a.en, body.lang-es strong.en { display: none; }
 
     /* ─── LANG TOGGLE ─── */
     .lang-toggle { display: flex; align-items: center; gap: 3px; background: var(--cream); border: 1.5px solid var(--border); border-radius: 20px; padding: 3px 4px; }

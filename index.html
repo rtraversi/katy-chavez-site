@@ -94,7 +94,7 @@
     /* dark gradient overlay so text pops */
     .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,35,60,0.55) 0%, rgba(15,25,50,0.70) 100%); }
     .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); z-index: 1; }
-    .hero::after { content: ''; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 620px; height: 620px; background: url('aztec.jpg') center top / cover no-repeat; opacity: 0.18; mask-image: radial-gradient(ellipse 55% 55% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 55%, transparent 100%); -webkit-mask-image: radial-gradient(ellipse 55% 55% at center, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 55%, transparent 100%); pointer-events: none; z-index: 2; }
+    .hero::after { display: none; }
     .hero-shine { position: absolute; top: -100px; left: -200px; width: 500px; height: 900px; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%); pointer-events: none; z-index: 2; }
     .hero-content { position: relative; z-index: 3; max-width: 780px; margin: 0 auto; animation: fadeUp 0.7s ease both; }
     @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
@@ -173,6 +173,17 @@
     @media (max-width: 680px) { .about-grid { grid-template-columns: 1fr; } }
     .highlight-pill { display: inline-block; background: var(--terracotta-pale); color: var(--terracotta); font-size: 0.82rem; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin: 3px 3px 3px 0; border: 1px solid rgba(201,103,79,0.2); }
     .staff-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .team-section { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; margin-top: 8px; }
+    @media (max-width: 700px) { .team-section { grid-template-columns: 1fr; } }
+    .team-aztec { position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+    .team-aztec img { width: 100%; display: block; }
+    .team-aztec-label { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(43,58,82,0.92)); padding: 32px 16px 16px; color: #fff; font-family: 'Playfair Display', serif; font-size: 0.9rem; font-style: italic; text-align: center; opacity: 0.9; }
+    .team-list { display: flex; flex-direction: column; gap: 14px; }
+    .team-member { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; border-left: 4px solid var(--terracotta); transition: box-shadow 0.2s, transform 0.2s; }
+    .team-member:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateX(4px); }
+    .team-member-avatar { width: 48px; height: 48px; background: var(--terracotta-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .team-member-info h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 2px; }
+    .team-member-info .role { font-size: 0.78rem; color: var(--terracotta); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
     .staff-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px 20px; text-align: center; transition: box-shadow 0.2s, transform 0.2s; border-top: 4px solid var(--terracotta); }
     .staff-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.09); transform: translateY(-3px); }
     .staff-card .staff-avatar { width: 52px; height: 52px; background: var(--terracotta-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px; }
@@ -736,13 +747,55 @@
     </div>
     <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;"><span class="en">Our Team</span><span class="es">Nuestro Equipo</span></h2>
     <div class="divider"></div>
-    <div class="staff-cards-grid">
-      <div class="staff-card"><div class="staff-avatar">⚖️</div><h3>Katy Chavez</h3><div class="role"><span class="en">Attorney at Law</span><span class="es">Abogada</span></div></div>
-      <div class="staff-card"><div class="staff-avatar">⚖️</div><h3>Daniel Bello</h3><div class="role"><span class="en">Attorney at Law</span><span class="es">Abogado</span></div></div>
-      <div class="staff-card"><div class="staff-avatar">⚖️</div><h3>Andrew Evans</h3><div class="role"><span class="en">Attorney at Law</span><span class="es">Abogado</span></div></div>
-      <div class="staff-card"><div class="staff-avatar">📋</div><h3>Jeff Reyes</h3><div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div></div>
-      <div class="staff-card"><div class="staff-avatar">🗂️</div><h3>Rosalba Benitez</h3><div class="role"><span class="en">Office Assistant</span><span class="es">Asistente de Oficina</span></div></div>
-      <div class="staff-card"><div class="staff-avatar">🗂️</div><h3>Vivi Santillana</h3><div class="role"><span class="en">Office Assistant</span><span class="es">Asistente de Oficina</span></div></div>
+    <div class="team-section">
+      <div class="team-aztec">
+        <img src="aztec.jpg" alt="Justice Warrior" />
+        <div class="team-aztec-label"><span class="en">Fighting for you.</span><span class="es">Luchando por usted.</span></div>
+      </div>
+      <div class="team-list">
+        <div class="team-member">
+          <div class="team-member-avatar">⚖️</div>
+          <div class="team-member-info">
+            <h3>Katy Chavez</h3>
+            <div class="role"><span class="en">Attorney at Law</span><span class="es">Abogada</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">⚖️</div>
+          <div class="team-member-info">
+            <h3>Daniel Bello</h3>
+            <div class="role"><span class="en">Attorney at Law</span><span class="es">Abogado</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">⚖️</div>
+          <div class="team-member-info">
+            <h3>Andrew Evans</h3>
+            <div class="role"><span class="en">Attorney at Law</span><span class="es">Abogado</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">📋</div>
+          <div class="team-member-info">
+            <h3>Jeff Reyes</h3>
+            <div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">🗂️</div>
+          <div class="team-member-info">
+            <h3>Rosalba Benitez</h3>
+            <div class="role"><span class="en">Office Assistant</span><span class="es">Asistente de Oficina</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">🗂️</div>
+          <div class="team-member-info">
+            <h3>Vivi Santillana</h3>
+            <div class="role"><span class="en">Office Assistant</span><span class="es">Asistente de Oficina</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

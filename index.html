@@ -234,15 +234,45 @@
     .email-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--terracotta-pale); color: var(--terracotta); border: 1.5px solid var(--terracotta); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.9rem; margin-top: 20px; transition: background 0.18s, color 0.18s; }
     .email-cta:hover { background: var(--terracotta); color: #fff; }
     .page-disclaimer { margin-top: 40px; padding: 16px 20px; background: var(--gold-pale); border-left: 4px solid var(--gold); font-size: 0.85rem; color: #6b5a2e; font-style: italic; border-radius: 0 8px 8px 0; box-shadow: inset 3px 0 0 var(--gold); }
+    /* ─── MOBILE STICKY CALL BAR ─── */
+    .mobile-call-bar { display: none; position: fixed; bottom: 0; left: 0; right: 0; z-index: 200; background: var(--terracotta); }
+    .mobile-call-bar a { display: flex; align-items: center; justify-content: center; gap: 10px; color: #fff; text-decoration: none; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 1rem; padding: 14px 24px; width: 100%; }
+    @media (max-width: 960px) { .mobile-call-bar { display: block; } body { padding-bottom: 56px; } }
+
+    /* ─── COPY TOAST ─── */
+    .copy-toast { position: fixed; bottom: 72px; left: 50%; transform: translateX(-50%) translateY(16px); background: var(--navy); color: #fff; padding: 8px 18px; border-radius: 20px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: opacity 0.2s, transform 0.2s; pointer-events: none; z-index: 300; }
+    .copy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ─── COPY BUTTON ─── */
+    .phone-copy-btn { display: inline-flex; align-items: center; gap: 5px; background: var(--terracotta-pale); color: var(--terracotta); border: 1px solid var(--terracotta); border-radius: 5px; padding: 2px 8px; font-size: 0.78rem; font-weight: 700; cursor: pointer; margin-left: 8px; vertical-align: middle; font-family: 'Nunito', sans-serif; transition: background 0.15s, color 0.15s; }
+    .phone-copy-btn:hover { background: var(--terracotta); color: #fff; }
+
+    /* ─── CONTACT FORM ─── */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.4fr; gap: 40px; align-items: start; }
+    @media (max-width: 700px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-detail { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 22px; }
+    .contact-icon { width: 40px; height: 40px; background: var(--terracotta-pale); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem; flex-shrink: 0; }
+    .contact-detail-text .label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); }
+    .contact-detail-text .value { font-size: 0.97rem; font-weight: 600; color: var(--navy); }
+    .contact-detail-text a { color: var(--terracotta); text-decoration: none; }
+    .contact-detail-text a:hover { text-decoration: underline; }
+    .form-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
+    .form-card h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: 20px; }
+    .form-row { margin-bottom: 18px; }
+    .form-row label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--navy-mid); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .form-row input, .form-row textarea, .form-row select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; color: var(--text-dark); background: #fff; transition: border-color 0.18s; outline: none; }
+    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--terracotta); }
+    .form-row textarea { resize: vertical; min-height: 110px; }
+    .form-note { font-size: 0.8rem; color: var(--text-light); margin-top: 8px; font-style: italic; }
+    .form-success { display: none; background: var(--sage-pale); border: 1px solid var(--sage-light); border-radius: 8px; padding: 16px 20px; color: #2d5e38; font-weight: 600; margin-top: 16px; }
   </style>
 </head>
 <body class="lang-en">
 
 <!-- Top Bar -->
 <div class="top-bar">
-  <span class="en">Bilingual (English &amp; Spanish) · Free consultations by phone · </span>
-  <span class="es">Bilingüe (Inglés &amp; Español) · Consultas gratuitas por teléfono · </span>
-  <a href="tel:9198381600">(919) 838-1600</a>
+  <span class="en">Bilingual (English &amp; Spanish) · Mon–Fri 9am–5pm · <a href="mailto:katycab@yahoo.com">✉ Email Us</a> · <a href="tel:9198381600">📞 (919) 838-1600</a></span>
+  <span class="es">Bilingüe (Inglés &amp; Español) · Lun–Vie 9am–5pm · <a href="mailto:katycab@yahoo.com">✉ Escríbanos</a> · <a href="tel:9198381600">📞 (919) 838-1600</a></span>
 </div>
 
 <!-- Navigation -->
@@ -371,28 +401,28 @@
       <div class="reviews-grid">
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-text">Katy and her team did such a great job handling our cases that I have no hesitation in recommending her to family, friends and colleagues. Immigration can be a complex and stressful process, but this firm's skills, professionalism, and attention to detail made it happen more smoothly and quickly than we could have hoped for.</p>
-          <div class="review-author">— <span class="en">Immigration Client</span><span class="es">Cliente de Inmigración</span></div>
+          <p class="review-text">Great and knowledgeable attorney who knew how to navigate and resolve my problem in record time. Her incredible staff and paralegals are friendly and patient as well. Great service overall.</p>
+          <div class="review-author">— <span class="en">Google Review · March 2025</span><span class="es">Reseña de Google · Marzo 2025</span></div>
         </div>
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-text">Attorney Katy Chavez provided us with very helpful legal consultation. She was knowledgeable about complex immigration issues. She was also very responsive and easy to communicate with. Highly recommended!</p>
-          <div class="review-author">— <span class="en">Immigration Client</span><span class="es">Cliente de Inmigración</span></div>
+          <p class="review-text">I researched before selecting Attorney Katy Chavez, and man was I blessed to choose her. The situation looked like I might be in the wrong in a traffic accident, even though I knew I was not at fault.</p>
+          <div class="review-author">— <span class="en">Traffic Client · November 2025</span><span class="es">Cliente de Tráfico · Noviembre 2025</span></div>
         </div>
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-text">Katy is the consummate professional. She addressed our daughter's court case with extreme precision, giving us all the information we needed to address everything ahead of time. HIGHLY recommend her and her staff!</p>
-          <div class="review-author">— <span class="en">Criminal Defense Client</span><span class="es">Cliente de Defensa Criminal</span></div>
+          <p class="review-text">We were referred to this law firm by Microsoft and happy we worked with this team. Always responsive, easy to work with and reassuring. They know their stuff. Highly recommend and a fantastic outcome. Thank you for all your help.</p>
+          <div class="review-author">— <span class="en">Google Review · November 2025</span><span class="es">Reseña de Google · Noviembre 2025</span></div>
         </div>
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-text">I had an absolutely incredible experience with this immigration law firm during my permanent residency and citizenship process. Katy Chavez is a wonderful, knowledgeable, and very responsible lawyer. She helped me throughout the entire process, replied promptly to my emails, and always answered all my concerns professionally.</p>
-          <div class="review-author">— <span class="en">Naturalization Client</span><span class="es">Cliente de Naturalización</span></div>
+          <p class="review-text">I was referred to Katy Chavez from a buddy of mine. She took me in with no questions asked. She handled my charges with ease, keeps you updated on what's going on with your case. I would highly recommend her. She does an amazing job.</p>
+          <div class="review-author">— <span class="en">Criminal Defense Client · January 2026</span><span class="es">Cliente de Defensa Criminal · Enero 2026</span></div>
         </div>
         <div class="review-card">
           <div class="review-stars">★★★★★</div>
-          <p class="review-text">Katy Chavez recently helped me with my mother's permanent residency process and she was approved! The whole process was so easy and smooth. Definitely would recommend her services. She speaks English and Spanish. Also, reasonable and fair pricing. Thank you from the bottom of my heart!</p>
-          <div class="review-author">— <span class="en">Immigration Client</span><span class="es">Cliente de Inmigración</span></div>
+          <p class="review-text">Absolutely outstanding lawyer! They handled my case with incredible skill, kept me informed every step of the way, and achieved a result far better than I hoped for. Professional, responsive, and genuinely caring. Cannot recommend highly enough!</p>
+          <div class="review-author">— <span class="en">Google Review · December 2025</span><span class="es">Reseña de Google · Diciembre 2025</span></div>
         </div>
       </div>
     </div>
@@ -824,7 +854,17 @@
           <div class="contact-icon">📞</div>
           <div class="contact-detail-text">
             <div class="label"><span class="en">Phone</span><span class="es">Teléfono</span></div>
-            <div class="value"><a href="tel:9198381600">(919) 838-1600</a></div>
+            <div class="value">
+              <a href="tel:9198381600">(919) 838-1600</a>
+              <button class="phone-copy-btn" onclick="copyPhone()">⧉ Copy</button>
+            </div>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">🕐</div>
+          <div class="contact-detail-text">
+            <div class="label"><span class="en">Office Hours</span><span class="es">Horario</span></div>
+            <div class="value" style="font-size:0.9rem;"><span class="en">Mon – Fri: 9:00 am – 5:00 pm</span><span class="es">Lun – Vie: 9:00 am – 5:00 pm</span><br/><span style="font-size:0.82rem;color:var(--text-light);"><span class="en">Free phone consultations anytime</span><span class="es">Consultas gratuitas en cualquier momento</span></span></div>
           </div>
         </div>
         <div class="contact-detail">
@@ -856,15 +896,52 @@
         </div>
       </div>
       <div>
-        <div style="border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.08);height:100%;min-height:360px;">
+        <div class="form-card" style="margin-bottom:24px;">
+          <h2><span class="en">Send a Message</span><span class="es">Envíenos un Mensaje</span></h2>
+          <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="contactForm" onsubmit="handleFormSubmit(event)">
+            <input type="hidden" name="form-name" value="contact" />
+            <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
+            <div class="form-row">
+              <label for="cf-name"><span class="en">Your Name</span><span class="es">Su Nombre</span></label>
+              <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required />
+            </div>
+            <div class="form-row">
+              <label for="cf-email"><span class="en">Email Address</span><span class="es">Correo Electrónico</span></label>
+              <input type="email" id="cf-email" name="email" placeholder="jane@email.com" required />
+            </div>
+            <div class="form-row">
+              <label for="cf-phone"><span class="en">Phone Number (optional)</span><span class="es">Teléfono (opcional)</span></label>
+              <input type="tel" id="cf-phone" name="phone" placeholder="(919) 555-0100" />
+            </div>
+            <div class="form-row">
+              <label for="cf-subject"><span class="en">Area of Concern</span><span class="es">Área de Consulta</span></label>
+              <select id="cf-subject" name="practice-area">
+                <option value=""><span class="en">Select a practice area...</span></option>
+                <option>Traffic Ticket</option>
+                <option>DWI / DWLR</option>
+                <option>Criminal Charge</option>
+                <option>Immigration</option>
+                <option>Other</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <label for="cf-message"><span class="en">Your Message</span><span class="es">Su Mensaje</span></label>
+              <textarea id="cf-message" name="message" placeholder="Please briefly describe your situation. Do not include confidential details at this stage." required></textarea>
+            </div>
+            <button type="submit" class="btn-primary" style="width:100%;"><span class="en">Send Message</span><span class="es">Enviar Mensaje</span></button>
+            <p class="form-note"><span class="en">This form does not create an attorney-client relationship.</span><span class="es">Este formulario no crea una relación abogado-cliente.</span></p>
+          </form>
+          <div class="form-success" id="formSuccess">
+            ✅ <span class="en">Thank you! Your message has been sent. Katy will be in touch shortly.</span><span class="es">¡Gracias! Su mensaje ha sido enviado. Katy se pondrá en contacto pronto.</span>
+          </div>
+        </div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.08);">
           <iframe
             title="Office Location"
             src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3232.1!2d-78.6382!3d35.7796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89ac5f5a7c3e6b1f%3A0x0!2s421+Fayetteville+St+%231100%2C+Raleigh%2C+NC+27601!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
-            width="100%"
-            height="100%"
-            style="border:0;min-height:360px;display:block;"
-            allowfullscreen=""
-            loading="lazy"
+            width="100%" height="240"
+            style="border:0;display:block;"
+            allowfullscreen="" loading="lazy"
             referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
@@ -877,6 +954,16 @@
     </div>
   </div>
 </div>
+
+<!-- ─── STICKY MOBILE CALL BAR ─── -->
+<div class="mobile-call-bar">
+  <a href="tel:9198381600">
+    <span>📞</span>
+    <span class="en">Tap to Call: (919) 838-1600</span>
+    <span class="es">Llamar: (919) 838-1600</span>
+  </a>
+</div>
+<div class="copy-toast" id="copyToast">✓ Phone number copied!</div>
 
 <!--  FOOTER  -->
 <footer>
@@ -972,6 +1059,33 @@
     if (_rl.count >= 3) return false;
     _rl.count++;
     return true;
+  }
+
+  // ─── COPY PHONE ───
+  function copyPhone() {
+    navigator.clipboard.writeText('9198381600').then(() => {
+      const toast = document.getElementById('copyToast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2200);
+    });
+  }
+
+  // ─── NETLIFY FORM SUBMIT ───
+  function handleFormSubmit(event) {
+    event.preventDefault();
+    const form = event.target;
+    fetch('/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(new FormData(form)).toString()
+    })
+    .then(() => {
+      form.style.display = 'none';
+      document.getElementById('formSuccess').style.display = 'block';
+    })
+    .catch(() => {
+      alert('There was a problem sending your message. Please email katycab@yahoo.com directly.');
+    });
   }
 
   // Set initial textarea placeholder

@@ -258,13 +258,6 @@
     .contact-detail-text a:hover { text-decoration: underline; }
     .form-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px; box-shadow: 0 4px 16px rgba(0,0,0,0.06); }
     .form-card h2 { font-family: 'Playfair Display', serif; font-size: 1.4rem; color: var(--navy); margin-bottom: 20px; }
-    .form-row { margin-bottom: 18px; }
-    .form-row label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--navy-mid); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .form-row input, .form-row textarea, .form-row select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; color: var(--text-dark); background: #fff; transition: border-color 0.18s; outline: none; }
-    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--terracotta); }
-    .form-row textarea { resize: vertical; min-height: 110px; }
-    .form-note { font-size: 0.8rem; color: var(--text-light); margin-top: 8px; font-style: italic; }
-    .form-success { display: none; background: var(--sage-pale); border: 1px solid var(--sage-light); border-radius: 8px; padding: 16px 20px; color: #2d5e38; font-weight: 600; margin-top: 16px; }
   </style>
 </head>
 <body class="lang-en">
@@ -903,41 +896,18 @@
         </div>
       </div>
       <div>
-        <div class="form-card" style="margin-bottom:24px;">
-          <h2><span class="en">Send a Message</span><span class="es">Envíenos un Mensaje</span></h2>
-          <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?success=true">
-            <input type="hidden" name="form-name" value="contact" />
-            <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
-            <div class="form-row">
-              <label for="cf-name"><span class="en">Your Name</span><span class="es">Su Nombre</span></label>
-              <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required />
-            </div>
-            <div class="form-row">
-              <label for="cf-email"><span class="en">Email Address</span><span class="es">Correo Electrónico</span></label>
-              <input type="email" id="cf-email" name="email" placeholder="jane@email.com" required />
-            </div>
-            <div class="form-row">
-              <label for="cf-phone"><span class="en">Phone Number (optional)</span><span class="es">Teléfono (opcional)</span></label>
-              <input type="tel" id="cf-phone" name="phone" placeholder="(919) 555-0100" />
-            </div>
-            <div class="form-row">
-              <label for="cf-subject"><span class="en">Area of Concern</span><span class="es">Área de Consulta</span></label>
-              <select id="cf-subject" name="practice-area">
-                <option value="">Select a practice area...</option>
-                <option>Traffic Ticket</option>
-                <option>DWI / DWLR</option>
-                <option>Criminal Charge</option>
-                <option>Immigration</option>
-                <option>Other</option>
-              </select>
-            </div>
-            <div class="form-row">
-              <label for="cf-message"><span class="en">Your Message</span><span class="es">Su Mensaje</span></label>
-              <textarea id="cf-message" name="message" placeholder="Please briefly describe your situation. Do not include confidential details at this stage." required></textarea>
-            </div>
-            <button type="submit" class="btn-primary" style="width:100%;"><span class="en">Send Message</span><span class="es">Enviar Mensaje</span></button>
-            <p class="form-note"><span class="en">This form does not create an attorney-client relationship.</span><span class="es">Este formulario no crea una relación abogado-cliente.</span></p>
-          </form>
+        <div class="form-card" style="margin-bottom:24px; text-align:center; padding: 48px 32px;">
+          <p style="font-size:2rem; margin-bottom:16px;">✉️</p>
+          <h2 style="margin-bottom:12px;"><span class="en">Get in Touch</span><span class="es">Contáctenos</span></h2>
+          <p style="color:var(--text-mid); font-size:1rem; margin-bottom:8px;">
+            <span class="en">To reach Katy directly, email her at:</span>
+            <span class="es">Para contactar a Katy directamente, escríbale a:</span>
+          </p>
+          <p style="font-size:1.2rem; font-weight:700; color:var(--navy); margin-bottom:16px;">katycab@yahoo.com</p>
+          <p style="color:var(--text-light); font-size:0.88rem; font-style:italic;">
+            <span class="en">She responds to all emails promptly — even if you are not yet a client. This does not create an attorney-client relationship.</span>
+            <span class="es">Responde todos los correos con prontitud — incluso si aún no es cliente. Esto no crea una relación abogado-cliente.</span>
+          </p>
         </div>
         <div style="border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.08);">
           <iframe
@@ -1041,30 +1011,6 @@
     if (!open) { ans.classList.add('open'); el.classList.add('open'); }
   }
 
-  //  SECURITY 
-  // Sanitize any user input to prevent XSS before using in DOM
-  function sanitize(str) {
-    if (typeof str !== 'string') return '';
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#x27;')
-      .replace(/\//g, '&#x2F;')
-      .trim()
-      .substring(0, 2000); // hard cap on input length
-  }
-
-  // Rate limiting: prevent form spam (max 3 submissions per 10 minutes)
-  const _rl = { count: 0, reset: Date.now() + 600000 };
-  function rateLimitOk() {
-    if (Date.now() > _rl.reset) { _rl.count = 0; _rl.reset = Date.now() + 600000; }
-    if (_rl.count >= 3) return false;
-    _rl.count++;
-    return true;
-  }
-
   // ─── COPY PHONE ───
   function copyPhone() {
     navigator.clipboard.writeText('9198381600').then(() => {
@@ -1072,31 +1018,6 @@
       toast.classList.add('show');
       setTimeout(() => toast.classList.remove('show'), 2200);
     });
-  }
-
-  // ─── NETLIFY FORM SUBMIT ───
-  function handleFormSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(new FormData(form)).toString()
-    })
-    .then(() => {
-      form.style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
-    })
-    .catch(() => {
-      alert('There was a problem sending your message. Please email katycab@yahoo.com directly.');
-    });
-  }
-
-  // ─── FORM SUCCESS REDIRECT HANDLER ───
-  if (window.location.search.includes('success=true')) {
-    showPage('contact');
-    const card = document.querySelector('.form-card');
-    if (card) card.innerHTML = '<div style="padding:24px;text-align:center;"><p style="font-size:1.5rem;margin-bottom:12px;">✅</p><h2 style="font-family:\'Playfair Display\',serif;color:var(--navy);margin-bottom:8px;">Message Sent!</h2><p style="color:var(--text-mid);">Thank you — Katy will be in touch shortly.</p></div>';
   }
 
   // Set initial textarea placeholder

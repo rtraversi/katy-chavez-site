@@ -1,14 +1,14 @@
 # ─────────────────────────────────────────────
 #  deploy.ps1  —  Katy Chavez Site
-#  Run from: C:\Users\rtrav\Downloads\katy-chavez-site
+#  Lives in: C:\sites\katychavez-site
 # ─────────────────────────────────────────────
 
 param(
-    [string]$SourceFile = "..\katychavez_v3.html",
+    [string]$SourceFile = "index.html",
     [string]$CommitMessage = ""
 )
 
-$RepoPath = "C:\Users\rtrav\Downloads\katy-chavez-site"
+$RepoPath = "C:\sites\katychavez-site"
 
 # ── Prompt for commit message if not provided ──
 if (-not $CommitMessage) {
@@ -20,6 +20,17 @@ if (-not $CommitMessage) {
 
 # ── Move to repo ──
 Set-Location $RepoPath
+
+# ── Resolve source file (absolute or relative to repo) ──
+if (-not [System.IO.Path]::IsPathRooted($SourceFile)) {
+    $SourceFile = Join-Path $RepoPath $SourceFile
+}
+
+# ── Verify source file exists ──
+if (-not (Test-Path $SourceFile)) {
+    Write-Host "`n❌ Source file not found: $SourceFile" -ForegroundColor Red
+    exit 1
+}
 
 # ── Copy source file to index.html ──
 Write-Host "`nCopying $SourceFile -> index.html..." -ForegroundColor Cyan

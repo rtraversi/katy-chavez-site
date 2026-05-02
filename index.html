@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
@@ -7,6 +7,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
   <style>
     :root {
       --terracotta: #C9674F;
@@ -26,1305 +28,956 @@
       --text-light: #888;
       --border: #E8E0D4;
     }
-
     * { box-sizing: border-box; margin: 0; padding: 0; }
-
     html { scroll-behavior: smooth; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.7; }
 
-    body {
-      font-family: 'Nunito', sans-serif;
-      background: var(--cream);
-      color: var(--text-dark);
-      line-height: 1.7;
-    }
+    /*  LANGUAGE SYSTEM  */
+    /* English shows by default; JS switches to Spanish when needed */
+    .es { display: none; }
+    .en { display: revert; }
+    body.lang-es .es { display: revert; }
+    body.lang-es .en { display: none; }
+    /* block-level overrides */
+    p.en, div.en, h1.en, h2.en, h3.en, li.en { display: block; }
+    body.lang-es p.es, body.lang-es div.es, body.lang-es h1.es,
+    body.lang-es h2.es, body.lang-es h3.es, body.lang-es li.es { display: block; }
+    body.lang-es p.en, body.lang-es div.en, body.lang-es h1.en,
+    body.lang-es h2.en, body.lang-es h3.en, body.lang-es li.en { display: none; }
+    /* inline overrides */
+    span.en, a.en, strong.en { display: inline; }
+    body.lang-es span.es, body.lang-es a.es, body.lang-es strong.es { display: inline; }
+    body.lang-es span.en, body.lang-es a.en, body.lang-es strong.en { display: none; }
 
-    /* ─── NAV ─── */
-    nav {
-      background: var(--warm-white);
-      border-bottom: 3px solid var(--terracotta);
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      box-shadow: 0 2px 12px rgba(0,0,0,0.07);
-    }
+    /*  LANG TOGGLE  */
+    .lang-toggle { display: flex; align-items: center; gap: 3px; background: var(--cream); border: 1.5px solid var(--border); border-radius: 20px; padding: 3px 4px; }
+    .lang-btn { font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 16px; border: none; cursor: pointer; background: transparent; color: var(--navy-mid); font-family: 'Nunito', sans-serif; transition: background 0.15s, color 0.15s; letter-spacing: 0.05em; }
+    .lang-btn.active { background: var(--terracotta); color: #fff; }
+    .lang-btn:hover:not(.active) { background: var(--terracotta-pale); color: var(--terracotta); }
 
-    .nav-inner {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 0 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      height: 68px;
-      gap: 12px;
-    }
-
-    .nav-brand {
-      display: flex;
-      flex-direction: column;
-      line-height: 1.2;
-      flex-shrink: 0;
-    }
-    .nav-brand .name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.25rem;
-      color: var(--navy);
-      font-weight: 700;
-    }
-    .nav-brand .tagline {
-      font-size: 0.72rem;
-      color: var(--terracotta);
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .nav-links {
-      display: flex;
-      gap: 2px;
-      list-style: none;
-      flex-shrink: 1;
-      min-width: 0;
-    }
-    .nav-links a {
-      display: block;
-      padding: 6px 10px;
-      font-size: 0.84rem;
-      font-weight: 600;
-      color: var(--navy-mid);
-      text-decoration: none;
-      border-radius: 6px;
-      transition: background 0.18s, color 0.18s;
-      white-space: nowrap;
-    }
-    .nav-links a:hover {
-      background: var(--terracotta-pale);
-      color: var(--terracotta);
-    }
-    .nav-links a.active {
-      background: var(--terracotta);
-      color: #fff;
-    }
-
-    .nav-phone {
-      font-size: 0.88rem;
-      font-weight: 700;
-      color: var(--terracotta);
-      text-decoration: none;
-      border: 2px solid var(--terracotta);
-      padding: 6px 14px;
-      border-radius: 20px;
-      transition: background 0.18s, color 0.18s;
-    }
+    /*  NAV  */
+    nav { background: var(--warm-white); border-bottom: 3px solid var(--terracotta); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .nav-inner { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 8px; }
+    .nav-brand { display: flex; flex-direction: row; align-items: center; gap: 10px; line-height: 1.2; flex-shrink: 0; }
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--terracotta); flex-shrink: 0; }
+    .nav-brand .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; white-space: nowrap; }
+    .nav-brand .tagline { font-size: 0.65rem; color: var(--terracotta); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; white-space: nowrap; }
+    .nav-links { display: flex; gap: 2px; list-style: none; }
+    .nav-links a { display: block; padding: 6px 9px; font-size: 0.82rem; font-weight: 600; color: var(--navy-mid); text-decoration: none; border-radius: 6px; transition: background 0.18s, color 0.18s; white-space: nowrap; }
+    .nav-links a:hover { background: var(--terracotta-pale); color: var(--terracotta); }
+    .nav-links a.active { background: var(--terracotta); color: #fff; }
+    .nav-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .nav-phone { font-size: 0.82rem; font-weight: 700; color: var(--terracotta); text-decoration: none; border: 2px solid var(--terracotta); padding: 5px 12px; border-radius: 20px; transition: background 0.18s, color 0.18s; white-space: nowrap; }
     .nav-phone:hover { background: var(--terracotta); color: #fff; }
-
-    /* hamburger */
-    .hamburger {
-      display: none;
-      flex-direction: column;
-      gap: 5px;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 6px;
-    }
-    .hamburger span {
-      display: block;
-      width: 24px;
-      height: 2px;
-      background: var(--navy);
-      border-radius: 2px;
-      transition: all 0.3s;
-    }
-    .mobile-menu {
-      display: none;
-      background: var(--warm-white);
-      border-top: 1px solid var(--border);
-      padding: 12px 24px 16px;
-    }
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 6px; }
+    .hamburger span { display: block; width: 24px; height: 2px; background: var(--navy); border-radius: 2px; }
+    .mobile-menu { display: none; background: var(--warm-white); border-top: 1px solid var(--border); padding: 12px 24px 16px; }
     .mobile-menu.open { display: block; }
-    .mobile-menu a {
-      display: block;
-      padding: 9px 0;
-      font-weight: 600;
-      color: var(--navy-mid);
-      text-decoration: none;
-      border-bottom: 1px solid var(--border);
-    }
+    .mobile-menu a { display: block; padding: 9px 0; font-weight: 600; color: var(--navy-mid); text-decoration: none; border-bottom: 1px solid var(--border); }
     .mobile-menu a:last-child { border-bottom: none; }
+    .mobile-lang { display: flex; gap: 8px; padding: 10px 0 12px; }
 
-    /* ─── TOP BAR ─── */
-    .top-bar {
-      background: var(--navy);
-      color: #c8d8f0;
-      font-size: 0.8rem;
-      text-align: center;
-      padding: 7px 24px;
-      letter-spacing: 0.02em;
-    }
+    /*  TOP BAR  */
+    .top-bar { background: var(--navy); color: #c8d8f0; font-size: 0.8rem; text-align: center; padding: 7px 24px; letter-spacing: 0.02em; }
     .top-bar a { color: var(--gold); text-decoration: none; font-weight: 700; }
     .top-bar a:hover { text-decoration: underline; }
 
-    /* ─── PAGES ─── */
+    /*  PAGES  */
     .page { display: none; }
     .page.active { display: block; }
 
-    /* ─── HERO ─── */
-    .hero {
-      background: linear-gradient(135deg, var(--navy) 0%, #3D5570 55%, var(--navy-mid) 100%);
-      padding: 80px 24px 90px;
-      text-align: center;
-      position: relative;
-      overflow: hidden;
-    }
-    .hero::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
-    }
-    .hero-content { position: relative; max-width: 780px; margin: 0 auto; }
-    .hero-badge {
-      display: inline-block;
-      background: var(--terracotta);
-      color: #fff;
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      padding: 5px 16px;
-      border-radius: 20px;
-      margin-bottom: 20px;
-    }
-    .hero h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(2rem, 5vw, 3.2rem);
-      color: #fff;
-      line-height: 1.2;
-      margin-bottom: 18px;
-    }
-    .hero h1 em {
-      color: var(--gold);
-      font-style: italic;
-    }
-    .hero p {
-      font-size: 1.1rem;
-      color: #b8cde8;
-      max-width: 580px;
-      margin: 0 auto 32px;
-    }
-    .hero-actions {
-      display: flex;
-      gap: 14px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-    .btn-primary {
-      background: var(--terracotta);
-      color: #fff;
-      padding: 13px 28px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      display: inline-block;
-      transition: background 0.18s, transform 0.12s;
-      border: none;
-      cursor: pointer;
-      font-family: 'Nunito', sans-serif;
-    }
-    .btn-primary:hover { background: var(--terracotta-light); transform: translateY(-1px); }
-    .btn-outline {
-      background: transparent;
-      color: #fff;
-      border: 2px solid rgba(255,255,255,0.5);
-      padding: 11px 26px;
-      border-radius: 8px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      text-decoration: none;
-      display: inline-block;
-      transition: border-color 0.18s, background 0.18s;
-    }
-    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.1); }
+    /*  HERO  */
+    .hero { background: #1a2a3e; padding: 90px 24px 100px; text-align: center; position: relative; overflow: hidden; }
+    /* Raleigh skyline photo layer */
+    .hero-bg { position: absolute; inset: 0; background: url('raleigh.jpg') center center / cover no-repeat; opacity: 0.45; }
+    /* dark gradient overlay so text pops */
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(180deg, rgba(20,35,60,0.55) 0%, rgba(15,25,50,0.70) 100%); }
+    .hero::before { content: ''; position: absolute; inset: 0; background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); z-index: 1; }
+    .hero::after { display: none; }
+    .hero-shine { position: absolute; top: -100px; left: -200px; width: 500px; height: 900px; background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,0.03) 50%, transparent 60%); pointer-events: none; z-index: 2; }
+    .hero-content { position: relative; z-index: 3; max-width: 780px; margin: 0 auto; animation: fadeUp 0.7s ease both; }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+    .hero-badge { display: inline-block; background: var(--terracotta); color: #fff; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 5px 16px; border-radius: 20px; margin-bottom: 20px; box-shadow: 0 4px 14px rgba(201,103,79,0.45); }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: clamp(2.2rem, 5.5vw, 3.6rem); color: #fff; line-height: 1.15; margin-bottom: 18px; text-shadow: 0 2px 20px rgba(0,0,0,0.2); }
+    .hero h1 em { color: var(--gold); font-style: italic; }
+    .hero p { font-size: 1.1rem; color: #cfe0f5; max-width: 580px; margin: 0 auto 36px; }
+    .hero-actions { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+    .btn-primary { background: var(--terracotta); color: #fff; padding: 14px 30px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; text-decoration: none; display: inline-block; transition: background 0.18s, transform 0.12s, box-shadow 0.18s; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; box-shadow: 0 4px 16px rgba(201,103,79,0.4); }
+    .btn-primary:hover { background: var(--terracotta-light); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(201,103,79,0.45); }
+    .btn-outline { background: transparent; color: #fff; border: 2px solid rgba(255,255,255,0.6); padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; text-decoration: none; display: inline-block; transition: border-color 0.18s, background 0.18s, transform 0.12s; }
+    .btn-outline:hover { border-color: #fff; background: rgba(255,255,255,0.12); transform: translateY(-2px); }
+    .hero-cards { display: flex; gap: 16px; justify-content: center; flex-wrap: wrap; margin-top: 52px; }
+    .hero-card { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); border-radius: 12px; padding: 18px 24px; text-align: center; min-width: 140px; backdrop-filter: blur(8px); transition: background 0.2s, transform 0.2s; }
+    .hero-card:hover { background: rgba(255,255,255,0.2); transform: translateY(-3px); }
+    .hero-card .icon { font-size: 1.6rem; margin-bottom: 8px; }
+    .hero-card .label { font-size: 0.82rem; color: #e0edff; font-weight: 700; letter-spacing: 0.02em; }
 
-    /* hero cards */
-    .hero-cards {
-      display: flex;
-      gap: 16px;
-      justify-content: center;
-      flex-wrap: wrap;
-      margin-top: 48px;
-      position: relative;
-    }
-    .hero-card {
-      background: rgba(255,255,255,0.09);
-      border: 1px solid rgba(255,255,255,0.15);
-      border-radius: 10px;
-      padding: 16px 22px;
-      text-align: center;
-      min-width: 140px;
-      backdrop-filter: blur(4px);
-    }
-    .hero-card .icon { font-size: 1.5rem; margin-bottom: 6px; }
-    .hero-card .label { font-size: 0.82rem; color: #c8d8f0; font-weight: 600; }
+    /*  STATS BAR  */
+    .stats-bar { background: var(--terracotta); padding: 28px 24px; }
+    .stats-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 8px; text-align: center; }
+    .stat-item { color: #fff; padding: 8px; }
+    .stat-num { font-family: 'Playfair Display', serif; font-size: 2.2rem; font-weight: 700; line-height: 1; display: block; }
+    .stat-label { font-size: 0.8rem; font-weight: 600; opacity: 0.88; text-transform: uppercase; letter-spacing: 0.08em; margin-top: 4px; display: block; }
+    .stat-item + .stat-item { border-left: 1px solid rgba(255,255,255,0.25); }
+    @media (max-width: 640px) { .stat-item + .stat-item { border-left: none; border-top: 1px solid rgba(255,255,255,0.2); } }
 
-    /* ─── SECTION LAYOUT ─── */
-    .section { padding: 64px 24px; }
+    /*  SECTIONS  */
+    .section { padding: 72px 24px; }
     .section-inner { max-width: 1000px; margin: 0 auto; }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.9rem;
-      color: var(--navy);
-      margin-bottom: 8px;
-    }
+    .section-alt { background: var(--warm-white); position: relative; }
+    .section-alt::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px; background: linear-gradient(90deg, var(--terracotta), var(--gold), var(--sage)); }
+    .section-title { font-family: 'Playfair Display', serif; font-size: 2rem; color: var(--navy); margin-bottom: 8px; }
     .section-title .accent { color: var(--terracotta); }
-    .divider {
-      width: 48px;
-      height: 3px;
-      background: var(--terracotta);
-      border-radius: 2px;
-      margin-bottom: 28px;
-    }
+    .divider { width: 56px; height: 4px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); border-radius: 2px; margin-bottom: 32px; }
+    .three-col { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 28px; margin-bottom: 40px; }
+    .info-card { background: #fff; border: 1px solid var(--border); border-radius: 16px; padding: 32px 28px; border-top: 5px solid var(--terracotta); transition: box-shadow 0.25s, transform 0.25s; position: relative; overflow: hidden; }
+    .info-card::after { content: ''; position: absolute; bottom: 0; right: 0; width: 80px; height: 80px; background: var(--terracotta-pale); border-radius: 50% 0 0 0; opacity: 0.5; }
+    .info-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,0.1); transform: translateY(-4px); }
+    .info-card h3 { font-family: 'Playfair Display', serif; font-size: 1.15rem; color: var(--navy); margin-bottom: 12px; }
+    .info-card p { font-size: 0.95rem; color: var(--text-mid); position: relative; z-index: 1; }
+    .disclaimer-box { background: var(--gold-pale); border-left: 4px solid var(--gold); border-radius: 0 8px 8px 0; padding: 16px 20px; font-size: 0.88rem; color: #6b5a2e; font-style: italic; }
 
-    /* ─── HOME CONTENT BLOCKS ─── */
-    .three-col {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 24px;
-      margin-bottom: 40px;
-    }
-    .info-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 28px;
-      border-top: 4px solid var(--terracotta);
-      transition: box-shadow 0.2s;
-    }
-    .info-card:hover { box-shadow: 0 6px 24px rgba(0,0,0,0.08); }
-    .info-card h3 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.1rem;
-      color: var(--navy);
-      margin-bottom: 12px;
-    }
-    .info-card p { font-size: 0.95rem; color: var(--text-mid); }
+    /*  PAGE HEADERS  */
+    .page-header { background: linear-gradient(135deg, var(--sage) 0%, var(--sage-light) 100%); padding: 60px 24px; color: #fff; position: relative; overflow: hidden; }
+    .page-header::after { content: ''; position: absolute; bottom: -30px; right: -30px; width: 200px; height: 200px; border-radius: 50%; background: rgba(255,255,255,0.06); pointer-events: none; }
+    .page-header::before { content: ''; position: absolute; top: -60px; left: -60px; width: 250px; height: 250px; border-radius: 50%; background: rgba(255,255,255,0.05); pointer-events: none; }
+    .page-header.traffic { background: linear-gradient(135deg, #2e6b7e 0%, #4A7A8A 50%, #6BA3B5 100%); }
+    .page-header.criminal { background: linear-gradient(135deg, #5e2d40 0%, #7A4A5E 50%, #A8728A 100%); }
+    .page-header.immigration { background: linear-gradient(135deg, #2d6e3f 0%, var(--sage) 50%, #5A8062 100%); }
+    .page-header.about { background: linear-gradient(135deg, #1a2a3e 0%, var(--navy) 50%, var(--navy-mid) 100%); }
+    .page-header.contact { background: linear-gradient(135deg, #a04535 0%, var(--terracotta) 50%, var(--terracotta-light) 100%); }
+    .page-header-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4.5vw, 2.8rem); margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,0.15); }
+    .page-header p { opacity: 0.92; font-size: 1.05rem; max-width: 600px; }
+    .page-header-icon { font-size: 3rem; margin-bottom: 12px; display: block; filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2)); }
 
-    .disclaimer-box {
-      background: var(--gold-pale);
-      border-left: 4px solid var(--gold);
-      border-radius: 0 8px 8px 0;
-      padding: 16px 20px;
-      font-size: 0.88rem;
-      color: #6b5a2e;
-      font-style: italic;
-    }
-
-    /* ─── PRACTICE AREA PAGES ─── */
-    .page-header {
-      background: linear-gradient(135deg, var(--sage) 0%, var(--sage-light) 100%);
-      padding: 52px 24px;
-      color: #fff;
-    }
-    .page-header.traffic { background: linear-gradient(135deg, #4A7A8A 0%, #6BA3B5 100%); }
-    .page-header.criminal { background: linear-gradient(135deg, #7A4A5E 0%, #A8728A 100%); }
-    .page-header.immigration { background: linear-gradient(135deg, var(--sage) 0%, #5A8062 100%); }
-    .page-header.about { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); }
-    .page-header.contact { background: linear-gradient(135deg, var(--terracotta) 0%, var(--terracotta-light) 100%); }
-    .page-header.reviews-bg { background: linear-gradient(135deg, var(--gold) 0%, #E8C06A 100%); }
-
-    .page-header-inner { max-width: 900px; margin: 0 auto; }
-    .page-header h1 {
-      font-family: 'Playfair Display', serif;
-      font-size: clamp(1.7rem, 4vw, 2.5rem);
-      margin-bottom: 8px;
-    }
-    .page-header p { opacity: 0.88; font-size: 1rem; max-width: 600px; }
-
-    /* content area */
-    .content-area { max-width: 900px; margin: 0 auto; padding: 48px 24px; }
-
-    .qa-block {
-      background: var(--warm-white);
-      border-radius: 10px;
-      border: 1px solid var(--border);
-      margin-bottom: 16px;
-      overflow: hidden;
-    }
-    .qa-question {
-      font-weight: 700;
-      color: var(--navy);
-      padding: 16px 20px;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-size: 0.95rem;
-      background: var(--sage-pale);
-      transition: background 0.15s;
-    }
-    .qa-question:hover { background: #d4e4d8; }
-    .qa-question .chevron { font-size: 0.8rem; transition: transform 0.2s; }
-    .qa-question.open .chevron { transform: rotate(180deg); }
-    .qa-answer {
-      display: none;
-      padding: 16px 20px;
-      font-size: 0.95rem;
-      color: var(--text-mid);
-      border-top: 1px solid var(--border);
-    }
+    /*  CONTENT  */
+    .content-area { max-width: 900px; margin: 0 auto; padding: 56px 24px; }
+    .qa-block { background: #fff; border-radius: 12px; border: 1px solid var(--border); margin-bottom: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.04); transition: box-shadow 0.2s; }
+    .qa-block:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .qa-question { font-weight: 700; color: var(--navy); padding: 18px 22px; cursor: pointer; display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; font-size: 0.95rem; background: var(--sage-pale); transition: background 0.15s; }
+    .qa-question:hover { background: #c8dece; }
+    .qa-question .qa-q-text { flex: 1; }
+    .qa-question .chevron { font-size: 0.8rem; transition: transform 0.25s; flex-shrink: 0; margin-top: 4px; color: var(--sage); }
+    .qa-question.open .chevron { transform: rotate(180deg); color: var(--terracotta); }
+    .qa-answer { display: none; padding: 18px 22px; font-size: 0.95rem; color: var(--text-mid); border-top: 1px solid var(--border); background: #fafffe; line-height: 1.75; }
     .qa-answer.open { display: block; }
+    .topic-section { margin-bottom: 48px; }
+    .topic-section h2 { font-family: 'Playfair Display', serif; font-size: 1.5rem; color: var(--navy); margin-bottom: 6px; }
+    .topic-section .mini-divider { width: 40px; height: 4px; background: linear-gradient(90deg, var(--terracotta), var(--gold)); border-radius: 2px; margin-bottom: 18px; }
+    .topic-section p { font-size: 0.96rem; color: var(--text-mid); margin-bottom: 12px; line-height: 1.8; }
 
-    .topic-section { margin-bottom: 40px; }
-    .topic-section h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      color: var(--navy);
-      margin-bottom: 6px;
-    }
-    .topic-section .mini-divider {
-      width: 36px; height: 3px;
-      background: var(--terracotta);
-      border-radius: 2px;
-      margin-bottom: 16px;
-    }
-    .topic-section p { font-size: 0.96rem; color: var(--text-mid); margin-bottom: 12px; }
-    .topic-section h3 {
-      font-size: 1rem;
-      color: var(--navy);
-      font-weight: 700;
-      margin: 20px 0 6px;
-    }
+    /*  ABOUT  */
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
+    @media (max-width: 680px) { .about-grid { grid-template-columns: 1fr; } }
+    .highlight-pill { display: inline-block; background: var(--terracotta-pale); color: var(--terracotta); font-size: 0.82rem; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin: 3px 3px 3px 0; border: 1px solid rgba(201,103,79,0.2); }
+    .staff-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+    .team-section { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; margin-top: 8px; }
+    @media (max-width: 700px) { .team-section { grid-template-columns: 1fr; } }
+    .team-aztec { position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 12px 40px rgba(0,0,0,0.15); }
+    .team-aztec img { width: 100%; display: block; }
+    .team-aztec-label { position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, rgba(43,58,82,0.92)); padding: 32px 16px 16px; color: #fff; font-family: 'Playfair Display', serif; font-size: 0.9rem; font-style: italic; text-align: center; opacity: 0.9; }
+    .team-list { display: flex; flex-direction: column; gap: 14px; }
+    .team-member { display: flex; align-items: center; gap: 16px; background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 16px 20px; border-left: 4px solid var(--terracotta); transition: box-shadow 0.2s, transform 0.2s; }
+    .team-member:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.08); transform: translateX(4px); }
+    .team-member-avatar { width: 48px; height: 48px; background: var(--terracotta-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; flex-shrink: 0; }
+    .team-member-info h3 { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--navy); margin-bottom: 2px; }
+    .team-member-info .role { font-size: 0.78rem; color: var(--terracotta); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; }
+    .staff-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px 20px; text-align: center; transition: box-shadow 0.2s, transform 0.2s; border-top: 4px solid var(--terracotta); }
+    .staff-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.09); transform: translateY(-3px); }
+    .staff-card .staff-avatar { width: 52px; height: 52px; background: var(--terracotta-pale); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; margin: 0 auto 12px; }
+    .staff-card h3 { color: var(--navy); font-family: 'Playfair Display', serif; font-size: 1.05rem; }
+    .staff-card .role { font-size: 0.78rem; color: var(--terracotta); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 4px; }
 
-    /* ─── ABOUT ─── */
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin-bottom: 40px;
-    }
-    @media (max-width: 680px) {
-      .about-grid { grid-template-columns: 1fr; }
-    }
-    .about-bio p { font-size: 0.96rem; color: var(--text-mid); margin-bottom: 12px; }
-    .highlight-pill {
-      display: inline-block;
-      background: var(--terracotta-pale);
-      color: var(--terracotta);
-      font-size: 0.82rem;
-      font-weight: 700;
-      padding: 4px 14px;
-      border-radius: 20px;
-      margin: 3px 3px 3px 0;
-    }
-    .staff-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 10px;
-      padding: 20px;
-      margin-bottom: 14px;
-    }
-    .staff-card h3 { color: var(--navy); font-family: 'Playfair Display', serif; font-size: 1.1rem; }
-    .staff-card .role { font-size: 0.82rem; color: var(--terracotta); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-top: 2px; }
-
-    /* ─── CONTACT FORM ─── */
-    .contact-grid {
-      display: grid;
-      grid-template-columns: 1fr 1.5fr;
-      gap: 40px;
-      align-items: start;
-    }
-    @media (max-width: 700px) {
-      .contact-grid { grid-template-columns: 1fr; }
-    }
-    .contact-info-box { }
-    .contact-detail {
-      display: flex;
-      align-items: flex-start;
-      gap: 14px;
-      margin-bottom: 22px;
-    }
-    .contact-icon {
-      width: 40px;
-      height: 40px;
-      background: var(--terracotta-pale);
-      border-radius: 8px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.1rem;
-      flex-shrink: 0;
-    }
+    /*  CONTACT  */
+    .contact-grid { display: grid; grid-template-columns: 1fr 1.5fr; gap: 40px; align-items: start; }
+    @media (max-width: 700px) { .contact-grid { grid-template-columns: 1fr; } }
+    .contact-detail { display: flex; align-items: flex-start; gap: 14px; margin-bottom: 22px; }
+    .contact-icon { width: 44px; height: 44px; background: linear-gradient(135deg, var(--terracotta-pale), #fde8df); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; flex-shrink: 0; box-shadow: 0 2px 8px rgba(201,103,79,0.15); }
     .contact-detail-text .label { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); }
     .contact-detail-text .value { font-size: 0.97rem; font-weight: 600; color: var(--navy); }
     .contact-detail-text a { color: var(--terracotta); text-decoration: none; }
     .contact-detail-text a:hover { text-decoration: underline; }
 
-    .form-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 32px;
-    }
-    .form-card h2 {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.4rem;
-      color: var(--navy);
-      margin-bottom: 20px;
-    }
-    .form-row { margin-bottom: 18px; }
-    .form-row label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--navy-mid); margin-bottom: 6px; text-transform: uppercase; letter-spacing: 0.05em; }
-    .form-row input, .form-row textarea, .form-row select {
-      width: 100%;
-      padding: 10px 14px;
-      border: 1.5px solid var(--border);
-      border-radius: 7px;
-      font-family: 'Nunito', sans-serif;
-      font-size: 0.95rem;
-      color: var(--text-dark);
-      background: #fff;
-      transition: border-color 0.18s;
-      outline: none;
-    }
-    .form-row input:focus, .form-row textarea:focus, .form-row select:focus { border-color: var(--terracotta); }
-    .form-row textarea { resize: vertical; min-height: 110px; }
-    .form-note { font-size: 0.8rem; color: var(--text-light); margin-top: 8px; font-style: italic; }
-    .form-success {
-      display: none;
-      background: var(--sage-pale);
-      border: 1px solid var(--sage-light);
-      border-radius: 8px;
-      padding: 16px 20px;
-      color: #2d5e38;
-      font-weight: 600;
-      margin-top: 16px;
-    }
+    /*  REVIEWS  */
+    .reviews-section { background: linear-gradient(135deg, #1e2d42 0%, #2B3A52 100%); padding: 72px 24px; position: relative; overflow: hidden; }
+    .reviews-section::before { content: ''; position: absolute; top: -100px; right: -100px; width: 400px; height: 400px; border-radius: 50%; background: rgba(212,168,75,0.06); pointer-events: none; }
+    .reviews-section .section-title { color: #fff; }
+    .reviews-section .section-title .accent { color: var(--gold); }
+    .reviews-section .divider { background: linear-gradient(90deg, var(--gold), var(--terracotta)); }
+    .reviews-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 22px; }
+    .review-card { background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12); border-radius: 16px; padding: 28px 24px 24px; position: relative; backdrop-filter: blur(4px); transition: background 0.2s, transform 0.2s; }
+    .review-card:hover { background: rgba(255,255,255,0.11); transform: translateY(-3px); }
+    .review-card::before { content: '"'; font-family: 'Playfair Display', serif; font-size: 5rem; color: var(--gold); opacity: 0.3; position: absolute; top: 4px; left: 18px; line-height: 1; }
+    .review-stars { color: var(--gold); font-size: 1rem; margin-bottom: 12px; letter-spacing: 2px; }
+    .review-text { font-size: 0.93rem; color: #ccd8e8; line-height: 1.7; padding-top: 12px; }
+    .review-author { margin-top: 16px; font-size: 0.8rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; }
 
-    /* ─── REVIEWS ─── */
-    .reviews-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 20px;
-    }
-    .review-card {
-      background: var(--warm-white);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 24px;
-      position: relative;
-    }
-    .review-card::before {
-      content: '"';
-      font-family: 'Playfair Display', serif;
-      font-size: 4rem;
-      color: var(--terracotta-pale);
-      position: absolute;
-      top: 8px;
-      left: 16px;
-      line-height: 1;
-    }
-    .review-stars { color: var(--gold); font-size: 0.9rem; margin-bottom: 10px; }
-    .review-text { font-size: 0.92rem; color: var(--text-mid); line-height: 1.65; padding-top: 10px; }
-    .review-author { margin-top: 14px; font-size: 0.82rem; font-weight: 700; color: var(--navy); text-transform: uppercase; letter-spacing: 0.06em; }
-
-    /* ─── FOOTER ─── */
-    footer {
-      background: var(--navy);
-      color: #8fa8c8;
-      padding: 48px 24px 32px;
-    }
-    .footer-inner {
-      max-width: 1000px;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: 1.5fr 1fr 1fr;
-      gap: 32px;
-    }
-    @media (max-width: 640px) {
-      .footer-inner { grid-template-columns: 1fr; }
-    }
-    .footer-brand .name {
-      font-family: 'Playfair Display', serif;
-      font-size: 1.3rem;
-      color: #fff;
-      margin-bottom: 8px;
-    }
-    .footer-brand p { font-size: 0.88rem; line-height: 1.65; }
-    footer h4 { color: #c8d8f0; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 12px; }
+    /*  FOOTER  */
+    footer { background: #141e2e; color: #8fa8c8; padding: 56px 24px 32px; }
+    .footer-inner { max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 40px; }
+    @media (max-width: 640px) { .footer-inner { grid-template-columns: 1fr; } }
+    .footer-brand .name { font-family: 'Playfair Display', serif; font-size: 1.3rem; color: #fff; margin-bottom: 8px; }
+    .footer-brand p { font-size: 0.88rem; line-height: 1.7; }
+    footer h4 { color: #c8d8f0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.12em; margin-bottom: 14px; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); }
     footer ul { list-style: none; }
-    footer ul li { margin-bottom: 8px; }
-    footer ul a { color: #8fa8c8; text-decoration: none; font-size: 0.9rem; transition: color 0.15s; }
-    footer ul a:hover { color: var(--terracotta-light); }
-    .footer-bottom {
-      max-width: 1000px;
-      margin: 32px auto 0;
-      padding-top: 20px;
-      border-top: 1px solid rgba(255,255,255,0.1);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px;
-      font-size: 0.82rem;
-    }
-    .footer-bottom a { color: #8fa8c8; text-decoration: none; }
+    footer ul li { margin-bottom: 10px; }
+    footer ul a { color: #8fa8c8; text-decoration: none; font-size: 0.9rem; transition: color 0.15s, padding-left 0.15s; display: inline-block; }
+    footer ul a:hover { color: var(--terracotta-light); padding-left: 4px; }
+    .footer-bottom { max-width: 1000px; margin: 36px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.82rem; }
 
-    /* ─── RESPONSIVE ─── */
-    @media (max-width: 768px) {
-      .nav-links, .nav-phone { display: none; }
-      .hamburger { display: flex; }
-    }
+    /*  RESPONSIVE  */
+    @media (max-width: 960px) { .nav-links, .nav-phone { display: none; } .hamburger { display: flex; } .lang-toggle { display: none; } }
+    @media (max-width: 600px) { .stats-inner { grid-template-columns: 1fr 1fr; } .hero-cards { gap: 10px; } .hero-card { min-width: 120px; padding: 14px 16px; } }
 
-    /* ─── STICKY MOBILE CALL BUTTON ─── */
-    .mobile-call-bar {
-      display: none;
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 200;
-      background: var(--terracotta);
-      padding: 0;
-    }
-    .mobile-call-bar a {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      color: #fff;
-      text-decoration: none;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
-      font-size: 1rem;
-      padding: 14px 24px;
-      width: 100%;
-    }
-    .mobile-call-bar .call-icon { font-size: 1.2rem; }
-    @media (max-width: 768px) {
-      .mobile-call-bar { display: block; }
-      body { padding-bottom: 56px; }
-    }
-
-    /* ─── COPY TOAST ─── */
-    .copy-toast {
-      position: fixed;
-      bottom: 72px;
-      left: 50%;
-      transform: translateX(-50%) translateY(16px);
-      background: var(--navy);
-      color: #fff;
-      padding: 8px 18px;
-      border-radius: 20px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      opacity: 0;
-      transition: opacity 0.2s, transform 0.2s;
-      pointer-events: none;
-      z-index: 300;
-    }
-    .copy-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
-
-    /* ─── COPY BUTTON ON CONTACT ─── */
-    .phone-copy-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 5px;
-      background: var(--terracotta-pale);
-      color: var(--terracotta);
-      border: 1px solid var(--terracotta);
-      border-radius: 5px;
-      padding: 2px 8px;
-      font-size: 0.78rem;
-      font-weight: 700;
-      cursor: pointer;
-      margin-left: 8px;
-      vertical-align: middle;
-      font-family: 'Nunito', sans-serif;
-      transition: background 0.15s, color 0.15s;
-    }
-    .phone-copy-btn:hover { background: var(--terracotta); color: #fff; }
-
-    /* Email link helper button */
-    .email-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 8px;
-      background: var(--terracotta-pale);
-      color: var(--terracotta);
-      border: 1.5px solid var(--terracotta);
-      padding: 10px 20px;
-      border-radius: 8px;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 0.9rem;
-      margin-top: 20px;
-      transition: background 0.18s, color 0.18s;
-    }
+    .email-cta { display: inline-flex; align-items: center; gap: 8px; background: var(--terracotta-pale); color: var(--terracotta); border: 1.5px solid var(--terracotta); padding: 10px 20px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.9rem; margin-top: 20px; transition: background 0.18s, color 0.18s; }
     .email-cta:hover { background: var(--terracotta); color: #fff; }
-
-    .page-disclaimer {
-      margin-top: 40px;
-      padding: 14px 18px;
-      background: var(--gold-pale);
-      border-left: 4px solid var(--gold);
-      font-size: 0.85rem;
-      color: #6b5a2e;
-      font-style: italic;
-      border-radius: 0 6px 6px 0;
-    }
+    .page-disclaimer { margin-top: 40px; padding: 16px 20px; background: var(--gold-pale); border-left: 4px solid var(--gold); font-size: 0.85rem; color: #6b5a2e; font-style: italic; border-radius: 0 8px 8px 0; box-shadow: inset 3px 0 0 var(--gold); }
   </style>
 </head>
-<body>
+<body class="lang-en">
 
 <!-- Top Bar -->
 <div class="top-bar">
-  Bilingual (English &amp; Spanish) · Mon–Fri 9am–5pm · <a href="mailto:katycab@yahoo.com">✉ Email Us</a> · <a href="tel:9198381600">📞 (919) 838-1600</a>
+  <span class="en">Bilingual (English &amp; Spanish) · Free consultations by phone · </span>
+  <span class="es">Bilingüe (Inglés &amp; Español) · Consultas gratuitas por teléfono · </span>
+  <a href="tel:9198381600">(919) 838-1600</a>
 </div>
 
 <!-- Navigation -->
 <nav>
   <div class="nav-inner">
     <div class="nav-brand">
-      <span class="name">Katy Chavez, Attorney</span>
-      <span class="tagline">Criminal &amp; Immigration Law · Raleigh, NC</span>
+      <img src="aztec.jpg" alt="Katy Chavez Attorney" class="nav-logo" />
+      <div class="nav-brand-text">
+        <span class="name">Katy Chavez, Attorney</span>
+        <span class="tagline en">Criminal &amp; Immigration Law · Raleigh, NC</span>
+        <span class="tagline es">Derecho Penal e Inmigración · Raleigh, NC</span>
+      </div>
     </div>
     <ul class="nav-links">
-      <li><a href="#" class="nav-link active" data-page="home">Home</a></li>
-      <li><a href="#" class="nav-link" data-page="traffic">Traffic &amp; DWI</a></li>
-      <li><a href="#" class="nav-link" data-page="criminal">Criminal Law</a></li>
-      <li><a href="#" class="nav-link" data-page="immigration">Immigration</a></li>
-      <li><a href="#" class="nav-link" data-page="about">About</a></li>
-      <li><a href="#" class="nav-link" data-page="reviews">Reviews</a></li>
-      <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
+      <li><a href="#" class="nav-link active" data-page="home"><span class="en">Home</span><span class="es">Inicio</span></a></li>
+      <li><a href="#" class="nav-link" data-page="traffic"><span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></a></li>
+      <li><a href="#" class="nav-link" data-page="criminal"><span class="en">Criminal Law</span><span class="es">Derecho Penal</span></a></li>
+      <li><a href="#" class="nav-link" data-page="immigration"><span class="en">Immigration</span><span class="es">Inmigración</span></a></li>
+      <li><a href="#" class="nav-link" data-page="about"><span class="en">About</span><span class="es">Nosotros</span></a></li>
+      <li><a href="#" class="nav-link" data-page="contact"><span class="en">Contact</span><span class="es">Contacto</span></a></li>
     </ul>
-    <a class="nav-phone" href="tel:9198381600">(919) 838-1600</a>
-    <button class="hamburger" id="hamburger" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
+    <div class="nav-right">
+      <a class="nav-phone" href="tel:9198381600">(919) 838-1600</a>
+      <div class="lang-toggle">
+        <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
+        <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
+      </div>
+    </div>
+    <button class="hamburger" id="hamburger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
   <div class="mobile-menu" id="mobileMenu">
-    <a href="#" class="nav-link" data-page="home">Home</a>
-    <a href="#" class="nav-link" data-page="traffic">Traffic &amp; DWI</a>
-    <a href="#" class="nav-link" data-page="criminal">Criminal Law</a>
-    <a href="#" class="nav-link" data-page="immigration">Immigration</a>
-    <a href="#" class="nav-link" data-page="about">About</a>
-    <a href="#" class="nav-link" data-page="reviews">Reviews</a>
-    <a href="#" class="nav-link" data-page="contact">Contact</a>
+    <div class="mobile-lang">
+      <button class="lang-btn active" id="btn-en-m" onclick="setLang('en')">EN — English</button>
+      <button class="lang-btn" id="btn-es-m" onclick="setLang('es')">ES — Español</button>
+    </div>
+    <a href="#" class="nav-link" data-page="home"><span class="en">Home</span><span class="es">Inicio</span></a>
+    <a href="#" class="nav-link" data-page="traffic"><span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></a>
+    <a href="#" class="nav-link" data-page="criminal"><span class="en">Criminal Law</span><span class="es">Derecho Penal</span></a>
+    <a href="#" class="nav-link" data-page="immigration"><span class="en">Immigration</span><span class="es">Inmigración</span></a>
+    <a href="#" class="nav-link" data-page="about"><span class="en">About</span><span class="es">Nosotros</span></a>
+    <a href="#" class="nav-link" data-page="contact"><span class="en">Contact</span><span class="es">Contacto</span></a>
   </div>
 </nav>
 
-<!-- ════════════════════════════════════
-     PAGE: HOME
-════════════════════════════════════ -->
+<!--  PAGE: HOME  -->
 <div class="page active" id="page-home">
   <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-overlay"></div>
+    <div class="hero-shine"></div>
     <div class="hero-content">
-      <span class="hero-badge">Wake County, North Carolina</span>
-      <h1>Legal Expertise You Can<br/><em>Actually Afford</em></h1>
-      <p>Katy Chavez is a dedicated, bilingual attorney focused on criminal defense, traffic matters, and immigration — committed to keeping rates low so quality representation is accessible to everyone.</p>
+      <h1 class="en">Legal Expertise You Can<br/><em>Actually Afford</em></h1>
+      <h1 class="es">Experiencia Legal que<br/><em>Realmente Puedes Pagar</em></h1>
+      <p class="en">Katy Chavez is a dedicated, bilingual attorney — handling criminal defense and traffic matters in Wake County, and immigration cases nationwide. Committed to keeping rates low so quality representation is accessible to everyone.</p>
+      <p class="es">Katy Chavez es una abogada bilingüe dedicada — manejando defensa criminal y tráfico en el Condado de Wake, y casos de inmigración en todo el país. Comprometida a mantener tarifas bajas para que la representación de calidad sea accesible para todos.</p>
       <div class="hero-actions">
-        <a href="#" class="btn-primary nav-link" data-page="contact">Get a Free Consultation</a>
-        <a href="#" class="btn-outline nav-link" data-page="about">Meet Katy</a>
+        <a href="#" class="btn-primary nav-link" data-page="contact"><span class="en">Get a Free Consultation</span><span class="es">Consulta Gratuita</span></a>
+        <a href="#" class="btn-outline nav-link" data-page="about"><span class="en">Meet Katy</span><span class="es">Conozca a Katy</span></a>
       </div>
       <div class="hero-cards">
-        <div class="hero-card">
-          <div class="icon">🚗</div>
-          <div class="label">Traffic &amp; DWI</div>
-        </div>
-        <div class="hero-card">
-          <div class="icon">⚖️</div>
-          <div class="label">Criminal Defense</div>
-        </div>
-        <div class="hero-card">
-          <div class="icon">🌎</div>
-          <div class="label">Immigration</div>
-        </div>
-        <div class="hero-card">
-          <div class="icon">💬</div>
-          <div class="label">English &amp; Spanish</div>
-        </div>
+        <div class="hero-card"><div class="icon">🚗</div><div class="label"><span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></div></div>
+        <div class="hero-card"><div class="icon">⚖️</div><div class="label"><span class="en">Criminal Defense</span><span class="es">Defensa Criminal</span></div></div>
+        <div class="hero-card"><div class="icon">🌎</div><div class="label"><span class="en">Immigration</span><span class="es">Inmigración</span></div></div>
+        <div class="hero-card"><div class="icon">💬</div><div class="label"><span class="en">English &amp; Spanish</span><span class="es">Inglés &amp; Español</span></div></div>
+      </div>
+    </div><!-- /hero-content -->
+  </div><!-- /hero -->
+
+  <div class="stats-bar">
+    <div class="stats-inner">
+      <div class="stat-item">
+        <span class="stat-num">3</span>
+        <span class="stat-label en">Attorneys</span>
+        <span class="stat-label es">Abogados</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">3</span>
+        <span class="stat-label en">Practice Areas</span>
+        <span class="stat-label es">Áreas de Práctica</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">2</span>
+        <span class="stat-label en">Languages</span>
+        <span class="stat-label es">Idiomas</span>
+      </div>
+      <div class="stat-item">
+        <span class="stat-num">Free</span>
+        <span class="stat-label en">Consultations</span>
+        <span class="stat-label es">Consultas</span>
       </div>
     </div>
   </div>
 
-  <div style="background: var(--navy); padding: 20px 24px;">
-    <div style="max-width:1000px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-      <div>
-        <p style="color:#fff; font-family:'Playfair Display',serif; font-size:1.1rem; margin-bottom:2px;">¿Habla español? Estamos aquí para ayudarle.</p>
-        <p style="color:#8fa8c8; font-size:0.88rem;">We offer fully bilingual legal services in English and Spanish — no interpreter needed.</p>
-      </div>
-      <a href="tel:9198381600" style="background:var(--terracotta); color:#fff; padding:10px 22px; border-radius:8px; text-decoration:none; font-weight:700; font-size:0.9rem; white-space:nowrap; flex-shrink:0;">📞 Llámenos: (919) 838-1600</a>
-    </div>
-  </div>
-
-  <div class="section" style="background: var(--warm-white);">
+  <div class="section section-alt">
     <div class="section-inner">
-      <p class="section-title">Why Clients Choose <span class="accent">Katy Chavez</span></p>
+      <p class="section-title"><span class="en">Why Clients Choose <span class="accent">Katy Chavez</span></span><span class="es">Por Qué los Clientes Eligen a <span class="accent">Katy Chavez</span></span></p>
       <div class="divider"></div>
       <div class="three-col">
         <div class="info-card">
-          <h3>📍 Focused Practice</h3>
-          <p>I handle traffic and criminal matters in Wake County only. No splitting time across counties or practice areas — that focus means you get my best work on your case.</p>
+          <h3>📍 <span class="en">Focused Practice</span><span class="es">Práctica Especializada</span></h3>
+          <p class="en">I handle traffic and criminal matters in Wake County only. No splitting time across counties or practice areas — that focus means you get my best work on your case.</p>
+          <p class="es">Manejo asuntos de tráfico y penales únicamente en el Condado de Wake. Sin dividir tiempo entre condados — esa concentración significa que obtienes mi mejor trabajo en tu caso.</p>
         </div>
         <div class="info-card">
-          <h3>💲 Affordable Rates</h3>
-          <p>It is my mission to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I don't spend on advertising — that savings goes back to you.</p>
+          <h3>💲 <span class="en">Affordable Rates</span><span class="es">Tarifas Asequibles</span></h3>
+          <p class="en">It is my mission to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I don't spend on advertising — that savings goes back to you.</p>
+          <p class="es">Mi misión es cobrar las tarifas más bajas posibles para que las personas con recursos limitados puedan beneficiarse de una representación legal de calidad. No gasto en publicidad — ese ahorro se lo devuelvo a usted.</p>
         </div>
         <div class="info-card">
-          <h3>📞 Always Reachable</h3>
-          <p>I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients. Call me for a free consultation at any time.</p>
+          <h3>📞 <span class="en">Always Reachable</span><span class="es">Siempre Disponible</span></h3>
+          <p class="en">I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients. Call our office for a free consultation at any time.</p>
+          <p class="es">Siempre respondo correos y llamadas sin cobrar tarifa — incluso para personas que aún no son mis clientes. Llame a nuestra oficina para una consulta gratuita en cualquier momento.</p>
         </div>
       </div>
       <div class="disclaimer-box">
-        <strong>Legal Disclaimer:</strong> The information on this website is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.
+        <span class="en"><strong>Legal Disclaimer:</strong> The information on this website is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</span>
+        <span class="es"><strong>Aviso Legal:</strong> La información en este sitio web no es, ni pretende ser, asesoramiento legal. Por favor contácteme directamente sobre los hechos de su caso particular.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="reviews-section">
+    <div class="section-inner">
+      <p class="section-title"><span class="en">What Clients Are <span class="accent">Saying</span></span><span class="es">Lo Que Dicen <span class="accent">Nuestros Clientes</span></span></p>
+      <div class="divider"></div>
+      <div class="reviews-grid">
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">Katy and her team did such a great job handling our cases that I have no hesitation in recommending her to family, friends and colleagues. Immigration can be a complex and stressful process, but this firm's skills, professionalism, and attention to detail made it happen more smoothly and quickly than we could have hoped for.</p>
+          <div class="review-author">— <span class="en">Immigration Client</span><span class="es">Cliente de Inmigración</span></div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">Attorney Katy Chavez provided us with very helpful legal consultation. She was knowledgeable about complex immigration issues. She was also very responsive and easy to communicate with. Highly recommended!</p>
+          <div class="review-author">— <span class="en">Immigration Client</span><span class="es">Cliente de Inmigración</span></div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">Katy is the consummate professional. She addressed our daughter's court case with extreme precision, giving us all the information we needed to address everything ahead of time. HIGHLY recommend her and her staff!</p>
+          <div class="review-author">— <span class="en">Criminal Defense Client</span><span class="es">Cliente de Defensa Criminal</span></div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">I had an absolutely incredible experience with this immigration law firm during my permanent residency and citizenship process. Katy Chavez is a wonderful, knowledgeable, and very responsible lawyer. She helped me throughout the entire process, replied promptly to my emails, and always answered all my concerns professionally.</p>
+          <div class="review-author">— <span class="en">Naturalization Client</span><span class="es">Cliente de Naturalización</span></div>
+        </div>
+        <div class="review-card">
+          <div class="review-stars">★★★★★</div>
+          <p class="review-text">Katy Chavez recently helped me with my mother's permanent residency process and she was approved! The whole process was so easy and smooth. Definitely would recommend her services. She speaks English and Spanish. Also, reasonable and fair pricing. Thank you from the bottom of my heart!</p>
+          <div class="review-author">— <span class="en">Immigration Client</span><span class="es">Cliente de Inmigración</span></div>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     PAGE: TRAFFIC & DWI
-════════════════════════════════════ -->
+<!--  PAGE: TRAFFIC & DWI  -->
 <div class="page" id="page-traffic">
   <div class="page-header traffic">
     <div class="page-header-inner">
-      <h1>Traffic &amp; DWI</h1>
-      <p>Protecting your license, your insurance rates, and your record in Wake County courts.</p>
+      <span class="page-header-icon">🚗</span>
+      <h1><span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></h1>
+      <p class="en">Protecting your license, your insurance rates, and your record in Wake County courts.</p>
+      <p class="es">Protegiendo su licencia, sus tarifas de seguro y su historial en los tribunales del Condado de Wake.</p>
     </div>
   </div>
   <div class="content-area">
-
     <div class="topic-section">
-      <h2>Traffic Tickets</h2>
+      <h2><span class="en">Traffic Tickets</span><span class="es">Multas de Tráfico</span></h2>
       <div class="mini-divider"></div>
-      <p>I can handle your traffic tickets received in Wake County — you won't need to come to court. If you mail in your ticket with payment, you are pleading guilty and your insurance will definitely go up. The minimum increase is 25% per year for three years.</p>
-      <p>In Wake County, speeding tickets can often be reduced to a non-moving violation of <strong>Improper Equipment</strong> — meaning no insurance points or license points, ever. If you don't qualify, I may seek a PJC. If your ticket came from an accident, I may be able to get it dismissed entirely. Tickets for no driver's license can be dismissed if you get your license before court date.</p>
-      <p>Already made the mistake of not hiring an attorney on a prior ticket and your insurance has gone up? We may still be able to file a motion to reopen the case and ask for a reduction.</p>
+      <p class="en">I can handle your traffic tickets received in Wake County — you won't need to come to court. If you mail in your ticket with payment, you are pleading guilty and your insurance will definitely go up. The minimum increase is 25% per year for three years.</p>
+      <p class="es">Puedo manejar sus multas de tráfico recibidas en el Condado de Wake — no necesitará venir a la corte. Si envía su multa por correo con el pago, está declarándose culpable y su seguro definitivamente subirá. El aumento mínimo es del 25% por año durante tres años.</p>
+      <p class="en">In Wake County, speeding tickets can often be reduced to a non-moving violation of <strong>Improper Equipment</strong> — meaning no insurance points or license points, ever. If you don't qualify, I may seek a PJC. If your ticket came from an accident, I may be able to get it dismissed entirely. Tickets for no driver's license can be dismissed if you get your license before court date.</p>
+      <p class="es">En el Condado de Wake, las multas por exceso de velocidad a menudo se pueden reducir a una infracción de <strong>Equipo Inadecuado</strong> — sin puntos de seguro ni de licencia. Si no califica, puedo solicitar un PJC. Si su multa fue resultado de un accidente, puedo lograr que se desestime. Las multas por no tener licencia pueden desestimarse si obtiene su licencia antes de la fecha del tribunal.</p>
+      <p class="en">Already made the mistake of not hiring an attorney on a prior ticket and your insurance has gone up? We may still be able to file a motion to reopen the case and ask for a reduction.</p>
+      <p class="es">¿Ya cometió el error de no contratar un abogado en una multa anterior y su seguro subió? Todavía podemos presentar una moción para reabrir el caso y solicitar una reducción.</p>
     </div>
-
     <div class="topic-section">
-      <h2>DWLR — Driving While License Revoked</h2>
+      <h2><span class="en">DWLR — Driving While License Revoked</span><span class="es">DWLR — Conducir con Licencia Revocada</span></h2>
       <div class="mini-divider"></div>
-      <p>This is one of the most important traffic charges to have an attorney for. The rules are complicated and the consequences are serious — including potential jail time and further revocations. Third-time revocations can be permanent. I can help you understand your options and resolve underlying charges efficiently.</p>
+      <p class="en">This is one of the most important traffic charges to have an attorney for. The rules are complicated and the consequences are serious — including potential jail time and further revocations. Third-time revocations can be permanent. I can help you understand your options and resolve underlying charges efficiently.</p>
+      <p class="es">Este es uno de los cargos de tráfico más importantes para los que debe tener un abogado. Las reglas son complicadas y las consecuencias son graves — incluyendo posible tiempo en prisión y revocaciones adicionales. Las revocaciones por tercera vez pueden ser permanentes. Puedo ayudarle a entender sus opciones y resolver los cargos subyacentes de manera eficiente.</p>
     </div>
-
     <div class="topic-section">
       <h2>DWI</h2>
       <div class="mini-divider"></div>
-      <p>I will order the officer's reports, the chemical analyst's notes, interview the officer, and develop a trial strategy. There are often strong legal grounds to challenge a DWI charge — from the legality of the initial stop to the validity of the breath test results.</p>
+      <p class="en">I will order the officer's reports, the chemical analyst's notes, interview the officer, and develop a trial strategy. There are often strong legal grounds to challenge a DWI charge — from the legality of the initial stop to the validity of the breath test results.</p>
+      <p class="es">Ordenaré los informes del oficial, las notas del analista químico, entrevistaré al oficial y desarrollaré una estrategia de juicio. A menudo hay fundamentos legales sólidos para impugnar un cargo de DWI — desde la legalidad de la detención inicial hasta la validez de los resultados de la prueba de aliento.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Getting a Driver's License</h2>
+      <h2><span class="en">Getting a Driver's License</span><span class="es">Obtener una Licencia de Conducir</span></h2>
       <div class="mini-divider"></div>
-      <p>If you're having trouble getting a license due to ID requirements, unresolved tickets, or other issues, I can help you work through those barriers. Remember: only the DMV can issue a valid ID or driver's license — never attempt to use a store-bought ID.</p>
+      <p class="en">If you're having trouble getting a license due to ID requirements, unresolved tickets, or other issues, I can help you work through those barriers. Remember: only the DMV can issue a valid ID or driver's license — never attempt to use a store-bought ID.</p>
+      <p class="es">Si tiene dificultades para obtener una licencia debido a requisitos de identificación, multas sin resolver u otros problemas, puedo ayudarle a superar esos obstáculos. Recuerde: solo el DMV puede emitir una identificación válida o licencia de conducir — nunca intente usar una identificación comprada en una tienda.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Frequently Asked Questions — DWLR</h2>
-      <div class="mini-divider"></div>
-
-      <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">Can I get a limited driving privilege if my license is revoked? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Maybe. There are limited privileges available for some revocations. It may also be possible to take care of outstanding charges, re-open old charges, or request a special DMV hearing to get your license back.</div>
-      </div>
-      <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">If I pay all my old tickets, will I be able to get my license back? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Probably not. Paying old tickets can often cause more problems than it solves — especially if those tickets were received while you were already revoked. Always ask an attorney before paying old tickets.</div>
-      </div>
-      <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">If I never had a license, how can I be charged with DWLR? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Not having a license doesn't avoid revocation. If you get a ticket and don't take care of it, your driving privilege becomes revoked. Driving while revoked can result in jail and further revocations — much more serious than Driving Without a License.</div>
-      </div>
-      <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">If I was revoked for DWI more than a year ago, why is my license still revoked? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Many people fail to complete required alcohol treatment within 12 months of conviction. Until treatment is complete, the license stays revoked — and there is no Limited Driving Privilege for this type of revocation. It can also take 2+ months after completing treatment before the DMV processes it.</div>
-      </div>
-    </div>
-
-    <div class="topic-section">
-      <h2>Frequently Asked Questions — DWI</h2>
+      <h2><span class="en">FAQ — DWLR</span><span class="es">Preguntas Frecuentes — DWLR</span></h2>
       <div class="mini-divider"></div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">What is the punishment for DWI? <span class="chevron">▼</span></div>
-        <div class="qa-answer">There are five levels of punishment. Without a prior conviction, child in the car, or accident, you'll likely receive Level 3, 4, or 5 — which involves a fine, license revocation, required alcohol treatment, and a suspended (not active) jail sentence. Insurance will increase by 400% or more.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">Can I get a limited driving privilege if my license is revoked?</span><span class="es">¿Puedo obtener un privilegio de conducción limitado si mi licencia está revocada?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Maybe. There are limited privileges available for some revocations. It may also be possible to take care of outstanding charges, re-open old charges, or request a special DMV hearing to get your license back.</span>
+          <span class="es">Tal vez. Hay privilegios limitados disponibles para algunas revocaciones. También puede ser posible atender cargos pendientes, reabrir cargos antiguos o solicitar una audiencia especial con el DMV para recuperar su licencia.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">What can I do to lessen my sentence? <span class="chevron">▼</span></div>
-        <div class="qa-answer">After the offense date, the most impactful thing you can do is go to an alcohol treatment facility for an evaluation. Other sentencing factors include whether there was an accident, the alcohol reading level, and your driving record.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">If I pay all my old tickets, will I be able to get my license back?</span><span class="es">Si pago todas mis multas antiguas, ¿podré recuperar mi licencia?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Probably not. Paying old tickets can often cause more problems than it solves — especially if those tickets were received while you were already revoked. Always ask an attorney before paying old tickets.</span>
+          <span class="es">Probablemente no. Pagar multas antiguas a menudo puede causar más problemas de los que resuelve — especialmente si esas multas se recibieron mientras ya estaba revocado. Siempre consulte a un abogado antes de pagar multas antiguas.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">If I was actually drinking and driving, is there any point to fighting the charge? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Yes. There are many ways to challenge the case — including the validity of the Intoxilyzer results, whether the officer had legal grounds to stop you, or whether you were actually impaired. Email me to discuss your specific situation.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">If I never had a license, how can I be charged with DWLR?</span><span class="es">Si nunca tuve licencia, ¿cómo me pueden acusar de DWLR?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Not having a license doesn't avoid revocation. If you get a ticket and don't take care of it, your driving privilege becomes revoked. Driving while revoked can result in jail and further revocations — much more serious than Driving Without a License.</span>
+          <span class="es">No tener licencia no evita la revocación. Si recibe una multa y no la atiende, su privilegio de conducción queda revocado. Conducir mientras está revocado puede resultar en cárcel y más revocaciones — mucho más grave que conducir sin licencia.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">How do I get a Limited Driving Privilege? <span class="chevron">▼</span></div>
-        <div class="qa-answer">If you had a valid license at the time of offense, you may be eligible for a limited privilege 10 days after the offense and after any conviction. You'll need to have completed an alcohol assessment and be currently insured.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">If I was revoked for DWI more than a year ago, why is my license still revoked?</span><span class="es">Si fui revocado por DWI hace más de un año, ¿por qué mi licencia sigue revocada?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Many people fail to complete required alcohol treatment within 12 months of conviction. Until treatment is complete, the license stays revoked — and there is no Limited Driving Privilege for this type of revocation. It can also take 2+ months after completing treatment before the DMV processes it.</span>
+          <span class="es">Muchas personas no completan el tratamiento de alcohol requerido dentro de los 12 meses posteriores a la condena. Hasta que se complete el tratamiento, la licencia permanece revocada — y no hay Privilegio de Conducción Limitado para este tipo de revocación. También puede tardar más de 2 meses después de completar el tratamiento para que el DMV lo procese.</span>
+        </div>
       </div>
     </div>
-
-    <a href="mailto:katycab@yahoo.com?subject=Traffic/DWI Inquiry from Website" class="email-cta">✉️ Email Me About Your Case</a>
-    <div class="page-disclaimer">The information on this page is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</div>
+    <div class="topic-section">
+      <h2><span class="en">FAQ — DWI</span><span class="es">Preguntas Frecuentes — DWI</span></h2>
+      <div class="mini-divider"></div>
+      <div class="qa-block">
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">What is the punishment for DWI?</span><span class="es">¿Cuál es el castigo por DWI?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">There are five levels of punishment. Without a prior conviction, child in the car, or accident, you'll likely receive Level 3, 4, or 5 — which involves a fine, license revocation, required alcohol treatment, and a suspended (not active) jail sentence. Insurance will increase by 400% or more.</span>
+          <span class="es">Hay cinco niveles de castigo. Sin condena previa, niño en el auto o accidente, probablemente recibirá el Nivel 3, 4 o 5 — lo que implica una multa, revocación de licencia, tratamiento de alcohol obligatorio y una sentencia de cárcel suspendida. El seguro aumentará un 400% o más.</span>
+        </div>
+      </div>
+      <div class="qa-block">
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">What can I do to lessen my sentence?</span><span class="es">¿Qué puedo hacer para reducir mi sentencia?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">After the offense date, the most impactful thing you can do is go to an alcohol treatment facility for an evaluation. Other sentencing factors include whether there was an accident, the alcohol reading level, and your driving record.</span>
+          <span class="es">Después de la fecha del delito, lo más efectivo que puede hacer es ir a un centro de tratamiento de alcohol para una evaluación. Otros factores incluyen si hubo un accidente, el nivel de alcohol y su historial de conducción.</span>
+        </div>
+      </div>
+      <div class="qa-block">
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">If I was actually drinking and driving, is there any point to fighting the charge?</span><span class="es">Si realmente estaba bebiendo y conduciendo, ¿tiene sentido combatir el cargo?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Yes. There are many ways to challenge the case — including the validity of the Intoxilyzer results, whether the officer had legal grounds to stop you, or whether you were actually impaired. Email me to discuss your specific situation.</span>
+          <span class="es">Sí. Hay muchas formas de impugnar el caso — incluyendo la validez de los resultados del Intoxilyzer, si el oficial tenía fundamentos legales para detenerlo, o si realmente estaba deteriorado. Escríbame para discutir su situación específica.</span>
+        </div>
+      </div>
+      <div class="qa-block">
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">How do I get a Limited Driving Privilege?</span><span class="es">¿Cómo obtengo un Privilegio de Conducción Limitado?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">If you had a valid license at the time of offense, you may be eligible for a limited privilege 10 days after the offense and after any conviction. You'll need to have completed an alcohol assessment and be currently insured.</span>
+          <span class="es">Si tenía una licencia válida en el momento del delito, puede ser elegible para un privilegio limitado 10 días después del delito y después de cualquier condena. Deberá haber completado una evaluación de alcohol y estar asegurado actualmente.</span>
+        </div>
+      </div>
+    </div>
+    <div class="page-disclaimer">
+      <span class="en">The information on this page is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</span>
+      <span class="es">La información en esta página no es, ni pretende ser, asesoramiento legal. Por favor contácteme directamente sobre los hechos de su caso particular.</span>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     PAGE: CRIMINAL LAW
-════════════════════════════════════ -->
+<!--  PAGE: CRIMINAL LAW  -->
 <div class="page" id="page-criminal">
   <div class="page-header criminal">
     <div class="page-header-inner">
-      <h1>Criminal Defense</h1>
-      <p>I handle criminal charges in Wake County only — focused representation so I can do the best job possible for you.</p>
+      <span class="page-header-icon">⚖️</span>
+      <h1><span class="en">Criminal Defense</span><span class="es">Defensa Criminal</span></h1>
+      <p class="en">I handle criminal charges in Wake County only — focused representation so I can do the best job possible for you.</p>
+      <p class="es">Manejo cargos criminales únicamente en el Condado de Wake — representación enfocada para poder hacer el mejor trabajo posible por usted.</p>
     </div>
   </div>
   <div class="content-area">
-
     <div class="topic-section">
-      <h2>Sentencing</h2>
+      <h2><span class="en">Sentencing</span><span class="es">Sentencias</span></h2>
       <div class="mini-divider"></div>
-      <p>The most common question I'm asked is: <em>What will my punishment be?</em> The honest answer is: it depends — mostly on prior convictions. For misdemeanors, prior history is actually more important than the nature of the crime.</p>
-      <p>A person with a clean record (Level I) generally will not face jail for most misdemeanors. Only Class A1 misdemeanors — such as Stalking, Assault on a Female or Child, Assault with a Deadly Weapon, or Violation of a Protective Order — may result in jail time for a first offender. On the other hand, even a minor charge can mean jail time for someone with a long record.</p>
+      <p class="en">The most common question I'm asked is: <em>What will my punishment be?</em> The honest answer is: it depends — mostly on prior convictions. For misdemeanors, prior history is actually more important than the nature of the crime.</p>
+      <p class="es">La pregunta más común que me hacen es: <em>¿Cuál será mi castigo?</em> La respuesta honesta es: depende — principalmente de las condenas previas. Para los delitos menores, el historial previo es en realidad más importante que la naturaleza del crimen.</p>
+      <p class="en">A person with a clean record (Level I) generally will not face jail for most misdemeanors. Only Class A1 misdemeanors — such as Stalking, Assault on a Female or Child, Assault with a Deadly Weapon, or Violation of a Protective Order — may result in jail time for a first offender.</p>
+      <p class="es">Una persona con antecedentes limpios (Nivel I) generalmente no enfrentará cárcel por la mayoría de los delitos menores. Solo los delitos menores Clase A1 — como el acoso, agresión a una mujer o niño, agresión con un arma mortal o violación de una orden de protección — pueden resultar en tiempo en prisión para un primer infractor.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Assault on a Female / Domestic Violence</h2>
+      <h2><span class="en">Assault on a Female / Domestic Violence</span><span class="es">Agresión a una Mujer / Violencia Doméstica</span></h2>
       <div class="mini-divider"></div>
-      <p>Domestic violence cases follow strict rules — the prosecutor has little discretion to dismiss these charges even if the victim wants to drop them. However, the State often offers a deferral program where the Defendant can earn a dismissal by completing anger management, alcohol treatment, or family counseling.</p>
-      <p><strong>Important:</strong> If you are not a US Citizen, these programs are treated differently by immigration than by the courts. Please consult with me about immigration implications before making any decisions.</p>
+      <p class="en">Domestic violence cases follow strict rules — the prosecutor has little discretion to dismiss these charges even if the victim wants to drop them. However, the State often offers a deferral program where the Defendant can earn a dismissal by completing anger management, alcohol treatment, or family counseling.</p>
+      <p class="es">Los casos de violencia doméstica siguen reglas estrictas — el fiscal tiene poca discreción para desestimar estos cargos incluso si la víctima quiere retirarlos. Sin embargo, el Estado a menudo ofrece un programa de aplazamiento donde el Acusado puede ganarse una desestimación completando manejo de ira, tratamiento de alcohol o consejería familiar.</p>
+      <p class="en"><strong>Important:</strong> If you are not a US Citizen, these programs are treated differently by immigration than by the courts. Please consult with me about immigration implications before making any decisions.</p>
+      <p class="es"><strong>Importante:</strong> Si no es ciudadano de EE.UU., estos programas son tratados de manera diferente por inmigración que por los tribunales. Por favor consulte conmigo sobre las implicaciones migratorias antes de tomar cualquier decisión.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Simple Assault / Communicating a Threat</h2>
+      <h2><span class="en">Simple Assault / Communicating a Threat</span><span class="es">Agresión Simple / Comunicar una Amenaza</span></h2>
       <div class="mini-divider"></div>
-      <p>Wake County gives parties the opportunity to resolve these charges through Mediation, where volunteer counselors help parties work through their issues and agree to solutions. A successful Mediation contract can result in the formal charges being dismissed.</p>
+      <p class="en">Wake County gives parties the opportunity to resolve these charges through Mediation, where volunteer counselors help parties work through their issues and agree to solutions. A successful Mediation contract can result in the formal charges being dismissed.</p>
+      <p class="es">El Condado de Wake da a las partes la oportunidad de resolver estos cargos a través de Mediación, donde consejeros voluntarios ayudan a las partes a trabajar sus problemas y acordar soluciones. Un contrato de Mediación exitoso puede resultar en que los cargos formales sean desestimados.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Larceny / Shoplifting</h2>
+      <h2><span class="en">Larceny / Shoplifting</span><span class="es">Robo / Hurto en Tiendas</span></h2>
       <div class="mini-divider"></div>
-      <p>First offenses can be dismissed after completing community service through the First Offender's Program. Otherwise a fine is usually sufficient. Subsequent offenses carry progressively harsher penalties. We can also challenge the charge directly and ask the State to produce witnesses.</p>
+      <p class="en">First offenses can be dismissed after completing community service through the First Offender's Program. Otherwise a fine is usually sufficient. Subsequent offenses carry progressively harsher penalties. We can also challenge the charge directly and ask the State to produce witnesses.</p>
+      <p class="es">Los primeros delitos pueden desestimarse después de completar servicio comunitario a través del Programa de Primer Infractor. De lo contrario, una multa suele ser suficiente. Los delitos posteriores conllevan sanciones progresivamente más severas. También podemos impugnar el cargo directamente y pedir al Estado que presente testigos.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Drug Charges</h2>
+      <h2><span class="en">Drug Charges</span><span class="es">Cargos por Drogas</span></h2>
       <div class="mini-divider"></div>
-      <p>There is a special program for first-time drug possession charges where you can earn a dismissal by completing classes and community service. The time commitment varies by drug type. Possession of cocaine or heroin is a felony in North Carolina. As with larceny, punishments increase significantly with each subsequent offense. There may also be defenses based on the legality of the stop or search.</p>
+      <p class="en">There is a special program for first-time drug possession charges where you can earn a dismissal by completing classes and community service. Possession of cocaine or heroin is a felony in North Carolina. Punishments increase significantly with each subsequent offense. There may also be defenses based on the legality of the stop or search.</p>
+      <p class="es">Existe un programa especial para cargos de posesión de drogas por primera vez donde puede ganarse una desestimación completando clases y servicio comunitario. La posesión de cocaína o heroína es un delito grave en Carolina del Norte. Los castigos aumentan significativamente con cada delito posterior. También puede haber defensas basadas en la legalidad de la detención o el registro.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Resisting or Delaying an Officer</h2>
+      <h2><span class="en">Resisting or Delaying an Officer</span><span class="es">Resistir o Demorar a un Oficial</span></h2>
       <div class="mini-divider"></div>
-      <p>These charges carry their own considerations and are best discussed in a direct consultation. Please reach out and I'll walk you through your options.</p>
+      <p class="en">These charges carry their own considerations and are best discussed in a direct consultation. Please reach out and I'll walk you through your options.</p>
+      <p class="es">Estos cargos tienen sus propias consideraciones y se discuten mejor en una consulta directa. Por favor comuníquese y le explicaré sus opciones.</p>
     </div>
-
-    <a href="mailto:katycab@yahoo.com?subject=Criminal Law Inquiry from Website" class="email-cta">✉️ Email Me About Your Case</a>
-    <div class="page-disclaimer">The information on this page is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</div>
+    <div class="page-disclaimer">
+      <span class="en">The information on this page is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</span>
+      <span class="es">La información en esta página no es, ni pretende ser, asesoramiento legal. Por favor contácteme directamente sobre los hechos de su caso particular.</span>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     PAGE: IMMIGRATION
-════════════════════════════════════ -->
+<!--  PAGE: IMMIGRATION  -->
 <div class="page" id="page-immigration">
   <div class="page-header immigration">
     <div class="page-header-inner">
-      <h1>Immigration Services</h1>
-      <p>Family petitions, naturalization, TPS renewals, green card renewals, and provisional waivers (I-601a).</p>
+      <span class="page-header-icon">🌎</span>
+      <h1><span class="en">Immigration Services</span><span class="es">Servicios de Inmigración</span></h1>
+      <p class="en">Serving immigration clients across the United States — family petitions, naturalization, TPS renewals, green card renewals, and provisional waivers (I-601a).</p>
+      <p class="es">Sirviendo a clientes de inmigración en todo Estados Unidos — peticiones familiares, naturalización, renovaciones de TPS, renovaciones de tarjeta verde y exenciones provisionales (I-601a).</p>
     </div>
   </div>
   <div class="content-area">
-
     <div class="topic-section">
-      <h2>What I Handle</h2>
+      <h2><span class="en">What I Handle</span><span class="es">Lo Que Manejo</span></h2>
       <div class="mini-divider"></div>
-      <p>If you are a Permanent Resident Alien or US Citizen wanting to petition for a family member, I can help. I also assist with:</p>
-      <ul style="margin: 8px 0 12px 20px; color: var(--text-mid); font-size:0.96rem;">
-        <li>Applications for Naturalization</li>
-        <li>TPS (Temporary Protected Status) renewals</li>
-        <li>Green Card renewals</li>
-        <li>I-601a Provisional Unlawful Presence Waivers</li>
-        <li>Family-based petitions for spouses of US Citizens</li>
+      <p class="en">If you are a Permanent Resident Alien or US Citizen wanting to petition for a family member, I can help. I also assist with:</p>
+      <p class="es">Si es un Residente Permanente o Ciudadano de EE.UU. y desea presentar una petición para un familiar, puedo ayudarle. También asisto con:</p>
+      <ul style="margin:8px 0 12px 20px; color:var(--text-mid); font-size:0.96rem;">
+        <li class="en">Applications for Naturalization</li><li class="es">Solicitudes de Naturalización</li>
+        <li class="en">TPS (Temporary Protected Status) renewals</li><li class="es">Renovaciones de TPS (Estatus de Protección Temporal)</li>
+        <li class="en">Green Card renewals</li><li class="es">Renovaciones de Tarjeta Verde</li>
+        <li class="en">I-601a Provisional Unlawful Presence Waivers</li><li class="es">Exenciones Provisionales de Presencia Ilegal I-601a</li>
+        <li class="en">Family-based petitions for spouses of US Citizens</li><li class="es">Peticiones basadas en familia para cónyuges de Ciudadanos de EE.UU.</li>
       </ul>
-      <p>I do not handle employment-based petitions or removal/deportation defense, but I can refer you to excellent attorneys who do.</p>
+      <p class="en">I do not handle employment-based petitions or removal/deportation defense, but I can refer you to excellent attorneys who do.</p>
+      <p class="es">No manejo peticiones basadas en empleo ni defensa de remoción/deportación, pero puedo referirle a excelentes abogados que sí lo hacen.</p>
     </div>
-
     <div class="topic-section">
-      <h2>Frequently Asked Questions</h2>
+      <h2><span class="en">Frequently Asked Questions</span><span class="es">Preguntas Frecuentes</span></h2>
       <div class="mini-divider"></div>
-
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">Can a Legal Permanent Resident apply for parents or siblings? <span class="chevron">▼</span></div>
-        <div class="qa-answer">No. You must be a US Citizen to petition for parents or siblings.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">Can a Legal Permanent Resident apply for parents or siblings?</span><span class="es">¿Puede un Residente Permanente Legal solicitar para padres o hermanos?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">No. You must be a US Citizen to petition for parents or siblings.</span>
+          <span class="es">No. Debe ser Ciudadano de EE.UU. para presentar una petición para padres o hermanos.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">I'm a US Citizen married to an undocumented immigrant. Can I apply for them? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Maybe. If your spouse entered with any type of visa, Border Crosser card, or as a Canadian, they may be able to adjust status without leaving the country — even if they overstayed. If they entered without inspection, they will generally need to leave the country and apply at a consulate. If they've been out of status for more than one year, a hardship waiver (I-601a) will be required before they can return. Contact me to discuss your specific situation.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">I'm a US Citizen married to an undocumented immigrant. Can I apply for them?</span><span class="es">Soy Ciudadano de EE.UU. casado con un inmigrante indocumentado. ¿Puedo solicitar para ellos?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Maybe. If your spouse entered with any type of visa, Border Crosser card, or as a Canadian, they may be able to adjust status without leaving the country — even if they overstayed. If they entered without inspection, they will generally need to leave the country and apply at a consulate. If they've been out of status for more than one year, a hardship waiver (I-601a) will be required before they can return.</span>
+          <span class="es">Tal vez. Si su cónyuge entró con algún tipo de visa, tarjeta de cruce fronterizo o como canadiense, puede ser elegible para ajustar su estatus sin salir del país — incluso si se quedó más tiempo del permitido. Si entraron sin inspección, generalmente deberán salir del país y solicitar en un consulado. Si han estado fuera de estatus por más de un año, se requerirá una exención de dificultades (I-601a) antes de que puedan regresar.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">Can I get a green card through my US-born children? <span class="chevron">▼</span></div>
-        <div class="qa-answer">Not until they are 21 years old. Once they are 21, they can petition for you if you entered the US legally (with inspection).</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">Can I get a green card through my US-born children?</span><span class="es">¿Puedo obtener una tarjeta verde a través de mis hijos nacidos en EE.UU.?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">Not until they are 21 years old. Once they are 21, they can petition for you if you entered the US legally (with inspection).</span>
+          <span class="es">No hasta que tengan 21 años. Una vez que tengan 21 años, pueden presentar una petición por usted si entró a EE.UU. legalmente (con inspección).</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">What is the I-601a Provisional Waiver? <span class="chevron">▼</span></div>
-        <div class="qa-answer">The I-601a is a waiver of bars to admissibility caused by unlawful presence. It allows someone who would otherwise be barred from returning to the US to apply for the bar to be waived. The waiver is based on hardship to a qualifying US Citizen spouse or parent. The applicant can remain in the US while the waiver is being decided. If approved, they would then leave the country briefly to receive their residency at a consulate and return legally.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">What is the I-601a Provisional Waiver?</span><span class="es">¿Qué es la Exención Provisional I-601a?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">The I-601a is a waiver of bars to admissibility caused by unlawful presence. It allows someone who would otherwise be barred from returning to the US to apply for the bar to be waived. The waiver is based on hardship to a qualifying US Citizen spouse or parent. The applicant can remain in the US while the waiver is being decided. If approved, they would then leave the country briefly to receive their residency at a consulate and return legally.</span>
+          <span class="es">El I-601a es una exención de barreras de admisibilidad causadas por presencia ilegal. Permite que alguien que de otro modo tendría prohibición de regresar a EE.UU. solicite que se exima la prohibición. La exención se basa en las dificultades para un cónyuge o padre Ciudadano de EE.UU. calificado. El solicitante puede permanecer en EE.UU. mientras se decide la exención. Si se aprueba, saldría brevemente para recibir su residencia en un consulado y regresar legalmente.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">How is the I-601a waiver decision made? <span class="chevron">▼</span></div>
-        <div class="qa-answer">The decision is based on proving exceptional and extreme hardship to a qualifying US Citizen relative if the alien could not return. The letter and supporting evidence must show both why the US Citizen cannot simply live in the foreign country, and why living apart in the US would also cause extreme hardship. Cases prepared by an attorney have a significantly higher approval rate.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">How is the I-601a waiver decision made?</span><span class="es">¿Cómo se toma la decisión sobre la exención I-601a?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">The decision is based on proving exceptional and extreme hardship to a qualifying US Citizen relative if the alien could not return. The letter and supporting evidence must show both why the US Citizen cannot simply live in the foreign country, and why living apart in the US would also cause extreme hardship. Cases prepared by an attorney have a significantly higher approval rate.</span>
+          <span class="es">La decisión se basa en probar dificultades excepcionales y extremas para un familiar Ciudadano de EE.UU. calificado si el extranjero no pudiera regresar. La carta y la evidencia de apoyo deben mostrar tanto por qué el Ciudadano de EE.UU. no puede simplemente vivir en el país extranjero, como por qué vivir separados en EE.UU. también causaría dificultades extremas. Los casos preparados por un abogado tienen una tasa de aprobación significativamente mayor.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">Does my spouse need to leave the US while the I-601a is being decided? <span class="chevron">▼</span></div>
-        <div class="qa-answer">No. For cases where the only bar is unlawful presence, the applicant can remain in the United States until the waiver is approved. They will only need to leave for a few business days to receive their residency at the consulate.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">Does my spouse need to leave the US while the I-601a is being decided?</span><span class="es">¿Necesita mi cónyuge salir de EE.UU. mientras se decide el I-601a?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">No. For cases where the only bar is unlawful presence, the applicant can remain in the United States until the waiver is approved. They will only need to leave for a few business days to receive their residency at the consulate.</span>
+          <span class="es">No. Para los casos en que la única barrera es la presencia ilegal, el solicitante puede permanecer en los Estados Unidos hasta que se apruebe la exención. Solo necesitarán salir por unos pocos días hábiles para recibir su residencia en el consulado.</span>
+        </div>
       </div>
       <div class="qa-block">
-        <div class="qa-question" onclick="toggleQA(this)">My spouse entered legally on a visa. How do I apply for their residency? <span class="chevron">▼</span></div>
-        <div class="qa-answer">If your spouse entered with any type of inspection (visa, VWP, Border Crosser card, or as a Canadian), they can likely Adjust Status without leaving the country — even if they've overstayed for many years. I will need birth certificates for both of you, marriage certificate, proof of income and tax forms for the last 3 years, any prior divorces, photos, and copies of the immigrant's passport and visa.</div>
+        <div class="qa-question" onclick="toggleQA(this)">
+          <span class="qa-q-text"><span class="en">My spouse entered legally on a visa. How do I apply for their residency?</span><span class="es">Mi cónyuge entró legalmente con visa. ¿Cómo solicito su residencia?</span></span>
+          <span class="chevron">▼</span>
+        </div>
+        <div class="qa-answer">
+          <span class="en">If your spouse entered with any type of inspection (visa, VWP, Border Crosser card, or as a Canadian), they can likely Adjust Status without leaving the country — even if they've overstayed for many years. I will need birth certificates for both of you, marriage certificate, proof of income and tax forms for the last 3 years, any prior divorces, photos, and copies of the immigrant's passport and visa.</span>
+          <span class="es">Si su cónyuge entró con algún tipo de inspección (visa, VWP, tarjeta de cruce fronterizo o como canadiense), probablemente puede Ajustar su Estatus sin salir del país — incluso si se han quedado más tiempo del permitido por muchos años. Necesitaré actas de nacimiento de ambos, acta de matrimonio, comprobante de ingresos y formularios de impuestos de los últimos 3 años, divorcios previos, fotos y copias del pasaporte y visa del inmigrante.</span>
+        </div>
       </div>
     </div>
-
-    <a href="mailto:katycab@yahoo.com?subject=Immigration Inquiry from Website" class="email-cta">✉️ Email Me About Your Case</a>
-    <div class="page-disclaimer">The information on this page is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</div>
+    <div class="page-disclaimer">
+      <span class="en">The information on this page is not, nor is it intended to be, legal advice. Please contact me directly regarding the facts of your particular case.</span>
+      <span class="es">La información en esta página no es, ni pretende ser, asesoramiento legal. Por favor contácteme directamente sobre los hechos de su caso particular.</span>
+    </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     PAGE: ABOUT
-════════════════════════════════════ -->
+<!--  PAGE: ABOUT  -->
 <div class="page" id="page-about">
   <div class="page-header about">
     <div class="page-header-inner">
-      <h1>About Our Practice</h1>
-      <p>A small firm with a big commitment to accessible, quality legal representation.</p>
+      <h1><span class="en">About Our Practice</span><span class="es">Sobre Nuestra Firma</span></h1>
+      <p class="en">A small firm with a big commitment to accessible, quality legal representation.</p>
+      <p class="es">Una firma pequeña con un gran compromiso con la representación legal accesible y de calidad.</p>
     </div>
   </div>
   <div class="content-area">
     <div class="about-grid">
-      <div class="about-bio">
-        <h2 style="font-family:'Playfair Display',serif; color:var(--navy); margin-bottom:6px;">Katy Chavez</h2>
-        <p style="color:var(--terracotta); font-weight:700; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.08em; margin-bottom:16px;">Attorney at Law</p>
-        <p>I am a lawyer passionate about helping each of my clients get the best result possible. My mission is to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I generally don't spend money on advertising — it doesn't bring value to clients and only adds cost.</p>
-        <p>I care about my clients, and I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients.</p>
-        <p>I am bilingual in English and Spanish.</p>
-        <p>If I'm not the best person to handle your case, I will happily refer you to a great attorney who will care about your matter. Feel free to email me with questions or call for a free consultation.</p>
+      <div>
+        <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;">Katy Chavez</h2>
+        <p style="color:var(--terracotta);font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;"><span class="en">Attorney at Law</span><span class="es">Abogada</span></p>
+        <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">I am a lawyer passionate about helping each of my clients get the best result possible. My mission is to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I generally don't spend money on advertising — it doesn't bring value to clients and only adds cost.</p>
+        <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Soy una abogada apasionada por ayudar a cada uno de mis clientes a obtener el mejor resultado posible. Mi misión es cobrar las tarifas más bajas posibles para que las personas con recursos limitados puedan beneficiarse de una representación legal de calidad. Generalmente no gasto dinero en publicidad — no aporta valor a los clientes y solo añade costos.</p>
+        <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">I care about my clients, and I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients. I am bilingual in English and Spanish.</p>
+        <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Me preocupo por mis clientes, y siempre respondo correos y llamadas sin cobrar tarifa — incluso para personas que aún no son mis clientes. Soy bilingüe en inglés y español.</p>
+        <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">If I'm not the best person to handle your case, I will happily refer you to a great attorney who will care about your matter.</p>
+        <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Si no soy la mejor persona para manejar su caso, con mucho gusto le referiré a un excelente abogado que se preocupará por su asunto.</p>
         <div style="margin-top:16px;">
-          <span class="highlight-pill">English &amp; Spanish</span>
-          <span class="highlight-pill">Wake County Focus</span>
-          <span class="highlight-pill">Free Phone Consultations</span>
-          <span class="highlight-pill">Lowest Rates Possible</span>
+          <span class="highlight-pill"><span class="en">English &amp; Spanish</span><span class="es">Inglés &amp; Español</span></span>
+          <span class="highlight-pill"><span class="en">Wake County Focus</span><span class="es">Enfocada en Condado de Wake</span></span>
+          <span class="highlight-pill"><span class="en">Free Phone Consultations</span><span class="es">Consultas Gratuitas</span></span>
+          <span class="highlight-pill"><span class="en">Lowest Rates Possible</span><span class="es">Tarifas Más Bajas</span></span>
         </div>
       </div>
       <div>
-        <h2 style="font-family:'Playfair Display',serif; color:var(--navy); margin-bottom:6px;">Practice Areas</h2>
+        <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;"><span class="en">Practice Areas</span><span class="es">Áreas de Práctica</span></h2>
         <div class="divider"></div>
         <div class="info-card" style="margin-bottom:14px;">
-          <h3>🚗 Traffic &amp; DWI</h3>
-          <p>Tickets, DWI defense, DWLR, license reinstatement — Wake County courts.</p>
+          <h3>🚗 <span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></h3>
+          <p class="en">Tickets, DWI defense, DWLR, license reinstatement — Wake County courts.</p>
+          <p class="es">Multas, defensa DWI, DWLR, reinstalación de licencia — tribunales del Condado de Wake.</p>
         </div>
         <div class="info-card" style="margin-bottom:14px;">
-          <h3>⚖️ Criminal Defense</h3>
-          <p>Assault, larceny, drug charges, and more — misdemeanors and felonies in Wake County.</p>
+          <h3>⚖️ <span class="en">Criminal Defense</span><span class="es">Defensa Criminal</span></h3>
+          <p class="en">Assault, larceny, drug charges, and more — misdemeanors and felonies in Wake County.</p>
+          <p class="es">Agresión, robo, cargos por drogas y más — delitos menores y graves en el Condado de Wake.</p>
         </div>
         <div class="info-card">
-          <h3>🌎 Immigration</h3>
-          <p>Family petitions, naturalization, TPS, green card renewals, and I-601a provisional waivers.</p>
+          <h3>🌎 <span class="en">Immigration</span><span class="es">Inmigración</span></h3>
+          <p class="en">Family petitions, naturalization, TPS, green card renewals, and I-601a provisional waivers — serving clients nationwide.</p>
+          <p class="es">Peticiones familiares, naturalización, TPS, renovaciones de tarjeta verde y exenciones provisionales I-601a — clientes en todo el país.</p>
         </div>
       </div>
     </div>
-
-    <h2 style="font-family:'Playfair Display',serif; color:var(--navy); margin-bottom:6px;">Our Team</h2>
+    <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;"><span class="en">Our Team</span><span class="es">Nuestro Equipo</span></h2>
     <div class="divider"></div>
-    <div class="staff-card">
-      <h3>Katy Chavez</h3>
-      <div class="role">Attorney at Law</div>
-    </div>
-    <div class="staff-card">
-      <h3>Rosalba Benitez</h3>
-      <div class="role">Office Assistant</div>
-    </div>
-    <div class="staff-card">
-      <h3>Isabel Benitez</h3>
-      <div class="role">Office Assistant</div>
-    </div>
-    <div class="staff-card">
-      <h3>Vivi Santillana</h3>
-      <div class="role">Office Assistant</div>
+    <div class="team-section">
+      <div class="team-aztec">
+        <img src="aztec.jpg" alt="Justice Warrior" />
+        <div class="team-aztec-label"><span class="en">Fighting for you.</span><span class="es">Luchando por usted.</span></div>
+      </div>
+      <div class="team-list">
+        <div class="team-member">
+          <div class="team-member-avatar">⚖️</div>
+          <div class="team-member-info">
+            <h3>Katy Chavez</h3>
+            <div class="role"><span class="en">Attorney at Law</span><span class="es">Abogada</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">⚖️</div>
+          <div class="team-member-info">
+            <h3>Daniel Bello</h3>
+            <div class="role"><span class="en">Attorney at Law</span><span class="es">Abogado</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">⚖️</div>
+          <div class="team-member-info">
+            <h3>Andrew Evans</h3>
+            <div class="role"><span class="en">Attorney at Law</span><span class="es">Abogado</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">📋</div>
+          <div class="team-member-info">
+            <h3>Jeff Reyes</h3>
+            <div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">📋</div>
+          <div class="team-member-info">
+            <h3>Rosalba Benitez</h3>
+            <div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">📋</div>
+          <div class="team-member-info">
+            <h3>Vivi Santillana</h3>
+            <div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">📋</div>
+          <div class="team-member-info">
+            <h3>Fidel Santillana</h3>
+            <div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     PAGE: CONTACT
-════════════════════════════════════ -->
+<!--  PAGE: CONTACT  -->
 <div class="page" id="page-contact">
   <div class="page-header contact">
     <div class="page-header-inner">
-      <h1>Contact Us</h1>
-      <p>Reach out for a free phone consultation — we respond to all inquiries promptly.</p>
+      <h1><span class="en">Contact Us</span><span class="es">Contáctenos</span></h1>
+      <p class="en">Reach out for a free phone consultation — we respond to all inquiries promptly.</p>
+      <p class="es">Comuníquese para una consulta telefónica gratuita — respondemos a todas las consultas con prontitud.</p>
     </div>
   </div>
   <div class="content-area">
     <div class="contact-grid">
-      <div class="contact-info-box">
-        <h2 style="font-family:'Playfair Display',serif; color:var(--navy); margin-bottom:20px;">Get in Touch</h2>
+      <div>
+        <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:20px;"><span class="en">Get in Touch</span><span class="es">Póngase en Contacto</span></h2>
         <div class="contact-detail">
           <div class="contact-icon">📞</div>
           <div class="contact-detail-text">
-            <div class="label">Phone</div>
-            <div class="value">
-              <a href="tel:9198381600">(919) 838-1600</a>
-              <button class="phone-copy-btn" onclick="copyPhone()">⧉ Copy</button>
-            </div>
+            <div class="label"><span class="en">Phone</span><span class="es">Teléfono</span></div>
+            <div class="value"><a href="tel:9198381600">(919) 838-1600</a></div>
           </div>
         </div>
         <div class="contact-detail">
           <div class="contact-icon">✉️</div>
           <div class="contact-detail-text">
-            <div class="label">Email</div>
+            <div class="label"><span class="en">Email</span><span class="es">Correo</span></div>
             <div class="value"><a href="mailto:katycab@yahoo.com">katycab@yahoo.com</a></div>
-          </div>
-        </div>
-        <div class="contact-detail">
-          <div class="contact-icon">🕐</div>
-          <div class="contact-detail-text">
-            <div class="label">Office Hours</div>
-            <div class="value" style="font-size:0.9rem;">Mon – Fri: 9:00 am – 5:00 pm<br/><span style="font-size:0.82rem; color:var(--text-light);">Free phone consultations anytime</span></div>
           </div>
         </div>
         <div class="contact-detail">
           <div class="contact-icon">📍</div>
           <div class="contact-detail-text">
-            <div class="label">Address</div>
-            <div class="value">421 Fayetteville St, Suite 1100<br/>Raleigh, NC 27601<br/><span style="font-size:0.82rem; color:var(--text-light);">11th Floor</span></div>
+            <div class="label"><span class="en">Address</span><span class="es">Dirección</span></div>
+            <div class="value">421 Fayetteville St, Suite 1100<br/>Raleigh, NC 27601<br/><span style="font-size:0.82rem;color:var(--text-light);"><span class="en">11th Floor</span><span class="es">Piso 11</span></span></div>
           </div>
         </div>
         <div class="contact-detail">
           <div class="contact-icon">💬</div>
           <div class="contact-detail-text">
-            <div class="label">Languages</div>
-            <div class="value">English &amp; Spanish</div>
+            <div class="label"><span class="en">Languages</span><span class="es">Idiomas</span></div>
+            <div class="value"><span class="en">English &amp; Spanish</span><span class="es">Inglés y Español</span></div>
           </div>
         </div>
-        <div style="background:var(--sage-pale); border-radius:10px; padding:16px; margin-top:8px;">
-          <p style="font-size:0.9rem; color:#2d5e38; font-weight:600;">Free phone consultations available. I respond to emails without charge — even if you are not yet a client.</p>
+        <div style="background:var(--sage-pale);border-radius:10px;padding:16px;margin-top:8px;">
+          <p style="font-size:0.9rem;color:#2d5e38;font-weight:600;">
+            <span class="en">Free phone consultations available. I respond to emails without charge — even if you are not yet a client.</span>
+            <span class="es">Consultas telefónicas gratuitas disponibles. Respondo correos sin cargo — incluso si aún no es cliente.</span>
+          </p>
         </div>
-        <!-- Google Maps -->
-        <div style="margin-top:20px; border-radius:10px; overflow:hidden; border:1px solid var(--border);">
+      </div>
+      <div>
+        <div style="border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.08);height:100%;min-height:360px;">
           <iframe
-            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3235.2!2d-78.6388!3d35.7796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89ac5f6e8e3bcf4b%3A0x2a1e6c1d0b3e2f5a!2s421%20Fayetteville%20St%2C%20Raleigh%2C%20NC%2027601!5e0!3m2!1sen!2sus!4v1"
-            width="100%" height="200" style="border:0; display:block;" allowfullscreen="" loading="lazy"
-            referrerpolicy="no-referrer-when-downgrade" title="Office location map">
+            title="Office Location"
+            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3232.1!2d-78.6382!3d35.7796!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x89ac5f5a7c3e6b1f%3A0x0!2s421+Fayetteville+St+%231100%2C+Raleigh%2C+NC+27601!5e0!3m2!1sen!2sus!4v1700000000000!5m2!1sen!2sus"
+            width="100%"
+            height="100%"
+            style="border:0;min-height:360px;display:block;"
+            allowfullscreen=""
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade">
           </iframe>
         </div>
-      </div>
-
-      <div class="form-card">
-        <h2>Send a Message</h2>
-        <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="contactForm" onsubmit="handleFormSubmit(event)">
-          <input type="hidden" name="form-name" value="contact" />
-          <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
-          <div class="form-row">
-            <label for="cf-name">Your Name</label>
-            <input type="text" id="cf-name" name="name" placeholder="Jane Smith" required />
-          </div>
-          <div class="form-row">
-            <label for="cf-email">Email Address</label>
-            <input type="email" id="cf-email" name="email" placeholder="jane@email.com" required />
-          </div>
-          <div class="form-row">
-            <label for="cf-phone">Phone Number (optional)</label>
-            <input type="tel" id="cf-phone" name="phone" placeholder="(919) 555-0100" />
-          </div>
-          <div class="form-row">
-            <label for="cf-subject">Area of Concern</label>
-            <select id="cf-subject" name="practice-area">
-              <option value="">Select a practice area...</option>
-              <option>Traffic Ticket</option>
-              <option>DWI / DWLR</option>
-              <option>Criminal Charge</option>
-              <option>Immigration</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div class="form-row">
-            <label for="cf-message">Your Message</label>
-            <textarea id="cf-message" name="message" placeholder="Please briefly describe your situation. Do not include confidential details at this stage." required></textarea>
-          </div>
-          <button type="submit" class="btn-primary" style="width:100%;">Send Message</button>
-          <p class="form-note">This form does not create an attorney-client relationship.</p>
-        </form>
-        <div class="form-success" id="formSuccess">
-          ✅ Thank you! Your message has been sent. Katy will be in touch shortly.
-        </div>
+        <p style="font-size:0.8rem;color:var(--text-light);margin-top:8px;text-align:center;">
+          <a href="https://maps.google.com/?q=421+Fayetteville+St,+Suite+1100,+Raleigh,+NC+27601" target="_blank" style="color:var(--terracotta);text-decoration:none;font-weight:600;">
+            <span class="en">📍 Open in Google Maps</span><span class="es">📍 Abrir en Google Maps</span>
+          </a>
+        </p>
       </div>
     </div>
   </div>
 </div>
 
-<!-- ════════════════════════════════════
-     PAGE: REVIEWS
-════════════════════════════════════ -->
-<div class="page" id="page-reviews">
-  <div class="page-header reviews-bg">
-    <div class="page-header-inner">
-      <h1>Client Reviews</h1>
-      <p>What clients are saying about Katy Chavez, Attorney.</p>
-    </div>
-  </div>
-  <div class="content-area">
-    <div class="reviews-grid">
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">Great and knowledgeable attorney who knew how to navigate and resolve my problem in record time. Her incredible staff and paralegals are friendly and patient as well. Great service overall.</p>
-        <div class="review-author">— Google Review · March 2025</div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">I researched before selecting Attorney Katy Chavez, and man was I blessed to choose her. The situation looked like I might be in the wrong in a traffic accident, even though I knew I was not at fault.</p>
-        <div class="review-author">— Traffic Client · November 2025</div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">We were referred to this law firm by Microsoft and happy we worked with this team. Always responsive, easy to work with and reassuring. They know their stuff. Highly recommend and a fantastic outcome. Thank you for all your help.</p>
-        <div class="review-author">— Google Review · November 2025</div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">I was referred to Katy Chavez from a buddy of mine. She took me in with no questions asked. She handled my charges with ease, keeps you updated on what's going on with your case. I would highly recommend her. She does an amazing job.</p>
-        <div class="review-author">— Criminal Defense Client · January 2026</div>
-      </div>
-      <div class="review-card">
-        <div class="review-stars">★★★★★</div>
-        <p class="review-text">Absolutely outstanding lawyer! They handled my case with incredible skill, kept me informed every step of the way, and achieved a result far better than I hoped for. Professional, responsive, and genuinely caring. Cannot recommend highly enough!</p>
-        <div class="review-author">— Google Review · December 2025</div>
-      </div>
-    </div>
-    <div style="text-align:center; margin-top:40px;">
-      <p style="color:var(--text-mid); margin-bottom:16px;">Ready to work with Katy? Get a free consultation today.</p>
-      <a href="#" class="btn-primary nav-link" data-page="contact">Contact Us</a>
-    </div>
-  </div>
-</div>
-
-<!-- ─── STICKY MOBILE CALL BAR ─── -->
-<div class="mobile-call-bar">
-  <a href="tel:9198381600">
-    <span class="call-icon">📞</span>
-    <span>Tap to Call: (919) 838-1600</span>
-  </a>
-</div>
-
-<!-- ─── COPY TOAST ─── -->
-<div class="copy-toast" id="copyToast">✓ Phone number copied!</div>
-
-<!-- ════════════════════════════════════
-     FOOTER
-════════════════════════════════════ -->
+<!--  FOOTER  -->
 <footer>
   <div class="footer-inner">
     <div class="footer-brand">
       <div class="name">Katy Chavez, Attorney</div>
-      <p>Criminal defense, traffic, DWI, and immigration law in Wake County, North Carolina. Affordable rates. Bilingual service. Free phone consultations.</p>
-      <p style="margin-top:12px;"><a href="tel:9198381600" style="color:var(--gold);">(919) 838-1600</a> · <a href="mailto:katycab@yahoo.com" style="color:var(--gold);">katycab@yahoo.com</a></p>
+      <p class="en">Criminal defense and traffic law serving Wake County, North Carolina. Immigration law serving clients across the United States. Affordable rates. Bilingual service. Free phone consultations.</p>
+      <p class="es">Defensa criminal y tráfico en el Condado de Wake, Carolina del Norte. Servicios de inmigración para clientes en todo Estados Unidos. Tarifas asequibles. Servicio bilingüe. Consultas gratuitas.</p>
+      <p style="margin-top:12px;"><a href="tel:9198381600" style="color:var(--gold);">(919) 838-1600</a></p>
     </div>
     <div>
-      <h4>Practice Areas</h4>
+      <h4><span class="en">Practice Areas</span><span class="es">Áreas de Práctica</span></h4>
       <ul>
-        <li><a href="#" class="nav-link" data-page="traffic">Traffic &amp; DWI</a></li>
-        <li><a href="#" class="nav-link" data-page="criminal">Criminal Law</a></li>
-        <li><a href="#" class="nav-link" data-page="immigration">Immigration</a></li>
+        <li><a href="#" class="nav-link" data-page="traffic"><span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></a></li>
+        <li><a href="#" class="nav-link" data-page="criminal"><span class="en">Criminal Law</span><span class="es">Derecho Penal</span></a></li>
+        <li><a href="#" class="nav-link" data-page="immigration"><span class="en">Immigration</span><span class="es">Inmigración</span></a></li>
       </ul>
     </div>
     <div>
-      <h4>Quick Links</h4>
+      <h4><span class="en">Quick Links</span><span class="es">Enlaces Rápidos</span></h4>
       <ul>
-        <li><a href="#" class="nav-link" data-page="about">About Us</a></li>
-        <li><a href="#" class="nav-link" data-page="reviews">Reviews</a></li>
-        <li><a href="#" class="nav-link" data-page="contact">Contact</a></li>
-        <li><a href="tel:9198381600">Call (919) 838-1600</a></li>
+        <li><a href="#" class="nav-link" data-page="about"><span class="en">About Us</span><span class="es">Nosotros</span></a></li>
+        <li><a href="#" class="nav-link" data-page="contact"><span class="en">Contact</span><span class="es">Contacto</span></a></li>
+        <li><a href="tel:9198381600"><span class="en">Call (919) 838-1600</span><span class="es">Llame al (919) 838-1600</span></a></li>
       </ul>
     </div>
   </div>
   <div class="footer-bottom">
-    <span>421 Fayetteville St, Suite 1100, Raleigh, NC 27601 (11th Floor)</span>
-    <span>© 2025 Katy Chavez, Attorney · All Rights Reserved</span>
+    <span>421 Fayetteville St, Suite 1100, Raleigh, NC 27601 (<span class="en">11th Floor</span><span class="es">Piso 11</span>)</span>
+    <span>© 2026 Katy Chavez, Attorney · <span class="en">All Rights Reserved</span><span class="es">Todos los Derechos Reservados</span></span>
   </div>
 </footer>
 
 <script>
-  // ─── PAGE NAVIGATION ───
-  function showPage(pageId) {
+  //  LANGUAGE 
+  function setLang(lang) {
+    document.body.className = 'lang-' + lang;
+    document.documentElement.lang = lang;
+    ['en','es'].forEach(l => {
+      document.getElementById('btn-' + l).classList.toggle('active', l === lang);
+      const m = document.getElementById('btn-' + l + '-m');
+      if (m) m.classList.toggle('active', l === lang);
+    });
+  }
+
+  //  PAGE NAVIGATION 
+  function showPage(id) {
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.nav-link').forEach(a => a.classList.remove('active'));
-
-    const page = document.getElementById('page-' + pageId);
-    if (page) page.classList.add('active');
-
-    document.querySelectorAll('.nav-link[data-page="' + pageId + '"]').forEach(a => a.classList.add('active'));
-
+    const p = document.getElementById('page-' + id);
+    if (p) p.classList.add('active');
+    document.querySelectorAll('.nav-link[data-page="' + id + '"]').forEach(a => a.classList.add('active'));
     window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    // close mobile menu
     document.getElementById('mobileMenu').classList.remove('open');
   }
 
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      showPage(this.dataset.page);
-    });
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.addEventListener('click', function(e) { e.preventDefault(); showPage(this.dataset.page); });
   });
 
-  // ─── HAMBURGER ───
   document.getElementById('hamburger').addEventListener('click', () => {
     document.getElementById('mobileMenu').classList.toggle('open');
   });
 
-  // ─── FAQ ACCORDION ───
+  //  FAQ 
   function toggleQA(el) {
-    const answer = el.nextElementSibling;
-    const isOpen = answer.classList.contains('open');
+    const ans = el.nextElementSibling;
+    const open = ans.classList.contains('open');
     el.closest('.topic-section')?.querySelectorAll('.qa-answer').forEach(a => a.classList.remove('open'));
     el.closest('.topic-section')?.querySelectorAll('.qa-question').forEach(q => q.classList.remove('open'));
-    if (!isOpen) {
-      answer.classList.add('open');
-      el.classList.add('open');
-    }
+    if (!open) { ans.classList.add('open'); el.classList.add('open'); }
   }
 
-  // ─── COPY PHONE NUMBER ───
-  function copyPhone() {
-    navigator.clipboard.writeText('9198381600').then(() => {
-      const toast = document.getElementById('copyToast');
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2200);
-    });
+  //  SECURITY 
+  // Sanitize any user input to prevent XSS before using in DOM
+  function sanitize(str) {
+    if (typeof str !== 'string') return '';
+    return str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#x27;')
+      .replace(/\//g, '&#x2F;')
+      .trim()
+      .substring(0, 2000); // hard cap on input length
   }
 
-  // ─── NETLIFY FORM SUBMIT ───
-  function handleFormSubmit(event) {
-    event.preventDefault();
-    const form = event.target;
-    const data = new FormData(form);
-
-    fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: new URLSearchParams(data).toString()
-    })
-    .then(() => {
-      form.style.display = 'none';
-      document.getElementById('formSuccess').style.display = 'block';
-    })
-    .catch(() => {
-      alert('There was a problem sending your message. Please email katycab@yahoo.com directly.');
-    });
+  // Rate limiting: prevent form spam (max 3 submissions per 10 minutes)
+  const _rl = { count: 0, reset: Date.now() + 600000 };
+  function rateLimitOk() {
+    if (Date.now() > _rl.reset) { _rl.count = 0; _rl.reset = Date.now() + 600000; }
+    if (_rl.count >= 3) return false;
+    _rl.count++;
+    return true;
   }
+
+  // Set initial textarea placeholder
+  setLang('en');
+  // restore active nav
+  document.querySelector('.nav-link[data-page="home"]').classList.add('active');
 </script>
 </body>
 </html>

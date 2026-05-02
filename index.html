@@ -807,6 +807,13 @@
         <div class="team-member">
           <div class="team-member-avatar">📋</div>
           <div class="team-member-info">
+            <h3>Amy Perez</h3>
+            <div class="role"><span class="en">Paralegal</span><span class="es">Paralegal</span></div>
+          </div>
+        </div>
+        <div class="team-member">
+          <div class="team-member-avatar">📋</div>
+          <div class="team-member-info">
             <h3>Jeff Reyes</h3>
             <div class="role"><span class="en">Legal Assistant</span><span class="es">Asistente Legal</span></div>
           </div>
@@ -898,7 +905,7 @@
       <div>
         <div class="form-card" style="margin-bottom:24px;">
           <h2><span class="en">Send a Message</span><span class="es">Envíenos un Mensaje</span></h2>
-          <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" id="contactForm" onsubmit="handleFormSubmit(event)">
+          <form name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field" action="/?success=true">
             <input type="hidden" name="form-name" value="contact" />
             <p style="display:none;"><label>Don't fill this out: <input name="bot-field" /></label></p>
             <div class="form-row">
@@ -916,7 +923,7 @@
             <div class="form-row">
               <label for="cf-subject"><span class="en">Area of Concern</span><span class="es">Área de Consulta</span></label>
               <select id="cf-subject" name="practice-area">
-                <option value=""><span class="en">Select a practice area...</span></option>
+                <option value="">Select a practice area...</option>
                 <option>Traffic Ticket</option>
                 <option>DWI / DWLR</option>
                 <option>Criminal Charge</option>
@@ -931,9 +938,6 @@
             <button type="submit" class="btn-primary" style="width:100%;"><span class="en">Send Message</span><span class="es">Enviar Mensaje</span></button>
             <p class="form-note"><span class="en">This form does not create an attorney-client relationship.</span><span class="es">Este formulario no crea una relación abogado-cliente.</span></p>
           </form>
-          <div class="form-success" id="formSuccess">
-            ✅ <span class="en">Thank you! Your message has been sent. Katy will be in touch shortly.</span><span class="es">¡Gracias! Su mensaje ha sido enviado. Katy se pondrá en contacto pronto.</span>
-          </div>
         </div>
         <div style="border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.08);">
           <iframe
@@ -1086,6 +1090,13 @@
     .catch(() => {
       alert('There was a problem sending your message. Please email katycab@yahoo.com directly.');
     });
+  }
+
+  // ─── FORM SUCCESS REDIRECT HANDLER ───
+  if (window.location.search.includes('success=true')) {
+    showPage('contact');
+    const card = document.querySelector('.form-card');
+    if (card) card.innerHTML = '<div style="padding:24px;text-align:center;"><p style="font-size:1.5rem;margin-bottom:12px;">✅</p><h2 style="font-family:\'Playfair Display\',serif;color:var(--navy);margin-bottom:8px;">Message Sent!</h2><p style="color:var(--text-mid);">Thank you — Katy will be in touch shortly.</p></div>';
   }
 
   // Set initial textarea placeholder

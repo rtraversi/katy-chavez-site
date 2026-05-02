@@ -4,7 +4,6 @@
 # ─────────────────────────────────────────────
 
 param(
-    [string]$SourceFile = "index.html",
     [string]$CommitMessage = ""
 )
 
@@ -20,21 +19,6 @@ if (-not $CommitMessage) {
 
 # ── Move to repo ──
 Set-Location $RepoPath
-
-# ── Resolve source file (absolute or relative to repo) ──
-if (-not [System.IO.Path]::IsPathRooted($SourceFile)) {
-    $SourceFile = Join-Path $RepoPath $SourceFile
-}
-
-# ── Verify source file exists ──
-if (-not (Test-Path $SourceFile)) {
-    Write-Host "`n❌ Source file not found: $SourceFile" -ForegroundColor Red
-    exit 1
-}
-
-# ── Copy source file to index.html ──
-Write-Host "`nCopying $SourceFile -> index.html..." -ForegroundColor Cyan
-Get-Content $SourceFile -Encoding UTF8 | Set-Content index.html -Encoding UTF8
 
 # ── Git status check ──
 Write-Host "`nChecking for changes..." -ForegroundColor Cyan

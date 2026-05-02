@@ -56,12 +56,14 @@
       align-items: center;
       justify-content: space-between;
       height: 68px;
+      gap: 12px;
     }
 
     .nav-brand {
       display: flex;
       flex-direction: column;
       line-height: 1.2;
+      flex-shrink: 0;
     }
     .nav-brand .name {
       font-family: 'Playfair Display', serif;
@@ -79,18 +81,21 @@
 
     .nav-links {
       display: flex;
-      gap: 4px;
+      gap: 2px;
       list-style: none;
+      flex-shrink: 1;
+      min-width: 0;
     }
     .nav-links a {
       display: block;
-      padding: 6px 12px;
-      font-size: 0.88rem;
+      padding: 6px 10px;
+      font-size: 0.84rem;
       font-weight: 600;
       color: var(--navy-mid);
       text-decoration: none;
       border-radius: 6px;
       transition: background 0.18s, color 0.18s;
+      white-space: nowrap;
     }
     .nav-links a:hover {
       background: var(--terracotta-pale);
@@ -678,7 +683,7 @@
 
 <!-- Top Bar -->
 <div class="top-bar">
-  Bilingual (English &amp; Spanish) · Mon–Fri 9am–6pm · <a href="mailto:katycab@yahoo.com">✉ Email Us</a> · <a href="tel:9198381600">📞 (919) 838-1600</a>
+  Bilingual (English &amp; Spanish) · Mon–Fri 9am–5pm · <a href="mailto:katycab@yahoo.com">✉ Email Us</a> · <a href="tel:9198381600">📞 (919) 838-1600</a>
 </div>
 
 <!-- Navigation -->
@@ -1088,7 +1093,7 @@
           <div class="contact-icon">🕐</div>
           <div class="contact-detail-text">
             <div class="label">Office Hours</div>
-            <div class="value" style="font-size:0.9rem;">Mon – Fri: 9:00 am – 6:00 pm<br/><span style="font-size:0.82rem; color:var(--text-light);">Free phone consultations anytime</span></div>
+            <div class="value" style="font-size:0.9rem;">Mon – Fri: 9:00 am – 5:00 pm<br/><span style="font-size:0.82rem; color:var(--text-light);">Free phone consultations anytime</span></div>
           </div>
         </div>
         <div class="contact-detail">

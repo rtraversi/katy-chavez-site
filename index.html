@@ -171,6 +171,14 @@
     /*  ABOUT  */
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
     @media (max-width: 680px) { .about-grid { grid-template-columns: 1fr; } }
+    .about-header-inner { display: flex; align-items: flex-end; gap: 32px; }
+    .about-header-inner .header-text { flex: 1; }
+    .about-header-photo { flex-shrink: 0; align-self: flex-end; }
+    .about-header-photo img { height: 210px; width: auto; object-fit: cover; object-position: top center; border-radius: 12px 12px 0 0; box-shadow: 0 -4px 24px rgba(0,0,0,0.25); display: block; }
+    @media (max-width: 600px) { .about-header-inner { flex-direction: column; align-items: flex-start; } .about-header-photo img { height: 160px; border-radius: 12px; } }
+    .meet-katy-section { display: flex; align-items: center; gap: 48px; flex-wrap: wrap; }
+    .meet-katy-photo img { width: 260px; height: 320px; object-fit: cover; object-position: top center; border-radius: 16px; box-shadow: 0 8px 32px rgba(0,0,0,0.15); display: block; }
+    @media (max-width: 680px) { .meet-katy-photo img { width: 100%; height: 280px; } }
     .highlight-pill { display: inline-block; background: var(--terracotta-pale); color: var(--terracotta); font-size: 0.82rem; font-weight: 700; padding: 5px 14px; border-radius: 20px; margin: 3px 3px 3px 0; border: 1px solid rgba(201,103,79,0.2); }
     .staff-cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
     .team-section { display: grid; grid-template-columns: 280px 1fr; gap: 48px; align-items: start; margin-top: 8px; }
@@ -355,6 +363,23 @@
         <span class="stat-num">Free</span>
         <span class="stat-label en">Consultations</span>
         <span class="stat-label es">Consultas</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-inner">
+      <div class="meet-katy-section">
+        <div class="meet-katy-photo">
+          <img src="katynewheadshot.jpg" alt="Katy Chavez, Attorney" />
+        </div>
+        <div style="flex:1;min-width:260px;">
+          <p class="section-title" style="text-align:left;margin-bottom:8px;"><span class="en">Meet <span class="accent">Katy Chavez</span></span><span class="es">Conozca a <span class="accent">Katy Chavez</span></span></p>
+          <div class="divider" style="margin-left:0;margin-right:auto;"></div>
+          <p class="en" style="color:var(--text-mid);margin-bottom:16px;">A passionate, bilingual attorney dedicated to making quality legal representation affordable and accessible. Whether you're facing a traffic ticket, a criminal charge, or an immigration matter, Katy brings personal attention and genuine commitment to every case.</p>
+          <p class="es" style="color:var(--text-mid);margin-bottom:16px;">Una apasionada abogada bilingüe dedicada a hacer que la representación legal de calidad sea asequible y accesible. Ya sea que enfrente una multa de tránsito, cargo criminal o asunto de inmigración, Katy aporta atención personal y compromiso real a cada caso.</p>
+          <a href="#" class="btn-primary nav-link" data-page="about"><span class="en">Learn More About Katy</span><span class="es">Conozca Más Sobre Katy</span></a>
+        </div>
       </div>
     </div>
   </div>
@@ -723,18 +748,28 @@
 
 <!--  PAGE: ABOUT  -->
 <div class="page" id="page-about">
-  <div class="page-header about">
-    <div class="page-header-inner">
-      <h1><span class="en">About Our Practice</span><span class="es">Sobre Nuestra Firma</span></h1>
-      <p class="en">A small firm with a big commitment to accessible, quality legal representation.</p>
-      <p class="es">Una firma pequeña con un gran compromiso con la representación legal accesible y de calidad.</p>
+  <div class="page-header about" style="padding-bottom:0;">
+    <div class="page-header-inner about-header-inner">
+      <div class="header-text">
+        <h1><span class="en">About Our Practice</span><span class="es">Sobre Nuestra Firma</span></h1>
+        <p class="en">A small firm with a big commitment to accessible, quality legal representation.</p>
+        <p class="es">Una firma pequeña con un gran compromiso con la representación legal accesible y de calidad.</p>
+      </div>
+      <div class="about-header-photo">
+        <img src="katynewheadshot.jpg" alt="Katy Chavez, Attorney" />
+      </div>
     </div>
   </div>
   <div class="content-area">
     <div class="about-grid">
       <div>
-        <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;">Katy Chavez</h2>
-        <p style="color:var(--terracotta);font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:16px;"><span class="en">Attorney at Law</span><span class="es">Abogada</span></p>
+        <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
+          <img src="katyprofile.jpg" alt="Katy Chavez, Attorney" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 4px 16px rgba(0,0,0,0.15);flex-shrink:0;" />
+          <div>
+            <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:4px;">Katy Chavez</h2>
+            <p style="color:var(--terracotta);font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0;"><span class="en">Attorney at Law</span><span class="es">Abogada</span></p>
+          </div>
+        </div>
         <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">I am a lawyer passionate about helping each of my clients get the best result possible. My mission is to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I generally don't spend money on advertising — it doesn't bring value to clients and only adds cost.</p>
         <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Soy una abogada apasionada por ayudar a cada uno de mis clientes a obtener el mejor resultado posible. Mi misión es cobrar las tarifas más bajas posibles para que las personas con recursos limitados puedan beneficiarse de una representación legal de calidad. Generalmente no gasto dinero en publicidad — no aporta valor a los clientes y solo añade costos.</p>
         <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">I care about my clients, and I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients. I am bilingual in English and Spanish.</p>

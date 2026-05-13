@@ -1,0 +1,25 @@
+# Secrets — NEVER commit
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+secrets/
+
+# Local n8n state (only the templates are tracked)
+n8n/jobs/
+n8n/forms/
+
+# OS / editor cruft
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# Claude Code local state (per-project permissions cache)
+.claude/settings.local.json
+
+# Node, in case we add tooling later
+node_modules/
+npm-debug.log*

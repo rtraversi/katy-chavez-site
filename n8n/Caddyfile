@@ -1,0 +1,36 @@
+# Caddy auto-provisions Let's Encrypt certs for this hostname.
+# Make sure n8n.katychavez.com points (A record) to this VPS's public IP in Netlify DNS
+# (Netlify Dashboard → Domains → katychavez.com → DNS records → Add A record).
+
+{$N8N_HOST} {
+    # Reverse proxy to n8n container.
+    reverse_proxy n8n:5678
+
+    # Allow large file uploads from the portal (client documents).
+    request_body {
+        max_size 100MB
+    }
+
+    # Static file serving for completed job downloads.
+    # n8n writes outputs to /data/jobs/{job-id}.zip — surface them under /files/{job-id}.zip
+    # with token-gated auth handled inside n8n via a separate route. For now, serve directly
+    # so we can iterate; we'll add a token check before exposing publicly.
+    handle_path /files/* {
+        root * /srv/jobs
+        file_server browse
+    }
+
+    encode zstd gzip
+
+    header {
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        Referrer-Policy "strict-origin-when-cross-origin"
+        -Server
+    }
+
+    log {
+        output file /var/log/caddy/access.log
+        format json
+    }
+}

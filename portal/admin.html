@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Staff Portal | Katy Chavez Law</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff">
+  <meta http-equiv="X-Frame-Options" content="DENY">
+  <meta name="robots" content="noindex, nofollow">
+  <style>
+    :root {
+      --terracotta: #C9674F;
+      --terracotta-light: #E8896E;
+      --terracotta-pale: #F5DDD7;
+      --sage: #6A8F72;
+      --sage-pale: #E4EEE6;
+      --gold: #D4A84B;
+      --gold-pale: #F5EDD8;
+      --navy: #2B3A52;
+      --navy-mid: #4A5E78;
+      --cream: #FDFAF5;
+      --warm-white: #FFFEF9;
+      --text-dark: #2B2B2B;
+      --text-mid: #555;
+      --text-light: #888;
+      --border: #E8E0D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { background: var(--warm-white); border-bottom: 3px solid var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--navy); }
+    .nav-brand .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+    .nav-brand .tagline { font-size: 0.65rem; color: var(--navy-mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-link-back { font-size: 0.82rem; font-weight: 600; color: var(--navy-mid); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: background 0.18s, color 0.18s; }
+    .nav-link-back:hover { background: var(--terracotta-pale); color: var(--terracotta); }
+    #user-slot { display: none; align-items: center; gap: 10px; }
+
+    .page-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 48px 24px 56px; color: #fff; position: relative; overflow: hidden; }
+    .page-header::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.3rem); margin-bottom: 6px; }
+    .page-header p { opacity: 0.9; font-size: 0.98rem; }
+    .badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 3px 12px; border-radius: 20px; margin-bottom: 12px; }
+
+    main { flex: 1; padding: 32px 24px 56px; max-width: 1100px; margin: -28px auto 0; width: 100%; }
+
+    .gate { background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); border: 1px solid var(--border); padding: 56px 36px; text-align: center; max-width: 480px; margin: 24px auto; }
+    .gate h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); margin-bottom: 8px; }
+    .gate p { color: var(--text-mid); margin-bottom: 24px; font-size: 0.95rem; }
+    #sign-in-mount { display: flex; justify-content: center; }
+
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .toolbar h2 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; }
+    .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .search { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; min-width: 220px; background: var(--warm-white); }
+    .search:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
+    .filter { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; background: var(--warm-white); }
+    .btn-refresh { background: var(--sage); color: #fff; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: 'Nunito', sans-serif; transition: background 0.15s; }
+    .btn-refresh:hover { background: #557a5e; }
+
+    .jobs-empty { background: #fff; border-radius: 14px; border: 1px dashed var(--border); padding: 48px 24px; text-align: center; color: var(--text-mid); }
+    .jobs-empty .icon { font-size: 2.4rem; display: block; margin-bottom: 10px; color: var(--text-light); }
+
+    .jobs-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .job-card { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--terracotta); border-radius: 12px; padding: 18px 20px; transition: box-shadow 0.18s, transform 0.12s; }
+    .job-card.translate { border-left-color: var(--sage); }
+    .job-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .job-card .job-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 10px; }
+    .job-card .job-mode { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: var(--terracotta); }
+    .job-card.translate .job-mode { color: var(--sage); }
+    .job-card .job-status { font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: var(--gold-pale); color: #6b5a2e; }
+    .job-card .job-status.done { background: var(--sage-pale); color: var(--sage); }
+    .job-card h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.1rem; margin-bottom: 4px; }
+    .job-card .job-meta { font-size: 0.82rem; color: var(--text-mid); margin-bottom: 10px; }
+    .job-card .job-actions { display: flex; gap: 8px; margin-top: 12px; }
+    .job-card .btn-download { background: var(--terracotta); color: #fff; padding: 7px 14px; border-radius: 6px; text-decoration: none; font-weight: 700; font-size: 0.82rem; flex: 1; text-align: center; transition: background 0.15s; }
+    .job-card .btn-download:hover { background: var(--terracotta-light); }
+    .job-card.translate .btn-download { background: var(--sage); }
+    .job-card.translate .btn-download:hover { background: #557a5e; }
+
+    .loading-state { text-align: center; padding: 48px 24px; color: var(--text-mid); }
+    .loading-state .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 14px 18px; border-radius: 8px; margin-bottom: 18px; font-size: 0.9rem; }
+
+    .user-pill { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--navy); background: var(--cream); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); }
+    .user-pill .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--terracotta); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+    .btn-signout { background: none; border: 1.5px solid var(--border); color: var(--navy-mid); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 600; transition: border-color 0.15s, color 0.15s; }
+    .btn-signout:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+    footer { background: var(--navy); color: #c8d8f0; padding: 20px 24px; text-align: center; font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="/katynewheadshot.jpg" alt="Katy Chavez" class="nav-logo" />
+        <div class="nav-brand-text">
+          <span class="name">Katy Chavez Law</span>
+          <span class="tagline">Staff Portal</span>
+        </div>
+      </a>
+      <div class="nav-right">
+        <a href="/portal/" class="nav-link-back">&larr; Client Portal</a>
+        <div id="user-slot"></div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <span class="badge">Staff Only</span>
+      <h1>Completed Submissions</h1>
+      <p id="header-sub">Sign in to view processed forms and translations.</p>
+    </div>
+  </header>
+
+  <main>
+    <div id="gate" class="gate">
+      <h2>Staff Sign In</h2>
+      <p>This area is restricted to Katy Chavez Law staff. Please sign in to continue.</p>
+      <div id="sign-in-mount"></div>
+    </div>
+
+    <div id="dashboard" style="display:none">
+      <div class="toolbar">
+        <h2>Jobs</h2>
+        <div class="toolbar-right">
+          <input type="text" id="search" class="search" placeholder="Search by client name..." />
+          <select id="filter-mode" class="filter">
+            <option value="all">All types</option>
+            <option value="forms">USCIS Forms</option>
+            <option value="translate">Translations</option>
+          </select>
+          <button class="btn-refresh" id="refresh-btn">Refresh</button>
+        </div>
+      </div>
+      <div id="error-slot"></div>
+      <div id="jobs-container">
+        <div class="loading-state">
+          <div class="spinner"></div>
+          <div>Loading jobs...</div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Katy Chavez Law &middot; Internal Staff Tool
+  </footer>
+
+  <!-- Clerk: dev instance. Swap to pk_live_... and add katychavez.com to Clerk allowed origins before launch. -->
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_ZGVjZW50LXNlYWhvcnNlLTc4LmNsZXJrLmFjY291bnRzLmRldiQ"
+    src="https://decent-seahorse-78.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
+  <script>
+    // n8n endpoint that returns the list of completed jobs.
+    // Expected response: { jobs: [{ id, mode, caseType, clientName, submittedAt, completedAt, downloadUrl, status }] }
+    const N8N_JOBS_URL = 'https://n8n.katychavez.com/webhook/portal-jobs';
+
+    const gate = document.getElementById('gate');
+    const dashboard = document.getElementById('dashboard');
+    const userSlot = document.getElementById('user-slot');
+    const headerSub = document.getElementById('header-sub');
+    const jobsContainer = document.getElementById('jobs-container');
+    const errorSlot = document.getElementById('error-slot');
+    const searchInput = document.getElementById('search');
+    const filterMode = document.getElementById('filter-mode');
+    const refreshBtn = document.getElementById('refresh-btn');
+
+    let allJobs = [];
+
+    function fmtDate(iso) {
+      if (!iso) return '';
+      const d = new Date(iso);
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) + ' · ' + d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
+    }
+
+    function renderJobs() {
+      const q = searchInput.value.toLowerCase().trim();
+      const m = filterMode.value;
+      const filtered = allJobs.filter(j => {
+        if (m !== 'all' && j.mode !== m) return false;
+        if (q && !(j.clientName || '').toLowerCase().includes(q)) return false;
+        return true;
+      });
+      if (!filtered.length) {
+        jobsContainer.innerHTML = '<div class="jobs-empty"><span class="icon">&#128194;</span>No jobs match your filters.</div>';
+        return;
+      }
+      jobsContainer.innerHTML = '<div class="jobs-grid">' + filtered.map(j => {
+        const isTrans = j.mode === 'translate';
+        const cls = 'job-card' + (isTrans ? ' translate' : '');
+        const modeLabel = isTrans ? 'Translation' : 'USCIS Forms';
+        const caseType = j.caseType ? ` · ${j.caseType}` : '';
+        const status = j.status === 'completed' ? 'done' : '';
+        const statusLabel = j.status === 'completed' ? 'Ready' : (j.status || 'Processing');
+        return `
+          <div class="${cls}">
+            <div class="job-head">
+              <span class="job-mode">${modeLabel}${caseType}</span>
+              <span class="job-status ${status}">${statusLabel}</span>
+            </div>
+            <h3>${escapeHtml(j.clientName || 'Unknown')}</h3>
+            <div class="job-meta">Submitted ${fmtDate(j.submittedAt)}${j.completedAt ? ' · Ready ' + fmtDate(j.completedAt) : ''}</div>
+            <div class="job-actions">
+              ${j.downloadUrl ? `<a class="btn-download" href="${j.downloadUrl}" target="_blank" rel="noopener">Download</a>` : '<span style="color:var(--text-light);font-size:0.85rem">Processing...</span>'}
+            </div>
+          </div>
+        `;
+      }).join('') + '</div>';
+    }
+
+    function escapeHtml(s) {
+      return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+    }
+
+    async function loadJobs() {
+      errorSlot.innerHTML = '';
+      jobsContainer.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading jobs...</div></div>';
+      try {
+        const token = await window.Clerk.session.getToken();
+        const resp = await fetch(N8N_JOBS_URL, { headers: { 'Authorization': 'Bearer ' + token } });
+        if (!resp.ok) throw new Error('Failed to load (' + resp.status + ')');
+        const data = await resp.json();
+        allJobs = (data.jobs || []).sort((a, b) => (b.submittedAt || '').localeCompare(a.submittedAt || ''));
+        renderJobs();
+      } catch (err) {
+        console.error(err);
+        errorSlot.innerHTML = '<div class="error-box">Could not load jobs: ' + escapeHtml(err.message) + '. Check that the n8n endpoint is reachable.</div>';
+        jobsContainer.innerHTML = '';
+      }
+    }
+
+    searchInput.addEventListener('input', renderJobs);
+    filterMode.addEventListener('change', renderJobs);
+    refreshBtn.addEventListener('click', loadJobs);
+
+    function mountUserChip(user) {
+      const initials = (user.firstName?.[0] || '') + (user.lastName?.[0] || '') || (user.primaryEmailAddress?.emailAddress?.[0] || '?').toUpperCase();
+      userSlot.style.display = 'flex';
+      userSlot.innerHTML = `
+        <div class="user-pill">
+          <span class="avatar">${escapeHtml(initials)}</span>
+          <span>${escapeHtml(user.firstName || user.primaryEmailAddress?.emailAddress || 'Staff')}</span>
+        </div>
+        <button class="btn-signout" id="signout-btn">Sign out</button>
+      `;
+      document.getElementById('signout-btn').addEventListener('click', () => window.Clerk.signOut().then(() => location.reload()));
+    }
+
+    window.addEventListener('load', async () => {
+      if (!window.Clerk) {
+        gate.innerHTML = '<h2>Clerk not configured</h2><p>Replace the Clerk publishable key and Frontend API host in <code>admin.html</code> before this page can authenticate.</p>';
+        return;
+      }
+      try {
+        await window.Clerk.load();
+      } catch (err) {
+        gate.innerHTML = '<h2>Clerk failed to load</h2><p>' + escapeHtml(err.message) + '</p>';
+        return;
+      }
+      if (window.Clerk.user) {
+        gate.style.display = 'none';
+        dashboard.style.display = 'block';
+        headerSub.textContent = 'Completed forms and translations from the document portal.';
+        mountUserChip(window.Clerk.user);
+        loadJobs();
+      } else {
+        window.Clerk.mountSignIn(document.getElementById('sign-in-mount'), {
+          appearance: { variables: { colorPrimary: '#C9674F' } }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

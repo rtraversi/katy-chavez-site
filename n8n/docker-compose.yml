@@ -1,0 +1,68 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - n8n
+    networks:
+      - kcl
+
+  n8n:
+    image: n8nio/n8n:latest
+    restart: unless-stopped
+    environment:
+      # Host and webhook routing — must match Caddy reverse-proxy host.
+      N8N_HOST: ${N8N_HOST}
+      N8N_PORT: 5678
+      N8N_PROTOCOL: https
+      WEBHOOK_URL: https://${N8N_HOST}/
+      N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
+
+      # Sit behind Caddy.
+      N8N_PROXY_HOPS: 1
+
+      # Owner / admin user is bootstrapped on first login.
+      N8N_BASIC_AUTH_ACTIVE: "false"
+
+      # Upload size for client documents.
+      N8N_PAYLOAD_SIZE_MAX: 100
+
+      # Persist runs for 14 days (adjust as needed).
+      EXECUTIONS_DATA_PRUNE: "true"
+      EXECUTIONS_DATA_MAX_AGE: 336
+
+      # Encryption key for stored credentials.
+      N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
+
+      # Time zone.
+      GENERIC_TIMEZONE: America/New_York
+      TZ: America/New_York
+
+      # External secrets passed to workflows via expressions: $env.ANTHROPIC_API_KEY etc.
+      ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
+      CLERK_JWT_ISSUER: ${CLERK_JWT_ISSUER}
+
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - ./forms:/data/forms:ro
+      - ./jobs:/data/jobs
+    networks:
+      - kcl
+
+volumes:
+  n8n_data:
+  caddy_data:
+  caddy_config:
+
+networks:
+  kcl:
+    driver: bridge

@@ -1,68 +1,47 @@
-services:
-  caddy:
-    image: caddy:2-alpine
-    restart: unless-stopped
-    ports:
-      - "80:80"
-      - "443:443"
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile:ro
-      - caddy_data:/data
-      - caddy_config:/config
-    depends_on:
-      - n8n
-    networks:
-      - kcl
+# KCL n8n stack — shared-tenancy mode.
+# Routes through the host-level Traefik that BSR runs across all tenant n8n containers.
+# Traefik discovers this container via the Docker socket and uses the labels below to
+# route https://n8n.katychavez.com -> n8n:5678 with auto Let's Encrypt cert.
+#
+# Requires (already in place on this VPS):
+#   - traefik-traefik-1 running with --providers.docker=true and a "letsencrypt" certresolver
+#   - DNS A record n8n.katychavez.com -> this VPS public IP
+#   - Firewall already allowing 80/443 (do not reset it)
 
+services:
   n8n:
     image: n8nio/n8n:latest
     restart: unless-stopped
+    ports:
+      - "5678"
     environment:
-      # Host and webhook routing — must match Caddy reverse-proxy host.
       N8N_HOST: ${N8N_HOST}
       N8N_PORT: 5678
       N8N_PROTOCOL: https
       WEBHOOK_URL: https://${N8N_HOST}/
       N8N_EDITOR_BASE_URL: https://${N8N_HOST}/
-
-      # Sit behind Caddy.
       N8N_PROXY_HOPS: 1
-
-      # Owner / admin user is bootstrapped on first login.
       N8N_BASIC_AUTH_ACTIVE: "false"
-
-      # Upload size for client documents.
       N8N_PAYLOAD_SIZE_MAX: 100
-
-      # Persist runs for 14 days (adjust as needed).
       EXECUTIONS_DATA_PRUNE: "true"
       EXECUTIONS_DATA_MAX_AGE: 336
-
-      # Encryption key for stored credentials.
       N8N_ENCRYPTION_KEY: ${N8N_ENCRYPTION_KEY}
-
-      # Time zone.
       GENERIC_TIMEZONE: America/New_York
       TZ: America/New_York
-
-      # External secrets passed to workflows via expressions: $env.ANTHROPIC_API_KEY etc.
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
       CLERK_JWT_ISSUER: ${CLERK_JWT_ISSUER}
-
     volumes:
       - n8n_data:/home/node/.n8n
       - ./forms:/data/forms:ro
       - ./jobs:/data/jobs
-    networks:
-      - kcl
+    labels:
+      traefik.enable: "true"
+      traefik.http.routers.kcl.entrypoints: websecure
+      traefik.http.routers.kcl.rule: Host(`n8n.katychavez.com`)
+      traefik.http.routers.kcl.tls.certresolver: letsencrypt
+      traefik.http.services.kcl.loadbalancer.server.port: "5678"
 
 volumes:
   n8n_data:
-  caddy_data:
-  caddy_config:
-
-networks:
-  kcl:
-    driver: bridge

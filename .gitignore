@@ -5,6 +5,11 @@
 *.pem
 *.key
 secrets/
+*.local
+*api-key*
+*api_key*
+*-token*
+*_token*
 
 # Local n8n state (only the templates are tracked)
 n8n/jobs/

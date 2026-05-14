@@ -42,6 +42,12 @@ fi
 # ── Stage stack directory ──
 mkdir -p "$DIR" "$DIR/forms" "$DIR/jobs"
 
+# n8n container runs as uid 1000 (user "node"). Give it ownership of the
+# mounted dirs so Code-node fs.mkdirSync / writeFileSync can persist job
+# data. /data/forms is mounted read-only so it can stay root-owned, but
+# /data/jobs is read-write.
+chown -R 1000:1000 "$DIR/jobs"
+
 # ── docker-compose.yml: copy canonical from repo into stack dir ──
 echo "==> Writing $DIR/docker-compose.yml"
 cp "$REPO_DIR/docker-compose.yml" "$DIR/docker-compose.yml"

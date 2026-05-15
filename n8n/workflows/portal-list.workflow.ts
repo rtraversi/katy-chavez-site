@@ -1,6 +1,7 @@
 // portal-list workflow — paginated customer list with optional search.
 // Endpoint: POST https://n8n.katychavez.com/webhook/portal-list
-// Auth: Clerk JWT (via Clerk JWT credential in n8n)
+// Auth: shared secret via X-Portal-Secret header ("Portal API Secret" cred in n8n).
+//       Stop-gap; will switch to Clerk JWT when the frontend lands.
 // Body: { search?: string, limit?: number, offset?: number }
 // Returns: { persons: [...], total: number }
 
@@ -15,13 +16,13 @@ const webhookTrigger = trigger({
       httpMethod: 'POST',
       path: 'portal-list',
       responseMode: 'responseNode',
-      authentication: 'jwtAuth',
+      authentication: 'headerAuth',
       options: {
         allowedOrigins:
           'https://katychavez.com,https://www.katychavez.com,https://katy-chavez-law.netlify.app',
       },
     },
-    credentials: { jwtAuth: newCredential('Clerk JWT') },
+    credentials: { httpHeaderAuth: newCredential('Portal API Secret') },
     position: [200, 300],
   },
   output: [{ body: { search: '', limit: 50, offset: 0 } }],

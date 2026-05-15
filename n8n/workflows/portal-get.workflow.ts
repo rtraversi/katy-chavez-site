@@ -1,6 +1,7 @@
 // portal-get workflow — full record for one person.
 // Endpoint: POST https://n8n.katychavez.com/webhook/portal-get
-// Auth: Clerk JWT (via Clerk JWT credential in n8n)
+// Auth: shared secret via X-Portal-Secret header ("Portal API Secret" cred in n8n).
+//       Stop-gap; will switch to Clerk JWT when the frontend lands.
 // Body: { person_id: string (uuid) }
 // Returns: { person, case, related_persons, documents, extracted_fields }
 
@@ -15,13 +16,13 @@ const webhookTrigger = trigger({
       httpMethod: 'POST',
       path: 'portal-get',
       responseMode: 'responseNode',
-      authentication: 'jwtAuth',
+      authentication: 'headerAuth',
       options: {
         allowedOrigins:
           'https://katychavez.com,https://www.katychavez.com,https://katy-chavez-law.netlify.app',
       },
     },
-    credentials: { jwtAuth: newCredential('Clerk JWT') },
+    credentials: { httpHeaderAuth: newCredential('Portal API Secret') },
     position: [200, 300],
   },
   output: [{ body: { person_id: '00000000-0000-0000-0000-000000000000' } }],

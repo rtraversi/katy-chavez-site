@@ -95,6 +95,36 @@
 
     .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 14px 18px; border-radius: 8px; margin-bottom: 18px; font-size: 0.9rem; }
 
+    /* Upload modal */
+    .modal-backdrop { position: fixed; inset: 0; background: rgba(20, 25, 40, 0.55); display: flex; align-items: flex-start; justify-content: center; padding: 60px 20px 20px; z-index: 200; overflow-y: auto; }
+    .modal { background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); width: 100%; max-width: 620px; padding: 28px 32px 24px; position: relative; }
+    .modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 1.8rem; line-height: 1; color: var(--text-light); cursor: pointer; padding: 6px 10px; border-radius: 6px; }
+    .modal-close:hover { background: var(--cream); color: var(--text-dark); }
+    .modal h2 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.5rem; margin-bottom: 6px; }
+    .modal .modal-help { color: var(--text-mid); font-size: 0.92rem; margin-bottom: 18px; }
+    .dropzone { border: 2px dashed var(--border); border-radius: 12px; padding: 36px 20px; text-align: center; background: var(--warm-white); transition: border-color 0.15s, background 0.15s; cursor: pointer; }
+    .dropzone:hover, .dropzone.drag-over { border-color: var(--terracotta); background: var(--terracotta-pale); }
+    .dropzone .icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+    .dropzone .label { font-weight: 700; color: var(--navy); font-size: 1.02rem; margin-bottom: 4px; }
+    .dropzone .hint { color: var(--text-mid); font-size: 0.85rem; }
+    .dropzone input[type=file] { display: none; }
+    .file-list { margin-top: 16px; display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; }
+    .file-row { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: var(--cream); border-radius: 8px; border: 1px solid var(--border); font-size: 0.88rem; }
+    .file-row .file-name { flex: 1; color: var(--navy); font-weight: 600; word-break: break-all; }
+    .file-row .file-size { color: var(--text-mid); font-size: 0.78rem; }
+    .file-row .file-remove { background: none; border: none; color: var(--text-light); cursor: pointer; font-size: 1.2rem; padding: 0 4px; }
+    .file-row .file-remove:hover { color: #b3392e; }
+    .upload-status { margin-top: 16px; padding: 14px 16px; border-radius: 8px; font-size: 0.9rem; display: none; }
+    .upload-status.info { background: var(--gold-pale); color: #6b5a2e; border-left: 4px solid var(--gold); display: block; }
+    .upload-status.error { background: #f5dcd9; color: #b3392e; border-left: 4px solid #b3392e; display: block; }
+    .upload-status .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #c4a960; border-top-color: transparent; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+    .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+    .btn-cancel { background: none; border: 1.5px solid var(--border); color: var(--navy-mid); padding: 10px 18px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-weight: 600; cursor: pointer; }
+    .btn-cancel:hover { border-color: var(--text-mid); }
+    .btn-upload { background: var(--terracotta); color: #fff; border: none; padding: 10px 22px; border-radius: 8px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; }
+    .btn-upload:hover { background: var(--terracotta-light); }
+    .btn-upload:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
+
     footer { background: var(--navy); color: #c8d8f0; padding: 20px 24px; text-align: center; font-size: 0.82rem; }
   </style>
 </head>
@@ -151,6 +181,30 @@
         </div>
 
         <div id="list-container"></div>
+      </div>
+    </div>
+
+    <!-- Upload modal -->
+    <div id="upload-modal" class="modal-backdrop" style="display:none;">
+      <div class="modal">
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+        <h2>Upload customer documents</h2>
+        <p class="modal-help">Drop in any mix of passports, birth certs, marriage certs, green cards/EADs, intake forms, W-2s, paystubs, tax returns. The AI will classify each one and pull customer info into a new contact card.</p>
+
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.heic" />
+          <span class="icon">📎</span>
+          <div class="label">Drop files here or click to choose</div>
+          <div class="hint">PDF, JPG, PNG (multi-select OK)</div>
+        </label>
+
+        <div class="file-list" id="file-list"></div>
+        <div class="upload-status" id="upload-status"></div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="upload-cancel">Cancel</button>
+          <button class="btn-upload" id="upload-submit" disabled>Upload &amp; analyze</button>
+        </div>
       </div>
     </div>
   </main>
@@ -343,9 +397,132 @@
       searchTimer = setTimeout(loadCustomers, 300);
     });
 
+    // ── Upload modal ─────────────────────────────────────────────────
+    const uploadModal = document.getElementById('upload-modal');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const fileList = document.getElementById('file-list');
+    const uploadStatus = document.getElementById('upload-status');
+    const uploadSubmit = document.getElementById('upload-submit');
+    let pendingFiles = [];
+    let uploading = false;
+
+    function openUploadModal() {
+      pendingFiles = [];
+      uploading = false;
+      uploadStatus.className = 'upload-status';
+      uploadStatus.innerHTML = '';
+      fileInput.value = '';
+      renderPendingFiles();
+      uploadModal.style.display = 'flex';
+    }
+
+    function closeUploadModal() {
+      if (uploading) return;
+      uploadModal.style.display = 'none';
+    }
+
+    function renderPendingFiles() {
+      uploadSubmit.disabled = pendingFiles.length === 0 || uploading;
+      if (pendingFiles.length === 0) {
+        fileList.innerHTML = '';
+        return;
+      }
+      fileList.innerHTML = pendingFiles.map((f, i) =>
+        '<div class="file-row">'
+        + '<span class="file-name">' + escapeHtml(f.name) + '</span>'
+        + '<span class="file-size">' + Math.max(1, Math.round(f.size / 1024)) + ' KB</span>'
+        + '<button class="file-remove" data-idx="' + i + '" aria-label="Remove">&times;</button>'
+        + '</div>'
+      ).join('');
+      fileList.querySelectorAll('.file-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (uploading) return;
+          pendingFiles.splice(parseInt(btn.dataset.idx, 10), 1);
+          renderPendingFiles();
+        });
+      });
+    }
+
+    function addFiles(fileList) {
+      for (const f of fileList) {
+        if (f && f.size > 0) pendingFiles.push(f);
+      }
+      renderPendingFiles();
+    }
+
     document.getElementById('new-customer').addEventListener('click', (e) => {
       e.preventDefault();
-      alert('New-customer upload UI: coming next. For now, upload via curl to /webhook/portal-submit.');
+      openUploadModal();
+    });
+    document.getElementById('modal-close').addEventListener('click', closeUploadModal);
+    document.getElementById('upload-cancel').addEventListener('click', closeUploadModal);
+    uploadModal.addEventListener('click', (e) => {
+      if (e.target === uploadModal) closeUploadModal();
+    });
+
+    fileInput.addEventListener('change', () => addFiles(fileInput.files));
+    dropzone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropzone.classList.add('drag-over');
+    });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('drag-over');
+      if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+    });
+
+    uploadSubmit.addEventListener('click', async () => {
+      if (pendingFiles.length === 0 || uploading) return;
+      uploading = true;
+      uploadSubmit.disabled = true;
+      uploadStatus.className = 'upload-status info';
+      uploadStatus.innerHTML = '<span class="spinner"></span>Uploading ' + pendingFiles.length + ' file' + (pendingFiles.length === 1 ? '' : 's') + ' and analyzing with AI… this can take 30-90 seconds.';
+
+      try {
+        const fd = new FormData();
+        pendingFiles.forEach(f => fd.append('files', f, f.name));
+        fd.append('uploadedAt', new Date().toISOString());
+
+        const res = await fetch(N8N_BASE + '/webhook/portal-submit', {
+          method: 'POST',
+          body: fd,
+        });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error('Server returned ' + res.status + ': ' + t.slice(0, 200));
+        }
+        const data = await res.json();
+
+        if (!data || !data.success) {
+          throw new Error('Upload returned no success flag: ' + JSON.stringify(data).slice(0, 200));
+        }
+
+        const personIds = (data.case && data.case.person_ids) || [];
+        const fileCount = (data.summary && data.summary.files) || pendingFiles.length;
+        const analyzed = (data.summary && data.summary.analyzed) || 0;
+
+        if (personIds.length > 0) {
+          uploadStatus.innerHTML = '✅ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' (' + analyzed + ' analyzed, ' + personIds.length + ' person' + (personIds.length === 1 ? '' : 's') + ' created). Opening customer card…';
+          setTimeout(() => {
+            window.location.href = '/portal/customer.html?id=' + encodeURIComponent(personIds[0]);
+          }, 900);
+        } else {
+          uploadStatus.innerHTML = '⚠️ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' but no customer info was extracted (no analyzable documents recognized). Refreshing list…';
+          uploading = false;
+          setTimeout(() => {
+            closeUploadModal();
+            loadCustomers();
+          }, 1500);
+        }
+      } catch (err) {
+        uploadStatus.className = 'upload-status error';
+        uploadStatus.innerHTML = 'Upload failed: ' + escapeHtml(err.message);
+        uploading = false;
+        uploadSubmit.disabled = pendingFiles.length === 0;
+      }
     });
 
     init();

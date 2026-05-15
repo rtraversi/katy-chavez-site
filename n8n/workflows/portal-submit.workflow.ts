@@ -115,21 +115,29 @@ const CLASSIFY_PROMPT = 'Classify this document into one of these categories: pa
 
 const EXTRACT_PROMPT = 'Extract the following fields from this document. Return JSON only (no markdown fences). Use null for any field not present. Dates as YYYY-MM-DD. Names exactly as written on the document.\\n\\n{\\n  "name_full": null,\\n  "name_given": null,\\n  "name_family": null,\\n  "dob": null,\\n  "place_of_birth": null,\\n  "country_of_birth": null,\\n  "country_of_citizenship": null,\\n  "sex": null,\\n  "a_number": null,\\n  "passport_number": null,\\n  "marriage_date": null,\\n  "marriage_location": null,\\n  "spouse_name": null,\\n  "ead_category": null,\\n  "ead_expiry": null,\\n  "gc_category": null,\\n  "gc_expiry": null\\n}';
 
+const helpers = this.helpers;
 async function callClaude(messages, maxTokens) {
-  const resp = await fetch(API_URL, {
-    method: 'POST',
-    headers: {
-      'x-api-key': apiKey,
-      'anthropic-version': '2023-06-01',
-      'content-type': 'application/json',
-    },
-    body: JSON.stringify({ model: MODEL, max_tokens: maxTokens || 1500, messages }),
-  });
-  if (!resp.ok) {
-    const errText = await resp.text();
-    throw new Error('Claude API ' + resp.status + ': ' + errText.slice(0, 500));
+  let data;
+  try {
+    data = await helpers.httpRequest({
+      method: 'POST',
+      url: API_URL,
+      headers: {
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'content-type': 'application/json',
+      },
+      body: { model: MODEL, max_tokens: maxTokens || 1500, messages },
+      json: true,
+    });
+  } catch (e) {
+    const status = e && e.httpCode ? e.httpCode : '?';
+    const detail = e && e.message ? e.message : String(e);
+    throw new Error('Claude API ' + status + ': ' + detail.slice(0, 500));
   }
-  const data = await resp.json();
+  if (!data || !data.content || !data.content[0]) {
+    throw new Error('Claude API empty/malformed response: ' + JSON.stringify(data).slice(0, 200));
+  }
   return data.content[0].text;
 }
 
@@ -155,27 +163,31 @@ function buildMediaBlock(buf, mimeType) {
 const fileResults = [];
 for (let i = 0; i < files.length; i++) {
   const f = files[i];
+  const errors = [];
   let media = null;
   let buf = null;
   try {
     buf = fs.readFileSync(f.storage_path);
     media = buildMediaBlock(buf, f.mime_type);
+    if (!media) errors.push('buildMediaBlock returned null for mime ' + f.mime_type);
   } catch (e) {
-    // unreadable; skip
+    errors.push('readFile: ' + (e && e.message ? e.message : String(e)));
   }
 
   if (!media) {
-    fileResults.push({ ...f, doc_type: 'unknown', classification_confidence: 0, extracted: null });
+    fileResults.push({ ...f, doc_type: 'unknown', classification_confidence: 0, extracted: null, _errors: errors });
     continue;
   }
 
   let classification = { doc_type: 'unknown', confidence: 0 };
+  let classifyRaw = null;
   try {
-    const txt = await callClaude([{ role: 'user', content: [media, { type: 'text', text: CLASSIFY_PROMPT }] }], 150);
-    const parsed = parseJson(txt);
+    classifyRaw = await callClaude([{ role: 'user', content: [media, { type: 'text', text: CLASSIFY_PROMPT }] }], 150);
+    const parsed = parseJson(classifyRaw);
     if (VALID_TYPES.indexOf(parsed.doc_type) >= 0) classification = parsed;
+    else errors.push('classify returned invalid doc_type: ' + JSON.stringify(parsed));
   } catch (e) {
-    // leave as unknown
+    errors.push('classify: ' + (e && e.message ? e.message : String(e)));
   }
 
   let extracted = null;
@@ -184,7 +196,7 @@ for (let i = 0; i < files.length; i++) {
       const txt = await callClaude([{ role: 'user', content: [media, { type: 'text', text: EXTRACT_PROMPT }] }], 1500);
       extracted = parseJson(txt);
     } catch (e) {
-      // leave as null
+      errors.push('extract: ' + (e && e.message ? e.message : String(e)));
     }
   }
 
@@ -193,6 +205,8 @@ for (let i = 0; i < files.length; i++) {
     doc_type: classification.doc_type,
     classification_confidence: classification.confidence,
     extracted,
+    _errors: errors,
+    _classifyRaw: classifyRaw,
   });
 }
 
@@ -331,6 +345,12 @@ return [{
       files: fileResults.length,
       analyzed: fileResults.filter(function(f) { return f.extracted ? true : false; }).length,
       persons: persons.length,
+      errors: [].concat.apply([], fileResults.map(function(f) {
+        return (f._errors || []).map(function(e) { return f.filename + ': ' + e; });
+      })),
+      classify_samples: fileResults.map(function(f) {
+        return { filename: f.filename, doc_type: f.doc_type, raw: f._classifyRaw };
+      }),
     },
   },
 }];`,

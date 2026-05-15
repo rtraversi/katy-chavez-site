@@ -182,23 +182,28 @@
     const listContainer = document.getElementById('list-container');
     const totalCount = document.getElementById('total-count');
 
+    // Clerk gate temporarily disabled — dev instance hits needs_client_trust
+    // which the SDK can't resolve. API secret alone gates the portal until
+    // we move to production Clerk (or switch to Cloudflare Access / Keycloak).
+    const REQUIRE_CLERK = false;
+
     let signInMounted = false;
     let searchTimer = null;
 
-    async function initClerk() {
-      while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
-      await window.Clerk.load();
-      renderAuth();
-      window.Clerk.addListener(renderAuth);
+    async function init() {
+      if (REQUIRE_CLERK) {
+        while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
+        await window.Clerk.load();
+        renderAuth();
+        window.Clerk.addListener(renderAuth);
+      } else {
+        showDashboard();
+      }
     }
 
     function renderAuth() {
-      if (window.Clerk.user) {
-        gate.style.display = 'none';
-        dashboard.style.display = 'block';
-        headerSub.textContent = 'Search, edit, and upload customer documents.';
-        renderUserPill();
-        ensureSecretLoaded();
+      if (window.Clerk && window.Clerk.user) {
+        showDashboard();
       } else {
         gate.style.display = 'block';
         dashboard.style.display = 'none';
@@ -209,6 +214,18 @@
           window.Clerk.mountSignIn(document.getElementById('sign-in-mount'));
         }
       }
+    }
+
+    function showDashboard() {
+      gate.style.display = 'none';
+      dashboard.style.display = 'block';
+      headerSub.textContent = 'Search, edit, and upload customer documents.';
+      if (REQUIRE_CLERK && window.Clerk && window.Clerk.user) {
+        renderUserPill();
+      } else {
+        userSlot.style.display = 'none';
+      }
+      ensureSecretLoaded();
     }
 
     function renderUserPill() {
@@ -331,7 +348,7 @@
       alert('New-customer upload UI: coming next. For now, upload via curl to /webhook/portal-submit.');
     });
 
-    initClerk();
+    init();
   </script>
 </body>
 </html>

@@ -209,23 +209,27 @@
     const headerName = document.getElementById('header-name');
     const headerSub = document.getElementById('header-sub');
 
+    // Clerk gate temporarily disabled — see portal/index.html for rationale.
+    const REQUIRE_CLERK = false;
+
     let record = null;
     let dirty = false;
     let signInMounted = false;
 
-    async function initClerk() {
-      while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
-      await window.Clerk.load();
-      renderAuth();
-      window.Clerk.addListener(renderAuth);
+    async function init() {
+      if (REQUIRE_CLERK) {
+        while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
+        await window.Clerk.load();
+        renderAuth();
+        window.Clerk.addListener(renderAuth);
+      } else {
+        showDashboard();
+      }
     }
 
     function renderAuth() {
-      if (window.Clerk.user) {
-        gate.style.display = 'none';
-        dashboard.style.display = 'block';
-        renderUserPill();
-        if (!record) loadPerson();
+      if (window.Clerk && window.Clerk.user) {
+        showDashboard();
       } else {
         gate.style.display = 'block';
         dashboard.style.display = 'none';
@@ -235,6 +239,17 @@
           window.Clerk.mountSignIn(document.getElementById('sign-in-mount'));
         }
       }
+    }
+
+    function showDashboard() {
+      gate.style.display = 'none';
+      dashboard.style.display = 'block';
+      if (REQUIRE_CLERK && window.Clerk && window.Clerk.user) {
+        renderUserPill();
+      } else {
+        userSlot.style.display = 'none';
+      }
+      if (!record) loadPerson();
     }
 
     function renderUserPill() {
@@ -506,7 +521,7 @@
       if (dirty) { e.preventDefault(); e.returnValue = ''; }
     });
 
-    initClerk();
+    init();
   </script>
 </body>
 </html>

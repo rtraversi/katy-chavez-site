@@ -60,6 +60,9 @@ services:
       # uploads to /data/jobs/{jobId}/. Keep this list minimal — only what the
       # Code nodes in this stack actually need.
       NODE_FUNCTION_ALLOW_BUILTIN: fs,path
+      # Allow Code nodes to read $env.* (specifically ANTHROPIC_API_KEY in the
+      # Classify+Extract step). n8n blocks env access in Code by default.
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}

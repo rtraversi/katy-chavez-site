@@ -3,20 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Client Portal | Katy Chavez Law</title>
+  <title>Portal | Katy Chavez Law</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <meta http-equiv="X-Content-Type-Options" content="nosniff">
-  <meta http-equiv="X-Frame-Options" content="DENY">
-  <meta name="robots" content="noindex, nofollow">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="robots" content="noindex, nofollow" />
   <style>
     :root {
       --terracotta: #C9674F;
       --terracotta-light: #E8896E;
       --terracotta-pale: #F5DDD7;
       --sage: #6A8F72;
-      --sage-light: #9AB5A0;
       --sage-pale: #E4EEE6;
       --gold: #D4A84B;
       --gold-pale: #F5EDD8;
@@ -28,117 +25,77 @@
       --text-mid: #555;
       --text-light: #888;
       --border: #E8E0D4;
-      --success: #2d7a4f;
-      --success-pale: #d8efd8;
-      --error: #b3392e;
-      --error-pale: #f5dcd9;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
 
-    .es { display: none; }
-    .en { display: revert; }
-    body.lang-es .es { display: revert; }
-    body.lang-es .en { display: none; }
-    p.en, div.en, h1.en, h2.en, h3.en, label.en, span.en-block { display: block; }
-    body.lang-es p.es, body.lang-es div.es, body.lang-es h1.es,
-    body.lang-es h2.es, body.lang-es h3.es, body.lang-es label.es,
-    body.lang-es span.es-block { display: block; }
-    body.lang-es p.en, body.lang-es div.en, body.lang-es h1.en,
-    body.lang-es h2.en, body.lang-es h3.en, body.lang-es label.en,
-    body.lang-es span.en-block { display: none; }
-    span.en, a.en, strong.en { display: inline; }
-    body.lang-es span.es, body.lang-es a.es, body.lang-es strong.es { display: inline; }
-    body.lang-es span.en, body.lang-es a.en, body.lang-es strong.en { display: none; }
-
-    nav { background: var(--warm-white); border-bottom: 3px solid var(--terracotta); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    nav { background: var(--warm-white); border-bottom: 3px solid var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
     .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
     .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
     .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--terracotta); }
+    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--navy); }
     .nav-brand .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
-    .nav-brand .tagline { font-size: 0.65rem; color: var(--terracotta); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-    .nav-right { display: flex; align-items: center; gap: 12px; }
-    .nav-link-back { font-size: 0.82rem; font-weight: 600; color: var(--navy-mid); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: background 0.18s, color 0.18s; }
-    .nav-link-back:hover { background: var(--terracotta-pale); color: var(--terracotta); }
-    .lang-toggle { display: flex; gap: 3px; background: var(--cream); border: 1.5px solid var(--border); border-radius: 20px; padding: 3px 4px; }
-    .lang-btn { font-size: 0.78rem; font-weight: 700; padding: 3px 10px; border-radius: 16px; border: none; cursor: pointer; background: transparent; color: var(--navy-mid); font-family: 'Nunito', sans-serif; transition: background 0.15s, color 0.15s; letter-spacing: 0.05em; }
-    .lang-btn.active { background: var(--terracotta); color: #fff; }
-    .lang-btn:hover:not(.active) { background: var(--terracotta-pale); color: var(--terracotta); }
+    .nav-brand .tagline { font-size: 0.65rem; color: var(--navy-mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    #user-slot { display: none; align-items: center; gap: 10px; }
+    .user-pill { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--navy); background: var(--cream); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); }
+    .user-pill .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--terracotta); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+    .btn-signout { background: none; border: 1.5px solid var(--border); color: var(--navy-mid); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 600; transition: border-color 0.15s, color 0.15s; }
+    .btn-signout:hover { border-color: var(--terracotta); color: var(--terracotta); }
 
-    .page-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 60%, var(--sage) 100%); padding: 56px 24px 64px; color: #fff; position: relative; overflow: hidden; }
+    .page-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 48px 24px 56px; color: #fff; position: relative; overflow: hidden; }
     .page-header::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); }
-    .page-header::before { content: ''; position: absolute; top: -60px; left: -60px; width: 250px; height: 250px; border-radius: 50%; background: rgba(255,255,255,0.05); }
-    .page-header-inner { max-width: 900px; margin: 0 auto; position: relative; z-index: 1; }
-    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.9rem, 4.5vw, 2.6rem); margin-bottom: 10px; text-shadow: 0 2px 12px rgba(0,0,0,0.15); }
-    .page-header p { opacity: 0.92; font-size: 1.05rem; max-width: 640px; }
-    .page-header .badge { display: inline-block; background: var(--terracotta); color: #fff; font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 4px 14px; border-radius: 20px; margin-bottom: 14px; box-shadow: 0 4px 14px rgba(201,103,79,0.45); }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.3rem); margin-bottom: 6px; }
+    .page-header p { opacity: 0.9; font-size: 0.98rem; }
+    .badge { display: inline-block; background: var(--gold); color: var(--navy); font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; padding: 3px 12px; border-radius: 20px; margin-bottom: 12px; }
 
-    main { flex: 1; padding: 48px 24px 64px; }
-    .form-card { max-width: 720px; margin: -32px auto 0; background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); border: 1px solid var(--border); padding: 36px 36px 32px; position: relative; }
-    @media (max-width: 600px) { .form-card { padding: 28px 22px 24px; margin-top: -20px; } main { padding: 32px 16px 48px; } }
+    main { flex: 1; padding: 32px 24px 56px; max-width: 1100px; margin: -28px auto 0; width: 100%; }
 
-    .step { margin-bottom: 28px; }
-    .step-label { font-family: 'Playfair Display', serif; font-size: 0.95rem; color: var(--navy); font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-    .step-number { display: inline-flex; align-items: center; justify-content: center; width: 26px; height: 26px; background: var(--terracotta); color: #fff; border-radius: 50%; font-size: 0.78rem; font-weight: 700; font-family: 'Nunito', sans-serif; }
+    .gate { background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); border: 1px solid var(--border); padding: 56px 36px; text-align: center; max-width: 480px; margin: 24px auto; }
+    .gate h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); margin-bottom: 8px; }
+    .gate p { color: var(--text-mid); margin-bottom: 24px; font-size: 0.95rem; }
+    #sign-in-mount { display: flex; justify-content: center; }
 
-    .mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 560px) { .mode-grid { grid-template-columns: 1fr; } }
-    .mode-option { background: var(--warm-white); border: 2px solid var(--border); border-radius: 12px; padding: 18px 18px; cursor: pointer; transition: border-color 0.15s, background 0.15s, transform 0.12s; text-align: left; }
-    .mode-option:hover { border-color: var(--terracotta-light); background: var(--terracotta-pale); transform: translateY(-1px); }
-    .mode-option.selected { border-color: var(--terracotta); background: var(--terracotta-pale); box-shadow: 0 4px 16px rgba(201,103,79,0.18); }
-    .mode-option .mode-icon { font-size: 1.6rem; margin-bottom: 8px; display: block; }
-    .mode-option .mode-title { font-family: 'Playfair Display', serif; font-size: 1.05rem; color: var(--navy); font-weight: 700; margin-bottom: 4px; }
-    .mode-option .mode-desc { font-size: 0.82rem; color: var(--text-mid); line-height: 1.5; }
-    .mode-option input[type=radio] { display: none; }
+    .secret-prompt { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 24px; margin-bottom: 24px; }
+    .secret-prompt label { display: block; font-weight: 600; color: var(--navy); margin-bottom: 8px; font-size: 0.95rem; }
+    .secret-prompt .help { color: var(--text-mid); font-size: 0.85rem; margin-bottom: 12px; }
+    .secret-row { display: flex; gap: 8px; }
+    .secret-row input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; background: var(--warm-white); }
+    .secret-row input:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
+    .secret-row button { background: var(--terracotta); color: #fff; border: none; padding: 0 18px; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif; cursor: pointer; }
+    .secret-row button:hover { background: var(--terracotta-light); }
 
-    .field { margin-bottom: 14px; }
-    .field label { display: block; font-size: 0.85rem; font-weight: 600; color: var(--navy); margin-bottom: 6px; }
-    .field input[type=text], .field input[type=email], .field select, .field textarea {
-      width: 100%; padding: 11px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; color: var(--text-dark); background: var(--warm-white); transition: border-color 0.15s, box-shadow 0.15s;
-    }
-    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
-    .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
-    @media (max-width: 560px) { .field-row { grid-template-columns: 1fr; } }
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    .toolbar h2 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; }
+    .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .search { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; min-width: 260px; background: var(--warm-white); }
+    .search:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
+    .btn-primary { background: var(--terracotta); color: #fff; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-weight: 700; font-size: 0.85rem; font-family: 'Nunito', sans-serif; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; transition: background 0.15s; }
+    .btn-primary:hover { background: var(--terracotta-light); }
+    .total { font-size: 0.85rem; color: var(--text-mid); font-weight: 400; }
 
-    .dropzone { border: 2px dashed var(--border); border-radius: 12px; padding: 28px 20px; text-align: center; background: var(--warm-white); cursor: pointer; transition: border-color 0.15s, background 0.15s; }
-    .dropzone:hover, .dropzone.dragover { border-color: var(--terracotta); background: var(--terracotta-pale); }
-    .dropzone .drop-icon { font-size: 2rem; margin-bottom: 8px; display: block; color: var(--terracotta); }
-    .dropzone .drop-text { font-size: 0.95rem; color: var(--navy); font-weight: 600; margin-bottom: 4px; }
-    .dropzone .drop-sub { font-size: 0.8rem; color: var(--text-light); }
-    .dropzone input[type=file] { display: none; }
+    .cust-empty { background: #fff; border-radius: 14px; border: 1px dashed var(--border); padding: 48px 24px; text-align: center; color: var(--text-mid); }
+    .cust-empty .icon { font-size: 2.4rem; display: block; margin-bottom: 10px; color: var(--text-light); }
 
-    .file-list { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
-    .file-item { display: flex; align-items: center; justify-content: space-between; gap: 12px; background: var(--sage-pale); border: 1px solid var(--sage-light); border-radius: 8px; padding: 10px 14px; font-size: 0.88rem; }
-    .file-item .file-name { color: var(--navy); font-weight: 600; flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .file-item .file-size { color: var(--text-mid); font-size: 0.78rem; }
-    .file-item .file-remove { background: none; border: none; color: var(--error); cursor: pointer; font-size: 1.1rem; padding: 0 4px; line-height: 1; }
-    .file-item .file-remove:hover { color: var(--terracotta); }
+    .cust-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 14px; }
+    .cust-card { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--terracotta); border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit; transition: box-shadow 0.18s, transform 0.12s; display: block; }
+    .cust-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
+    .cust-card .cust-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 10px; }
+    .cust-card .case-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta); }
+    .cust-card .doc-pill { font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: var(--gold-pale); color: #6b5a2e; }
+    .cust-card h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.15rem; margin-bottom: 4px; }
+    .cust-card .meta { font-size: 0.82rem; color: var(--text-mid); line-height: 1.6; }
+    .cust-card .meta .row { display: flex; gap: 8px; }
+    .cust-card .meta .row .k { color: var(--text-light); font-weight: 600; min-width: 60px; }
 
-    .submit-row { margin-top: 28px; display: flex; justify-content: flex-end; gap: 12px; align-items: center; }
-    .btn-primary { background: var(--terracotta); color: #fff; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-size: 0.95rem; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; transition: background 0.18s, transform 0.12s, box-shadow 0.18s; box-shadow: 0 4px 14px rgba(201,103,79,0.35); }
-    .btn-primary:hover:not(:disabled) { background: var(--terracotta-light); transform: translateY(-2px); box-shadow: 0 8px 22px rgba(201,103,79,0.4); }
-    .btn-primary:disabled { background: var(--text-light); cursor: not-allowed; box-shadow: none; transform: none; }
-    .btn-primary .spinner { display: none; width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.4); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
-    .btn-primary.loading .spinner { display: inline-block; }
+    .loading-state { text-align: center; padding: 48px 24px; color: var(--text-mid); }
+    .loading-state .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .status-banner { margin-top: 20px; padding: 14px 18px; border-radius: 10px; font-size: 0.92rem; display: none; }
-    .status-banner.show { display: block; }
-    .status-banner.success { background: var(--success-pale); color: var(--success); border-left: 4px solid var(--success); }
-    .status-banner.error { background: var(--error-pale); color: var(--error); border-left: 4px solid var(--error); }
-    .status-banner.info { background: var(--gold-pale); color: #6b5a2e; border-left: 4px solid var(--gold); }
+    .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 14px 18px; border-radius: 8px; margin-bottom: 18px; font-size: 0.9rem; }
 
-    .conditional { display: none; }
-    .conditional.show { display: block; }
-
-    .info-box { background: var(--sage-pale); border-left: 4px solid var(--sage); border-radius: 0 8px 8px 0; padding: 12px 16px; font-size: 0.86rem; color: #2f5236; margin-top: 12px; }
-    .info-box strong { color: var(--navy); }
-
-    footer { background: var(--navy); color: #c8d8f0; padding: 24px 24px; text-align: center; font-size: 0.85rem; }
-    footer a { color: var(--gold); text-decoration: none; font-weight: 600; }
-    footer a:hover { text-decoration: underline; }
+    footer { background: var(--navy); color: #c8d8f0; padding: 20px 24px; text-align: center; font-size: 0.82rem; }
   </style>
 </head>
 <body>
@@ -148,259 +105,233 @@
         <img src="/katynewheadshot.jpg" alt="Katy Chavez" class="nav-logo" />
         <div class="nav-brand-text">
           <span class="name">Katy Chavez Law</span>
-          <span class="tagline"><span class="en">Client Portal</span><span class="es">Portal del Cliente</span></span>
+          <span class="tagline">Portal</span>
         </div>
       </a>
       <div class="nav-right">
-        <a href="/" class="nav-link-back"><span class="en">&larr; Main Site</span><span class="es">&larr; Sitio Principal</span></a>
-        <div class="lang-toggle">
-          <button class="lang-btn active" data-lang="en">EN</button>
-          <button class="lang-btn" data-lang="es">ES</button>
-        </div>
+        <div id="user-slot"></div>
       </div>
     </div>
   </nav>
 
   <header class="page-header">
     <div class="page-header-inner">
-      <span class="badge"><span class="en">Secure Submission</span><span class="es">Envío Seguro</span></span>
-      <h1>
-        <span class="en">Client Document Portal</span>
-        <span class="es">Portal de Documentos del Cliente</span>
-      </h1>
-      <p>
-        <span class="en">Upload your supporting documents and we'll prepare your USCIS forms or translation. Your information is encrypted and protected by attorney-client privilege.</span>
-        <span class="es">Cargue sus documentos de respaldo y prepararemos sus formularios de USCIS o su traducción. Su información está encriptada y protegida por el privilegio abogado-cliente.</span>
-      </p>
+      <span class="badge">Staff Only</span>
+      <h1>Customer Records</h1>
+      <p id="header-sub">Sign in to view and manage client cases.</p>
     </div>
   </header>
 
   <main>
-    <form id="portal-form" class="form-card" autocomplete="off" novalidate>
-      <div class="step">
-        <div class="step-label"><span class="step-number">1</span><span class="en">What do you need?</span><span class="es">¿Qué necesita?</span></div>
-        <div class="mode-grid">
-          <label class="mode-option" data-mode="forms">
-            <input type="radio" name="mode" value="forms" />
-            <span class="mode-icon">&#128221;</span>
-            <div class="mode-title"><span class="en">USCIS Form Filling</span><span class="es">Llenado de Formularios USCIS</span></div>
-            <div class="mode-desc"><span class="en">Upload supporting documents to have your USCIS forms prepared.</span><span class="es">Cargue documentos para que preparemos sus formularios de USCIS.</span></div>
-          </label>
-          <label class="mode-option" data-mode="translate">
-            <input type="radio" name="mode" value="translate" />
-            <span class="mode-icon">&#127760;</span>
-            <div class="mode-title"><span class="en">Spanish &rarr; English Translation</span><span class="es">Traducción Español &rarr; Inglés</span></div>
-            <div class="mode-desc"><span class="en">Upload a Spanish document for certified English translation.</span><span class="es">Cargue un documento en español para traducción certificada al inglés.</span></div>
-          </label>
+    <div id="gate" class="gate">
+      <h2>Staff Sign In</h2>
+      <p>This portal is restricted to Katy Chavez Law staff.</p>
+      <div id="sign-in-mount"></div>
+    </div>
+
+    <div id="dashboard" style="display: none;">
+      <div id="error-slot"></div>
+
+      <div id="secret-section" class="secret-prompt" style="display: none;">
+        <label for="secret-input">Portal API Secret</label>
+        <p class="help">One-time setup per browser. Paste the value from your password manager — we'll cache it here for future visits.</p>
+        <div class="secret-row">
+          <input type="password" id="secret-input" placeholder="paste secret here…" autocomplete="off" />
+          <button id="secret-save">Save</button>
         </div>
       </div>
 
-      <div class="step conditional" id="step-case-type">
-        <div class="step-label"><span class="step-number">2</span><span class="en">Case Type</span><span class="es">Tipo de Caso</span></div>
-        <div class="field">
-          <select id="case-type" name="caseType">
-            <option value=""><span class="en">— Select case type —</span></option>
-            <option value="AOS">Adjustment of Status (AOS) &mdash; I-485, I-130, I-864, I-765, I-131, I-693</option>
-            <option value="DACA">DACA &mdash; I-821D, I-765</option>
-            <option value="K1">K-1 Fiancé(e) Visa &mdash; I-129F</option>
-            <option value="ConsularProcessing">Consular Processing &mdash; I-130, I-864, DS-260</option>
-            <option value="Citizenship">Citizenship &mdash; N-400</option>
-            <option value="Waivers">Waivers &mdash; I-601, I-601A</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="step conditional" id="step-client">
-        <div class="step-label"><span class="step-number" id="client-step-num">3</span><span class="en">Client Information</span><span class="es">Información del Cliente</span></div>
-        <div class="field-row">
-          <div class="field">
-            <label for="client-name"><span class="en">Full Legal Name</span><span class="es">Nombre Legal Completo</span></label>
-            <input type="text" id="client-name" name="clientName" required />
-          </div>
-          <div class="field">
-            <label for="client-email"><span class="en">Email Address</span><span class="es">Correo Electrónico</span></label>
-            <input type="email" id="client-email" name="clientEmail" required />
+      <div id="main-section" style="display: none;">
+        <div class="toolbar">
+          <h2>Customers <span class="total" id="total-count"></span></h2>
+          <div class="toolbar-right">
+            <input type="search" id="search" class="search" placeholder="Search by name…" />
+            <a href="#" class="btn-primary" id="new-customer">+ New customer</a>
           </div>
         </div>
-        <div class="field">
-          <label for="client-notes"><span class="en">Notes for the legal team (optional)</span><span class="es">Notas para el equipo legal (opcional)</span></label>
-          <textarea id="client-notes" name="clientNotes" rows="2"></textarea>
-        </div>
-      </div>
 
-      <div class="step conditional" id="step-upload">
-        <div class="step-label"><span class="step-number" id="upload-step-num">4</span><span class="en">Upload Documents</span><span class="es">Cargar Documentos</span></div>
-        <label class="dropzone" id="dropzone" for="file-input">
-          <span class="drop-icon">&#8682;</span>
-          <div class="drop-text"><span class="en">Drop files here or click to browse</span><span class="es">Arrastre archivos aquí o haga clic para explorar</span></div>
-          <div class="drop-sub"><span class="en">PDF, JPG, PNG, DOCX accepted. Up to 50 MB total.</span><span class="es">Se aceptan PDF, JPG, PNG, DOCX. Hasta 50 MB en total.</span></div>
-          <input type="file" id="file-input" name="files" multiple accept=".pdf,.jpg,.jpeg,.png,.docx,.doc,.heic" />
-        </label>
-        <div class="file-list" id="file-list"></div>
-        <div class="info-box" id="forms-info" style="display:none">
-          <strong><span class="en">Helpful documents to include:</span><span class="es">Documentos útiles para incluir:</span></strong>
-          <span class="en"> birth certificate, passport, marriage certificate, prior immigration documents, tax returns, pay stubs.</span>
-          <span class="es"> certificado de nacimiento, pasaporte, certificado de matrimonio, documentos de inmigración previos, declaraciones de impuestos, comprobantes de pago.</span>
-        </div>
+        <div id="list-container"></div>
       </div>
-
-      <div class="submit-row">
-        <button type="submit" class="btn-primary" id="submit-btn" disabled>
-          <span class="spinner"></span>
-          <span class="en">Submit Securely</span>
-          <span class="es">Enviar de Forma Segura</span>
-        </button>
-      </div>
-
-      <div class="status-banner" id="status-banner" role="status" aria-live="polite"></div>
-    </form>
+    </div>
   </main>
 
   <footer>
-    <span class="en">&copy; Katy Chavez Law &middot; Encrypted in transit &middot; Attorney-client privileged</span>
-    <span class="es">&copy; Katy Chavez Law &middot; Encriptado en tránsito &middot; Privilegio abogado-cliente</span>
-    &middot; <a href="/portal/admin.html"><span class="en">Staff Login</span><span class="es">Acceso de Personal</span></a>
+    &copy; Katy Chavez Law &middot; Staff Portal
   </footer>
 
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_ZGVjZW50LXNlYWhvcnNlLTc4LmNsZXJrLmFjY291bnRzLmRldiQ"
+    src="https://decent-seahorse-78.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
   <script>
-    // n8n webhook endpoint — replace with production URL once container is live.
-    const N8N_WEBHOOK_URL = 'https://n8n.katychavez.com/webhook/portal-submit';
+    const N8N_BASE = 'https://n8n.katychavez.com';
+    const LS_SECRET = 'kcl_portal_secret';
 
-    const langButtons = document.querySelectorAll('.lang-btn');
-    langButtons.forEach(b => b.addEventListener('click', () => {
-      document.body.classList.toggle('lang-es', b.dataset.lang === 'es');
-      langButtons.forEach(x => x.classList.toggle('active', x === b));
-    }));
+    const gate = document.getElementById('gate');
+    const dashboard = document.getElementById('dashboard');
+    const userSlot = document.getElementById('user-slot');
+    const headerSub = document.getElementById('header-sub');
+    const errorSlot = document.getElementById('error-slot');
+    const secretSection = document.getElementById('secret-section');
+    const secretInput = document.getElementById('secret-input');
+    const mainSection = document.getElementById('main-section');
+    const searchInput = document.getElementById('search');
+    const listContainer = document.getElementById('list-container');
+    const totalCount = document.getElementById('total-count');
 
-    const modeOptions = document.querySelectorAll('.mode-option');
-    const stepCaseType = document.getElementById('step-case-type');
-    const stepClient = document.getElementById('step-client');
-    const stepUpload = document.getElementById('step-upload');
-    const clientStepNum = document.getElementById('client-step-num');
-    const uploadStepNum = document.getElementById('upload-step-num');
-    const formsInfo = document.getElementById('forms-info');
-    const caseTypeSelect = document.getElementById('case-type');
-    const submitBtn = document.getElementById('submit-btn');
-    const fileInput = document.getElementById('file-input');
-    const fileList = document.getElementById('file-list');
-    const dropzone = document.getElementById('dropzone');
-    const banner = document.getElementById('status-banner');
+    let signInMounted = false;
+    let searchTimer = null;
 
-    let selectedMode = null;
-    let files = [];
-
-    function updateSubmitState() {
-      const clientName = document.getElementById('client-name').value.trim();
-      const clientEmail = document.getElementById('client-email').value.trim();
-      const caseTypeOK = selectedMode !== 'forms' || caseTypeSelect.value;
-      submitBtn.disabled = !(selectedMode && clientName && clientEmail && caseTypeOK && files.length > 0);
+    async function initClerk() {
+      while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
+      await window.Clerk.load();
+      renderAuth();
+      window.Clerk.addListener(renderAuth);
     }
 
-    modeOptions.forEach(opt => {
-      opt.addEventListener('click', () => {
-        modeOptions.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        opt.querySelector('input').checked = true;
-        selectedMode = opt.dataset.mode;
-        const showCaseType = selectedMode === 'forms';
-        stepCaseType.classList.toggle('show', showCaseType);
-        formsInfo.style.display = showCaseType ? 'block' : 'none';
-        clientStepNum.textContent = showCaseType ? '3' : '2';
-        uploadStepNum.textContent = showCaseType ? '4' : '3';
-        stepClient.classList.add('show');
-        stepUpload.classList.add('show');
-        if (selectedMode === 'translate') {
-          fileInput.removeAttribute('multiple');
-        } else {
-          fileInput.setAttribute('multiple', '');
+    function renderAuth() {
+      if (window.Clerk.user) {
+        gate.style.display = 'none';
+        dashboard.style.display = 'block';
+        headerSub.textContent = 'Search, edit, and upload customer documents.';
+        renderUserPill();
+        ensureSecretLoaded();
+      } else {
+        gate.style.display = 'block';
+        dashboard.style.display = 'none';
+        headerSub.textContent = 'Sign in to view and manage client cases.';
+        userSlot.style.display = 'none';
+        if (!signInMounted) {
+          signInMounted = true;
+          window.Clerk.mountSignIn(document.getElementById('sign-in-mount'));
         }
-        updateSubmitState();
-      });
+      }
+    }
+
+    function renderUserPill() {
+      const u = window.Clerk.user;
+      const email = u.primaryEmailAddress?.emailAddress || u.id;
+      const initials = (email[0] || '?').toUpperCase();
+      userSlot.style.display = 'flex';
+      userSlot.innerHTML = '<div class="user-pill"><div class="avatar">' + initials + '</div><span>' + escapeHtml(email) + '</span></div><button class="btn-signout" id="signout-btn">Sign out</button>';
+      document.getElementById('signout-btn').addEventListener('click', () => window.Clerk.signOut());
+    }
+
+    function ensureSecretLoaded() {
+      const cached = localStorage.getItem(LS_SECRET);
+      if (cached) {
+        secretSection.style.display = 'none';
+        mainSection.style.display = 'block';
+        loadCustomers();
+      } else {
+        secretSection.style.display = 'block';
+        mainSection.style.display = 'none';
+      }
+    }
+
+    document.getElementById('secret-save').addEventListener('click', () => {
+      const v = secretInput.value.trim();
+      if (!v) return;
+      localStorage.setItem(LS_SECRET, v);
+      secretInput.value = '';
+      ensureSecretLoaded();
+    });
+    secretInput.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('secret-save').click();
     });
 
-    caseTypeSelect.addEventListener('change', updateSubmitState);
-    document.getElementById('client-name').addEventListener('input', updateSubmitState);
-    document.getElementById('client-email').addEventListener('input', updateSubmitState);
-
-    function fmtSize(bytes) {
-      if (bytes < 1024) return bytes + ' B';
-      if (bytes < 1048576) return (bytes / 1024).toFixed(1) + ' KB';
-      return (bytes / 1048576).toFixed(1) + ' MB';
-    }
-
-    function renderFiles() {
-      fileList.innerHTML = '';
-      files.forEach((f, i) => {
-        const item = document.createElement('div');
-        item.className = 'file-item';
-        const name = document.createElement('span'); name.className = 'file-name'; name.textContent = f.name;
-        const size = document.createElement('span'); size.className = 'file-size'; size.textContent = fmtSize(f.size);
-        const rm = document.createElement('button'); rm.type = 'button'; rm.className = 'file-remove'; rm.textContent = '×';
-        rm.addEventListener('click', () => { files.splice(i, 1); renderFiles(); updateSubmitState(); });
-        item.appendChild(name); item.appendChild(size); item.appendChild(rm);
-        fileList.appendChild(item);
+    async function api(path, body) {
+      const secret = localStorage.getItem(LS_SECRET);
+      if (!secret) throw new Error('Portal secret not set');
+      const res = await fetch(N8N_BASE + path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Portal-Secret': secret,
+        },
+        body: JSON.stringify(body || {}),
       });
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem(LS_SECRET);
+        throw new Error('Authentication failed. The portal secret may be wrong — please re-enter.');
+      }
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error('API ' + res.status + ': ' + t.slice(0, 200));
+      }
+      return res.json();
     }
 
-    function addFiles(newFiles) {
-      const limit = selectedMode === 'translate' ? 1 : 20;
-      const incoming = Array.from(newFiles).slice(0, limit - files.length);
-      const totalBytes = [...files, ...incoming].reduce((s, f) => s + f.size, 0);
-      if (totalBytes > 50 * 1024 * 1024) {
-        showBanner('error', 'Total upload exceeds 50 MB. Please remove a file or compress your documents.', 'El total excede 50 MB. Por favor elimine un archivo o comprima sus documentos.');
+    async function loadCustomers() {
+      const q = searchInput.value.trim();
+      listContainer.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading customers…</div></div>';
+      errorSlot.innerHTML = '';
+      try {
+        const data = await api('/webhook/portal-list', { search: q, limit: 100, offset: 0 });
+        renderCustomers(data);
+      } catch (e) {
+        errorSlot.innerHTML = '<div class="error-box">' + escapeHtml(e.message) + '</div>';
+        listContainer.innerHTML = '';
+        if (e.message.indexOf('Authentication failed') >= 0) ensureSecretLoaded();
+      }
+    }
+
+    function renderCustomers(data) {
+      const persons = data.persons || [];
+      totalCount.textContent = data.total > 0 ? '(' + data.total + ')' : '';
+
+      if (persons.length === 0) {
+        const qLabel = searchInput.value ? ' matching "' + escapeHtml(searchInput.value) + '"' : '';
+        listContainer.innerHTML = '<div class="cust-empty"><span class="icon">📋</span><div>No customers yet' + qLabel + '.</div></div>';
         return;
       }
-      if (selectedMode === 'translate' && incoming.length > 0) files = [incoming[0]];
-      else files = [...files, ...incoming];
-      renderFiles();
-      updateSubmitState();
+
+      const cards = persons.map(p => {
+        const displayName = p.name_passport
+          || p.name_alternate
+          || ((p.name_given || '') + ' ' + (p.name_family || '')).trim()
+          || '(no name)';
+        const dob = p.dob || '—';
+        const caseLbl = p.case_label || '(no case)';
+        const docs = p.doc_count || 0;
+        const updated = p.updated_at ? new Date(p.updated_at).toLocaleDateString() : '';
+
+        return '<a href="/portal/customer.html?id=' + encodeURIComponent(p.id) + '" class="cust-card">'
+          + '<div class="cust-head">'
+          + '<span class="case-label">' + escapeHtml(caseLbl) + '</span>'
+          + '<span class="doc-pill">' + docs + ' doc' + (docs === 1 ? '' : 's') + '</span>'
+          + '</div>'
+          + '<h3>' + escapeHtml(displayName) + '</h3>'
+          + '<div class="meta">'
+          + '<div class="row"><span class="k">DOB</span><span>' + escapeHtml(dob) + '</span></div>'
+          + '<div class="row"><span class="k">Email</span><span>' + escapeHtml(p.email || '—') + '</span></div>'
+          + '<div class="row"><span class="k">Updated</span><span>' + escapeHtml(updated) + '</span></div>'
+          + '</div>'
+          + '</a>';
+      }).join('');
+
+      listContainer.innerHTML = '<div class="cust-grid">' + cards + '</div>';
     }
 
-    fileInput.addEventListener('change', e => addFiles(e.target.files));
-    ['dragenter', 'dragover'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.add('dragover'); }));
-    ['dragleave', 'drop'].forEach(ev => dropzone.addEventListener(ev, e => { e.preventDefault(); dropzone.classList.remove('dragover'); }));
-    dropzone.addEventListener('drop', e => { e.preventDefault(); dropzone.classList.remove('dragover'); addFiles(e.dataTransfer.files); });
-
-    function showBanner(kind, enMsg, esMsg) {
-      banner.className = 'status-banner show ' + kind;
-      const isES = document.body.classList.contains('lang-es');
-      banner.textContent = isES ? esMsg : enMsg;
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     }
 
-    document.getElementById('portal-form').addEventListener('submit', async e => {
-      e.preventDefault();
-      submitBtn.classList.add('loading'); submitBtn.disabled = true;
-      banner.classList.remove('show');
-
-      const fd = new FormData();
-      fd.append('mode', selectedMode);
-      if (selectedMode === 'forms') fd.append('caseType', caseTypeSelect.value);
-      fd.append('clientName', document.getElementById('client-name').value.trim());
-      fd.append('clientEmail', document.getElementById('client-email').value.trim());
-      fd.append('clientNotes', document.getElementById('client-notes').value.trim());
-      fd.append('submittedAt', new Date().toISOString());
-      files.forEach(f => fd.append('files', f, f.name));
-
-      try {
-        const resp = await fetch(N8N_WEBHOOK_URL, { method: 'POST', body: fd });
-        if (!resp.ok) throw new Error('Upload failed (' + resp.status + ')');
-        showBanner('success',
-          'Thank you. Your submission was received securely. Our team will contact you when the documents are ready.',
-          'Gracias. Su envío fue recibido de forma segura. Nuestro equipo se comunicará cuando los documentos estén listos.');
-        document.getElementById('portal-form').reset();
-        files = []; renderFiles(); selectedMode = null;
-        modeOptions.forEach(o => o.classList.remove('selected'));
-        [stepCaseType, stepClient, stepUpload].forEach(s => s.classList.remove('show'));
-      } catch (err) {
-        showBanner('error',
-          'Submission failed. Please try again or email katycab@yahoo.com.',
-          'Falló el envío. Por favor intente de nuevo o envíe un correo a katycab@yahoo.com.');
-        console.error(err);
-      } finally {
-        submitBtn.classList.remove('loading');
-        updateSubmitState();
-      }
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadCustomers, 300);
     });
+
+    document.getElementById('new-customer').addEventListener('click', (e) => {
+      e.preventDefault();
+      alert('New-customer upload UI: coming next. For now, upload via curl to /webhook/portal-submit.');
+    });
+
+    initClerk();
   </script>
 </body>
 </html>

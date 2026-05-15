@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Customer | Katy Chavez Law</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --terracotta: #C9674F;
+      --terracotta-light: #E8896E;
+      --terracotta-pale: #F5DDD7;
+      --sage: #6A8F72;
+      --sage-pale: #E4EEE6;
+      --gold: #D4A84B;
+      --gold-pale: #F5EDD8;
+      --navy: #2B3A52;
+      --navy-mid: #4A5E78;
+      --cream: #FDFAF5;
+      --warm-white: #FFFEF9;
+      --text-dark: #2B2B2B;
+      --text-mid: #555;
+      --text-light: #888;
+      --border: #E8E0D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { background: var(--warm-white); border-bottom: 3px solid var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--navy); }
+    .nav-brand .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+    .nav-brand .tagline { font-size: 0.65rem; color: var(--navy-mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+    .nav-link-back { font-size: 0.82rem; font-weight: 600; color: var(--navy-mid); text-decoration: none; padding: 6px 12px; border-radius: 6px; transition: background 0.18s, color 0.18s; }
+    .nav-link-back:hover { background: var(--terracotta-pale); color: var(--terracotta); }
+    #user-slot { display: none; align-items: center; gap: 10px; }
+    .user-pill { display: flex; align-items: center; gap: 8px; font-size: 0.85rem; color: var(--navy); background: var(--cream); padding: 5px 12px; border-radius: 20px; border: 1px solid var(--border); }
+    .user-pill .avatar { width: 26px; height: 26px; border-radius: 50%; background: var(--terracotta); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; }
+    .btn-signout { background: none; border: 1.5px solid var(--border); color: var(--navy-mid); padding: 6px 12px; border-radius: 6px; cursor: pointer; font-family: 'Nunito', sans-serif; font-size: 0.82rem; font-weight: 600; transition: border-color 0.15s, color 0.15s; }
+    .btn-signout:hover { border-color: var(--terracotta); color: var(--terracotta); }
+
+    .page-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 36px 24px 56px; color: #fff; position: relative; overflow: hidden; }
+    .page-header::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .case-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.12em; color: var(--gold); margin-bottom: 6px; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.7rem, 4vw, 2.2rem); margin-bottom: 4px; }
+    .page-header .subline { opacity: 0.85; font-size: 0.92rem; }
+
+    main { flex: 1; padding: 32px 24px 56px; max-width: 1100px; margin: -28px auto 0; width: 100%; }
+
+    .gate { background: #fff; border-radius: 16px; box-shadow: 0 12px 40px rgba(0,0,0,0.08); border: 1px solid var(--border); padding: 56px 36px; text-align: center; max-width: 480px; margin: 24px auto; }
+    .gate h2 { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--navy); margin-bottom: 8px; }
+    .gate p { color: var(--text-mid); margin-bottom: 24px; font-size: 0.95rem; }
+
+    .card-wrap { background: #fff; border-radius: 14px; box-shadow: 0 6px 24px rgba(0,0,0,0.06); border: 1px solid var(--border); overflow: hidden; }
+    .tabs { display: flex; background: var(--cream); border-bottom: 1px solid var(--border); overflow-x: auto; }
+    .tab-btn { flex: 0 0 auto; padding: 14px 22px; background: none; border: none; font-family: 'Nunito', sans-serif; font-weight: 600; font-size: 0.92rem; color: var(--text-mid); cursor: pointer; position: relative; white-space: nowrap; transition: color 0.15s, background 0.15s; }
+    .tab-btn:hover { color: var(--terracotta); background: var(--warm-white); }
+    .tab-btn.active { color: var(--terracotta); }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: 0; left: 14px; right: 14px; height: 3px; background: var(--terracotta); border-radius: 2px; }
+    .tab-panel { display: none; padding: 28px 32px; }
+    .tab-panel.active { display: block; }
+
+    .field-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 18px; }
+    .field { display: flex; flex-direction: column; }
+    .field label { font-size: 0.78rem; font-weight: 700; color: var(--navy-mid); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; display: flex; align-items: center; gap: 6px; }
+    .field input, .field select, .field textarea { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; background: var(--warm-white); color: var(--text-dark); }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
+    .field textarea { resize: vertical; min-height: 80px; }
+    .field.full { grid-column: 1 / -1; }
+    .field .prov { font-size: 0.7rem; color: var(--text-light); font-weight: 500; text-transform: none; letter-spacing: 0; }
+    .field .prov::before { content: '📄 '; }
+
+    .save-bar { display: flex; justify-content: flex-end; align-items: center; gap: 12px; padding: 16px 32px; background: var(--cream); border-top: 1px solid var(--border); position: sticky; bottom: 0; }
+    .save-status { font-size: 0.85rem; color: var(--text-mid); }
+    .save-status.dirty { color: var(--gold); font-weight: 600; }
+    .save-status.ok { color: var(--sage); font-weight: 600; }
+    .save-status.err { color: #b3392e; font-weight: 600; }
+    .btn-save { background: var(--terracotta); color: #fff; padding: 10px 22px; border: none; border-radius: 8px; font-family: 'Nunito', sans-serif; font-weight: 700; cursor: pointer; transition: background 0.15s; }
+    .btn-save:hover { background: var(--terracotta-light); }
+    .btn-save:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
+
+    .docs-list { display: flex; flex-direction: column; gap: 10px; }
+    .doc-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--warm-white); }
+    .doc-row .doc-icon { font-size: 1.4rem; }
+    .doc-row .doc-info { flex: 1; }
+    .doc-row .doc-name { font-weight: 600; color: var(--navy); margin-bottom: 2px; font-size: 0.92rem; word-break: break-all; }
+    .doc-row .doc-meta { font-size: 0.78rem; color: var(--text-mid); }
+    .doc-row .doc-type { font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: var(--gold-pale); color: #6b5a2e; text-transform: uppercase; letter-spacing: 0.06em; }
+    .doc-row .doc-type.analyzed { background: var(--sage-pale); color: var(--sage); }
+
+    .related-list { display: flex; flex-direction: column; gap: 10px; }
+    .related-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--warm-white); text-decoration: none; color: inherit; transition: border-color 0.15s; }
+    .related-row:hover { border-color: var(--terracotta); }
+    .related-row .name { flex: 1; font-weight: 600; color: var(--navy); }
+    .related-row .role { font-size: 0.78rem; color: var(--text-mid); text-transform: capitalize; }
+
+    .empty-tab { text-align: center; color: var(--text-mid); padding: 32px 16px; font-style: italic; }
+
+    .loading-state { text-align: center; padding: 64px 24px; color: var(--text-mid); }
+    .loading-state .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 14px 18px; border-radius: 8px; margin-bottom: 18px; font-size: 0.9rem; }
+
+    footer { background: var(--navy); color: #c8d8f0; padding: 20px 24px; text-align: center; font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="/katynewheadshot.jpg" alt="Katy Chavez" class="nav-logo" />
+        <div class="nav-brand-text">
+          <span class="name">Katy Chavez Law</span>
+          <span class="tagline">Portal</span>
+        </div>
+      </a>
+      <div class="nav-right">
+        <a href="/portal/" class="nav-link-back">&larr; All customers</a>
+        <div id="user-slot"></div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="case-label" id="case-label">—</div>
+      <h1 id="header-name">Customer</h1>
+      <div class="subline" id="header-sub">Loading…</div>
+    </div>
+  </header>
+
+  <main>
+    <div id="gate" class="gate" style="display:none;">
+      <h2>Staff Sign In</h2>
+      <p>This portal is restricted to Katy Chavez Law staff.</p>
+      <div id="sign-in-mount"></div>
+    </div>
+
+    <div id="dashboard" style="display: none;">
+      <div id="error-slot"></div>
+      <div id="content"></div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Katy Chavez Law &middot; Staff Portal
+  </footer>
+
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_ZGVjZW50LXNlYWhvcnNlLTc4LmNsZXJrLmFjY291bnRzLmRldiQ"
+    src="https://decent-seahorse-78.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
+  <script>
+    const N8N_BASE = 'https://n8n.katychavez.com';
+    const LS_SECRET = 'kcl_portal_secret';
+
+    const PERSON_FIELDS = {
+      identity: [
+        ['name_passport', 'Passport name', 'text'],
+        ['name_alternate', 'Alternate spelling', 'text'],
+        ['name_given', 'Given name', 'text'],
+        ['name_family', 'Family name', 'text'],
+        ['dob', 'Date of birth', 'date'],
+        ['sex', 'Sex', 'select', ['', 'M', 'F', 'X']],
+        ['place_of_birth', 'Place of birth', 'text'],
+        ['country_of_birth', 'Country of birth', 'text'],
+        ['country_of_citizenship', 'Country of citizenship', 'text'],
+        ['a_number', 'A-number', 'text'],
+        ['ssn', 'SSN', 'text'],
+      ],
+      contact: [
+        ['current_address', 'Current address', 'textarea'],
+        ['mailing_address', 'Mailing address (if different)', 'textarea'],
+        ['phone', 'Phone', 'tel'],
+        ['email', 'Email', 'email'],
+      ],
+      status: [
+        ['immigration_status', 'Immigration status', 'text'],
+        ['visa_type', 'Visa type', 'text'],
+        ['last_entry_date', 'Last entry date', 'date'],
+        ['i94_number', 'I-94 number', 'text'],
+        ['ead_category', 'EAD category', 'text'],
+        ['ead_expiry', 'EAD expiry', 'date'],
+        ['gc_category', 'Green card category', 'text'],
+        ['gc_expiry', 'Green card expiry', 'date'],
+      ],
+    };
+
+    const url = new URL(window.location.href);
+    const personId = url.searchParams.get('id');
+
+    const gate = document.getElementById('gate');
+    const dashboard = document.getElementById('dashboard');
+    const userSlot = document.getElementById('user-slot');
+    const errorSlot = document.getElementById('error-slot');
+    const content = document.getElementById('content');
+    const caseLabelEl = document.getElementById('case-label');
+    const headerName = document.getElementById('header-name');
+    const headerSub = document.getElementById('header-sub');
+
+    let record = null;
+    let dirty = false;
+    let signInMounted = false;
+
+    async function initClerk() {
+      while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
+      await window.Clerk.load();
+      renderAuth();
+      window.Clerk.addListener(renderAuth);
+    }
+
+    function renderAuth() {
+      if (window.Clerk.user) {
+        gate.style.display = 'none';
+        dashboard.style.display = 'block';
+        renderUserPill();
+        if (!record) loadPerson();
+      } else {
+        gate.style.display = 'block';
+        dashboard.style.display = 'none';
+        userSlot.style.display = 'none';
+        if (!signInMounted) {
+          signInMounted = true;
+          window.Clerk.mountSignIn(document.getElementById('sign-in-mount'));
+        }
+      }
+    }
+
+    function renderUserPill() {
+      const u = window.Clerk.user;
+      const email = u.primaryEmailAddress?.emailAddress || u.id;
+      const initials = (email[0] || '?').toUpperCase();
+      userSlot.style.display = 'flex';
+      userSlot.innerHTML = '<div class="user-pill"><div class="avatar">' + initials + '</div><span>' + escapeHtml(email) + '</span></div><button class="btn-signout" id="signout-btn">Sign out</button>';
+      document.getElementById('signout-btn').addEventListener('click', () => window.Clerk.signOut());
+    }
+
+    async function api(path, body) {
+      const secret = localStorage.getItem(LS_SECRET);
+      if (!secret) {
+        const v = prompt('Enter your Portal API Secret (cached after this):');
+        if (v) localStorage.setItem(LS_SECRET, v.trim());
+        else throw new Error('No portal secret provided');
+      }
+      const res = await fetch(N8N_BASE + path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Portal-Secret': localStorage.getItem(LS_SECRET),
+        },
+        body: JSON.stringify(body || {}),
+      });
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem(LS_SECRET);
+        throw new Error('Authentication failed. Refresh and re-enter the secret.');
+      }
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error('API ' + res.status + ': ' + t.slice(0, 200));
+      }
+      return res.json();
+    }
+
+    async function loadPerson() {
+      if (!personId) {
+        errorSlot.innerHTML = '<div class="error-box">Missing person ID. Go back to the customer list.</div>';
+        return;
+      }
+      content.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading customer…</div></div>';
+      errorSlot.innerHTML = '';
+      try {
+        record = await api('/webhook/portal-get', { person_id: personId });
+        if (!record || record.error) {
+          errorSlot.innerHTML = '<div class="error-box">Person not found.</div>';
+          content.innerHTML = '';
+          return;
+        }
+        renderRecord();
+      } catch (e) {
+        errorSlot.innerHTML = '<div class="error-box">' + escapeHtml(e.message) + '</div>';
+        content.innerHTML = '';
+      }
+    }
+
+    function renderRecord() {
+      const p = record.person;
+      const c = record.case;
+      const related = record.related_persons || [];
+      const docs = record.documents || [];
+      const fields = record.extracted_fields || [];
+
+      const displayName = p.name_passport
+        || ((p.name_given || '') + ' ' + (p.name_family || '')).trim()
+        || p.name_alternate
+        || '(no name)';
+      headerName.textContent = displayName;
+      caseLabelEl.textContent = c && c.case_label ? c.case_label : '—';
+      headerSub.textContent = (p.dob ? 'DOB ' + p.dob + ' · ' : '') + (p.country_of_citizenship || 'Citizenship unknown');
+
+      // Provenance map: field_name -> document filename
+      const provMap = {};
+      const docById = {};
+      docs.forEach(d => { docById[d.id] = d; });
+      fields.forEach(f => {
+        if (!provMap[f.field_name]) {
+          const d = docById[f.document_id];
+          provMap[f.field_name] = d ? (d.original_filename || d.filename) : null;
+        }
+      });
+
+      // Marriage data from extracted_fields (no person column for these yet)
+      const marriageFieldNames = ['marriage_date', 'marriage_location', 'spouse_name'];
+      const marriageVals = {};
+      fields.forEach(f => {
+        if (marriageFieldNames.indexOf(f.field_name) >= 0) marriageVals[f.field_name] = f.field_value;
+      });
+      const hasMarriage = Object.keys(marriageVals).length > 0;
+      const hasFamily = related.length > 0;
+
+      // Tabs
+      const tabs = [
+        { id: 'identity', label: 'Identity' },
+        { id: 'contact', label: 'Contact' },
+        { id: 'status', label: 'Status' },
+      ];
+      if (hasMarriage) tabs.push({ id: 'marriage', label: 'Marriage' });
+      if (hasFamily) tabs.push({ id: 'family', label: 'Family' });
+      tabs.push({ id: 'documents', label: 'Documents (' + docs.length + ')' });
+      tabs.push({ id: 'notes', label: 'Notes' });
+
+      const tabsHtml = '<div class="tabs">' + tabs.map((t, i) =>
+        '<button class="tab-btn ' + (i === 0 ? 'active' : '') + '" data-tab="' + t.id + '">' + escapeHtml(t.label) + '</button>'
+      ).join('') + '</div>';
+
+      // Editable panels
+      const identityPanel = renderEditableTab('identity', PERSON_FIELDS.identity, p, provMap);
+      const contactPanel = renderEditableTab('contact', PERSON_FIELDS.contact, p, provMap);
+      const statusPanel = renderEditableTab('status', PERSON_FIELDS.status, p, provMap);
+
+      // Marriage panel (read-only from extracted_fields)
+      let marriagePanel = '';
+      if (hasMarriage) {
+        const rows = marriageFieldNames.map(fn => {
+          if (!marriageVals[fn]) return '';
+          return '<div class="field"><label>' + escapeHtml(humanize(fn)) + '</label>'
+            + '<input type="text" value="' + escapeHtml(marriageVals[fn]) + '" disabled />'
+            + (provMap[fn] ? '<span class="prov">From ' + escapeHtml(provMap[fn]) + '</span>' : '')
+            + '</div>';
+        }).join('');
+        marriagePanel = '<div class="tab-panel" data-panel="marriage"><div class="field-grid">' + rows + '</div></div>';
+      }
+
+      // Family panel
+      let familyPanel = '';
+      if (hasFamily) {
+        const rows = related.map(rp => {
+          const rn = rp.name_passport || ((rp.name_given || '') + ' ' + (rp.name_family || '')).trim() || rp.name_alternate || '(no name)';
+          return '<a class="related-row" href="/portal/customer.html?id=' + encodeURIComponent(rp.id) + '">'
+            + '<span class="name">' + escapeHtml(rn) + '</span>'
+            + '<span class="role">' + escapeHtml(rp.role || 'unspecified') + '</span>'
+            + '</a>';
+        }).join('');
+        familyPanel = '<div class="tab-panel" data-panel="family"><div class="related-list">' + rows + '</div></div>';
+      }
+
+      // Documents
+      const docsRows = docs.length === 0
+        ? '<div class="empty-tab">No documents uploaded for this customer.</div>'
+        : '<div class="docs-list">' + docs.map(d => {
+            const icon = d.mime_type === 'application/pdf' ? '📄' : '🖼️';
+            const sizeKB = d.size_bytes ? Math.round(d.size_bytes / 1024) + ' KB' : '—';
+            return '<div class="doc-row">'
+              + '<div class="doc-icon">' + icon + '</div>'
+              + '<div class="doc-info">'
+              + '<div class="doc-name">' + escapeHtml(d.original_filename || d.filename) + '</div>'
+              + '<div class="doc-meta">' + sizeKB + ' · uploaded ' + (d.uploaded_at ? new Date(d.uploaded_at).toLocaleDateString() : '—') + '</div>'
+              + '</div>'
+              + '<span class="doc-type ' + (d.was_analyzed ? 'analyzed' : '') + '">' + escapeHtml(d.doc_type || 'unknown') + '</span>'
+              + '</div>';
+          }).join('') + '</div>';
+      const docsPanel = '<div class="tab-panel" data-panel="documents">' + docsRows + '</div>';
+
+      // Notes
+      const notesText = c && c.notes ? c.notes : '';
+      const notesPanel = '<div class="tab-panel" data-panel="notes">'
+        + '<div class="field full">'
+        + '<label>Case notes</label>'
+        + '<textarea disabled rows="8" placeholder="(case-level notes — editing not yet wired up)">' + escapeHtml(notesText) + '</textarea>'
+        + '</div></div>';
+
+      const saveBar = '<div class="save-bar">'
+        + '<span class="save-status" id="save-status">No changes</span>'
+        + '<button class="btn-save" id="save-btn" disabled>Save changes</button>'
+        + '</div>';
+
+      content.innerHTML = '<div class="card-wrap">'
+        + tabsHtml
+        + identityPanel + contactPanel + statusPanel + marriagePanel + familyPanel + docsPanel + notesPanel
+        + saveBar
+        + '</div>';
+
+      // Set the first tab active
+      const firstPanel = content.querySelector('.tab-panel');
+      if (firstPanel) firstPanel.classList.add('active');
+
+      bindTabs();
+      bindFieldEdits();
+      document.getElementById('save-btn').addEventListener('click', savePerson);
+    }
+
+    function renderEditableTab(id, fieldDefs, person, provMap) {
+      const rows = fieldDefs.map(def => {
+        const [key, label, type, options] = def;
+        const val = person[key] == null ? '' : person[key];
+        let inputHtml;
+        if (type === 'textarea') {
+          inputHtml = '<textarea data-field="' + key + '">' + escapeHtml(val) + '</textarea>';
+        } else if (type === 'select') {
+          const opts = (options || []).map(o => '<option value="' + escapeHtml(o) + '"' + (val === o ? ' selected' : '') + '>' + escapeHtml(o || '—') + '</option>').join('');
+          inputHtml = '<select data-field="' + key + '">' + opts + '</select>';
+        } else {
+          inputHtml = '<input type="' + type + '" data-field="' + key + '" value="' + escapeHtml(val) + '" />';
+        }
+        const prov = provMap[key] ? '<span class="prov">From ' + escapeHtml(provMap[key]) + '</span>' : '';
+        return '<div class="field"><label>' + escapeHtml(label) + '</label>' + inputHtml + prov + '</div>';
+      }).join('');
+      return '<div class="tab-panel" data-panel="' + id + '"><div class="field-grid">' + rows + '</div></div>';
+    }
+
+    function bindTabs() {
+      const btns = content.querySelectorAll('.tab-btn');
+      const panels = content.querySelectorAll('.tab-panel');
+      btns.forEach(b => {
+        b.addEventListener('click', () => {
+          btns.forEach(x => x.classList.remove('active'));
+          panels.forEach(x => x.classList.remove('active'));
+          b.classList.add('active');
+          const panel = content.querySelector('[data-panel="' + b.dataset.tab + '"]');
+          if (panel) panel.classList.add('active');
+        });
+      });
+    }
+
+    function bindFieldEdits() {
+      const inputs = content.querySelectorAll('[data-field]');
+      inputs.forEach(el => {
+        el.addEventListener('input', () => {
+          dirty = true;
+          const status = document.getElementById('save-status');
+          status.textContent = 'Unsaved changes';
+          status.className = 'save-status dirty';
+          document.getElementById('save-btn').disabled = false;
+        });
+      });
+    }
+
+    function collectFields() {
+      const out = {};
+      content.querySelectorAll('[data-field]').forEach(el => {
+        out[el.dataset.field] = el.value;
+      });
+      return out;
+    }
+
+    async function savePerson() {
+      const status = document.getElementById('save-status');
+      const btn = document.getElementById('save-btn');
+      btn.disabled = true;
+      status.textContent = 'Saving…';
+      status.className = 'save-status';
+      try {
+        const fields = collectFields();
+        const result = await api('/webhook/portal-update', { person_id: personId, fields });
+        record.person = result.person || record.person;
+        dirty = false;
+        status.textContent = 'Saved ' + new Date().toLocaleTimeString();
+        status.className = 'save-status ok';
+      } catch (e) {
+        status.textContent = 'Save failed: ' + e.message;
+        status.className = 'save-status err';
+        btn.disabled = false;
+      }
+    }
+
+    function humanize(s) {
+      return String(s).split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    }
+
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    window.addEventListener('beforeunload', (e) => {
+      if (dirty) { e.preventDefault(); e.returnValue = ''; }
+    });
+
+    initClerk();
+  </script>
+</body>
+</html>

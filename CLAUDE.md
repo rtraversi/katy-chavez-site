@@ -142,11 +142,12 @@ Per memory `feedback-privilege-boundary`: customer data must stay on KCL infrast
 - Verified end-to-end 2026-05-15: list loads, search filters, click navigates, save persists.
 
 **Known open items in Phase 1:**
-- `+ New customer` button is a stub. Uploads currently go via curl to `/webhook/portal-submit`. Real upload UI is the obvious next slice.
+- **Add documents to existing case** (highest priority next slice) — staff frequently receive client docs in waves, not all at once. Today the dashboard's `+ New case` button always creates a fresh case, so a second upload for the same client duplicates them. Need a `+ Add documents` button on `portal/customer.html` near the Documents tab that opens the same modal but tags the upload with `case_id=<this>`. Backend change: extend `portal-submit` (or build a sibling `portal-append` workflow) to detect `case_id` and switch to append-mode — INSERT documents + extracted_fields under existing case_id, reconcile new info into existing persons by name+DOB match, only create new persons if a genuinely new family member appears in the docs.
 - Marriage tab is **read-only** — fields (`marriage_date`, `marriage_location`, `spouse_name`) live in `extracted_fields` only; `persons` has no columns for them yet. A 004 migration + persons-column addition + `portal_update` allow-list extension would make these editable.
 - Notes tab is **read-only** — `cases.notes` exists; no update endpoint covers it yet.
 - Marriage cert family detection v1 creates **one person per cert**. The other named individual is captured as `extracted_fields.spouse_name`. v2: create two persons per cert and use spouse_name to link them.
 - Cleanup pass: delete `portal/admin.html` (deprecated) and `portal/dev-jwt.html` (abandoned debug page).
+- Auth re-enable on the CRUD webhooks (Clerk-prod / Cloudflare Access / Keycloak) — `REQUIRE_CLERK = false` flag at the top of both portal pages controls the front-end side.
 
 ## Phase 2 — USCIS form filling (next)
 

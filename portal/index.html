@@ -82,12 +82,12 @@
     .cust-card { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--terracotta); border-radius: 12px; padding: 18px 20px; text-decoration: none; color: inherit; transition: box-shadow 0.18s, transform 0.12s; display: block; }
     .cust-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.08); transform: translateY(-2px); }
     .cust-card .cust-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 6px; gap: 10px; }
-    .cust-card .case-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta); }
+    .cust-card .case-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--terracotta); display: flex; align-items: center; gap: 8px; }
+    .cust-card .new-badge { display: inline-block; background: #d83a2e; color: #fff; font-size: 0.62rem; padding: 2px 7px; border-radius: 10px; letter-spacing: 0.06em; }
     .cust-card .doc-pill { font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: var(--gold-pale); color: #6b5a2e; }
-    .cust-card h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.15rem; margin-bottom: 4px; }
-    .cust-card .meta { font-size: 0.82rem; color: var(--text-mid); line-height: 1.6; }
-    .cust-card .meta .row { display: flex; gap: 8px; }
-    .cust-card .meta .row .k { color: var(--text-light); font-weight: 600; min-width: 60px; }
+    .cust-card h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.1rem; margin-bottom: 4px; }
+    .cust-card .meta { font-size: 0.82rem; color: var(--text-mid); }
+    .cust-card .meta .email { color: var(--text-mid); }
 
     .loading-state { text-align: center; padding: 48px 24px; color: var(--text-mid); }
     .loading-state .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px; }
@@ -176,7 +176,7 @@
           <h2>Customers <span class="total" id="total-count"></span></h2>
           <div class="toolbar-right">
             <input type="search" id="search" class="search" placeholder="Search by name…" />
-            <a href="#" class="btn-primary" id="new-customer">+ New customer</a>
+            <a href="#" class="btn-primary" id="new-customer">+ New case</a>
           </div>
         </div>
 
@@ -277,7 +277,7 @@
       if (REQUIRE_CLERK && window.Clerk && window.Clerk.user) {
         renderUserPill();
       } else {
-        userSlot.style.display = 'none';
+        renderLogoutButton();
       }
       ensureSecretLoaded();
     }
@@ -308,6 +308,7 @@
       if (!v) return;
       localStorage.setItem(LS_SECRET, v);
       secretInput.value = '';
+      renderLogoutButton();
       ensureSecretLoaded();
     });
     secretInput.addEventListener('keydown', (e) => {
@@ -360,27 +361,24 @@
         return;
       }
 
+      const viewed = getViewedSet();
       const cards = persons.map(p => {
         const displayName = p.name_passport
           || p.name_alternate
           || ((p.name_given || '') + ' ' + (p.name_family || '')).trim()
           || '(no name)';
-        const dob = p.dob || '—';
-        const caseLbl = p.case_label || '(no case)';
+        const caseLbl = cleanCaseLabel(p.case_label || '(no case)');
         const docs = p.doc_count || 0;
-        const updated = p.updated_at ? new Date(p.updated_at).toLocaleDateString() : '';
+        const isNew = !viewed.has(p.id);
+        const badge = isNew ? '<span class="new-badge">NEW</span>' : '';
 
         return '<a href="/portal/customer.html?id=' + encodeURIComponent(p.id) + '" class="cust-card">'
           + '<div class="cust-head">'
-          + '<span class="case-label">' + escapeHtml(caseLbl) + '</span>'
+          + '<span class="case-label">' + escapeHtml(caseLbl) + badge + '</span>'
           + '<span class="doc-pill">' + docs + ' doc' + (docs === 1 ? '' : 's') + '</span>'
           + '</div>'
           + '<h3>' + escapeHtml(displayName) + '</h3>'
-          + '<div class="meta">'
-          + '<div class="row"><span class="k">DOB</span><span>' + escapeHtml(dob) + '</span></div>'
-          + '<div class="row"><span class="k">Email</span><span>' + escapeHtml(p.email || '—') + '</span></div>'
-          + '<div class="row"><span class="k">Updated</span><span>' + escapeHtml(updated) + '</span></div>'
-          + '</div>'
+          + '<div class="meta"><span class="email">' + escapeHtml(p.email || '—') + '</span></div>'
           + '</a>';
       }).join('');
 
@@ -390,6 +388,37 @@
     function escapeHtml(s) {
       if (s === null || s === undefined) return '';
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function cleanCaseLabel(label) {
+      // Strip trailing " (Job N)" suffix the workflow currently appends.
+      return String(label || '').replace(/\s*\(Job\s+\d+\)\s*$/i, '').trim() || label;
+    }
+
+    function getViewedSet() {
+      try {
+        const arr = JSON.parse(localStorage.getItem('kcl_viewed_customers') || '[]');
+        return new Set(Array.isArray(arr) ? arr : []);
+      } catch (e) {
+        return new Set();
+      }
+    }
+
+    function renderLogoutButton() {
+      // Visible whenever the secret is set — gives staff a way to clear it.
+      const hasSecret = !!localStorage.getItem(LS_SECRET);
+      if (hasSecret) {
+        userSlot.style.display = 'flex';
+        userSlot.innerHTML = '<button class="btn-signout" id="logout-btn">Log out</button>';
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          if (!confirm('Log out? This clears your portal session on this browser.')) return;
+          localStorage.removeItem(LS_SECRET);
+          window.location.reload();
+        });
+      } else {
+        userSlot.style.display = 'none';
+        userSlot.innerHTML = '';
+      }
     }
 
     searchInput.addEventListener('input', () => {

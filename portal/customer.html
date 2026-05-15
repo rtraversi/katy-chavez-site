@@ -95,6 +95,9 @@
     .doc-row .doc-type { font-size: 0.7rem; font-weight: 700; padding: 3px 10px; border-radius: 12px; background: var(--gold-pale); color: #6b5a2e; text-transform: uppercase; letter-spacing: 0.06em; }
     .doc-row .doc-type.analyzed { background: var(--sage-pale); color: var(--sage); }
 
+    .back-link-inline { display: inline-flex; align-items: center; gap: 6px; color: var(--navy-mid); text-decoration: none; font-size: 0.88rem; font-weight: 600; padding: 6px 10px; border-radius: 6px; margin-bottom: 14px; transition: background 0.15s, color 0.15s; }
+    .back-link-inline:hover { background: var(--terracotta-pale); color: var(--terracotta); }
+
     .related-list { display: flex; flex-direction: column; gap: 10px; }
     .related-row { display: flex; align-items: center; gap: 14px; padding: 12px 16px; border: 1px solid var(--border); border-radius: 10px; background: var(--warm-white); text-decoration: none; color: inherit; transition: border-color 0.15s; }
     .related-row:hover { border-color: var(--terracotta); }
@@ -247,7 +250,7 @@
       if (REQUIRE_CLERK && window.Clerk && window.Clerk.user) {
         renderUserPill();
       } else {
-        userSlot.style.display = 'none';
+        renderLogoutButton();
       }
       if (!record) loadPerson();
     }
@@ -320,8 +323,11 @@
         || p.name_alternate
         || '(no name)';
       headerName.textContent = displayName;
-      caseLabelEl.textContent = c && c.case_label ? c.case_label : '—';
+      caseLabelEl.textContent = c && c.case_label ? cleanCaseLabel(c.case_label) : '—';
       headerSub.textContent = (p.dob ? 'DOB ' + p.dob + ' · ' : '') + (p.country_of_citizenship || 'Citizenship unknown');
+
+      // Mark this person as viewed so the NEW badge on the dashboard clears.
+      markViewed(p.id);
 
       // Provenance map: field_name -> document filename
       const provMap = {};
@@ -419,7 +425,8 @@
         + '<button class="btn-save" id="save-btn" disabled>Save changes</button>'
         + '</div>';
 
-      content.innerHTML = '<div class="card-wrap">'
+      content.innerHTML = '<a href="/portal/" class="back-link-inline">&larr; Back to customers</a>'
+        + '<div class="card-wrap">'
         + tabsHtml
         + identityPanel + contactPanel + statusPanel + marriagePanel + familyPanel + docsPanel + notesPanel
         + saveBar
@@ -515,6 +522,39 @@
     function escapeHtml(s) {
       if (s === null || s === undefined) return '';
       return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function cleanCaseLabel(label) {
+      return String(label || '').replace(/\s*\(Job\s+\d+\)\s*$/i, '').trim() || label;
+    }
+
+    function markViewed(id) {
+      if (!id) return;
+      let arr;
+      try {
+        arr = JSON.parse(localStorage.getItem('kcl_viewed_customers') || '[]');
+        if (!Array.isArray(arr)) arr = [];
+      } catch (e) { arr = []; }
+      if (arr.indexOf(id) < 0) {
+        arr.push(id);
+        localStorage.setItem('kcl_viewed_customers', JSON.stringify(arr));
+      }
+    }
+
+    function renderLogoutButton() {
+      const hasSecret = !!localStorage.getItem(LS_SECRET);
+      if (hasSecret) {
+        userSlot.style.display = 'flex';
+        userSlot.innerHTML = '<button class="btn-signout" id="logout-btn">Log out</button>';
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          if (!confirm('Log out? This clears your portal session on this browser.')) return;
+          localStorage.removeItem(LS_SECRET);
+          window.location.href = '/portal/';
+        });
+      } else {
+        userSlot.style.display = 'none';
+        userSlot.innerHTML = '';
+      }
     }
 
     window.addEventListener('beforeunload', (e) => {

@@ -115,6 +115,8 @@ const CLASSIFY_PROMPT = 'Classify this document into one of these categories: pa
 
 const EXTRACT_PROMPT = 'Extract the following fields from this document. Return JSON only (no markdown fences). Use null for any field not present. Dates as YYYY-MM-DD. Names exactly as written on the document.\\n\\n{\\n  "name_full": null,\\n  "name_given": null,\\n  "name_family": null,\\n  "dob": null,\\n  "place_of_birth": null,\\n  "country_of_birth": null,\\n  "country_of_citizenship": null,\\n  "sex": null,\\n  "a_number": null,\\n  "passport_number": null,\\n  "marriage_date": null,\\n  "marriage_location": null,\\n  "spouse_name": null,\\n  "ead_category": null,\\n  "ead_expiry": null,\\n  "gc_category": null,\\n  "gc_expiry": null\\n}';
 
+const SYSTEM_PROMPT = 'You are a document extraction service. Respond with valid JSON only. No preamble, no explanation, no markdown fences, no commentary before or after the JSON. Begin your response with the opening brace and end with the closing brace.';
+
 const helpers = this.helpers;
 async function callClaude(messages, maxTokens) {
   let data;
@@ -127,7 +129,7 @@ async function callClaude(messages, maxTokens) {
         'anthropic-version': '2023-06-01',
         'content-type': 'application/json',
       },
-      body: { model: MODEL, max_tokens: maxTokens || 1500, messages },
+      body: { model: MODEL, max_tokens: maxTokens || 1500, system: SYSTEM_PROMPT, messages },
       json: true,
     });
   } catch (e) {
@@ -146,7 +148,17 @@ function parseJson(text) {
   if (s.startsWith('\`\`\`')) {
     s = s.replace(/^\`\`\`(?:json)?\\s*\\n?/, '').replace(/\\n?\`\`\`\\s*$/, '');
   }
-  return JSON.parse(s);
+  try {
+    return JSON.parse(s);
+  } catch (e) {
+    // Fallback: find first balanced JSON object in the response
+    const start = s.indexOf('{');
+    const end = s.lastIndexOf('}');
+    if (start >= 0 && end > start) {
+      return JSON.parse(s.slice(start, end + 1));
+    }
+    throw e;
+  }
 }
 
 function buildMediaBlock(buf, mimeType) {
@@ -191,10 +203,11 @@ for (let i = 0; i < files.length; i++) {
   }
 
   let extracted = null;
+  let extractRaw = null;
   if (ANALYZABLE.indexOf(classification.doc_type) >= 0) {
     try {
-      const txt = await callClaude([{ role: 'user', content: [media, { type: 'text', text: EXTRACT_PROMPT }] }], 1500);
-      extracted = parseJson(txt);
+      extractRaw = await callClaude([{ role: 'user', content: [media, { type: 'text', text: EXTRACT_PROMPT }] }], 1500);
+      extracted = parseJson(extractRaw);
     } catch (e) {
       errors.push('extract: ' + (e && e.message ? e.message : String(e)));
     }
@@ -207,6 +220,7 @@ for (let i = 0; i < files.length; i++) {
     extracted,
     _errors: errors,
     _classifyRaw: classifyRaw,
+    _extractRaw: extractRaw,
   });
 }
 
@@ -350,6 +364,9 @@ return [{
       })),
       classify_samples: fileResults.map(function(f) {
         return { filename: f.filename, doc_type: f.doc_type, raw: f._classifyRaw };
+      }),
+      extract_samples: fileResults.map(function(f) {
+        return { filename: f.filename, has_extract: f.extracted ? true : false, raw: f._extractRaw ? f._extractRaw.slice(0, 600) : null };
       }),
     },
   },

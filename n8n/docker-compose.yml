@@ -1,7 +1,13 @@
-# KCL n8n stack — shared-tenancy mode.
-# Routes through the host-level Traefik that BSR runs across all tenant n8n containers.
-# Traefik discovers this container via the Docker socket and uses the labels below to
-# route https://n8n.katychavez.com -> n8n:5678 with auto Let's Encrypt cert.
+# KCL n8n + portal-postgres stack — shared-tenancy mode.
+#
+# Two services:
+#   - postgres: internal-only DB for portal customer/case/person/document records
+#   - n8n:     workflow engine + webhook surface, exposed via shared Traefik
+#
+# Traefik discovers the n8n container via the Docker socket and uses the labels
+# below to route https://n8n.katychavez.com -> n8n:5678 with auto Let's Encrypt
+# cert. Postgres has no host port and no Traefik labels — accessible only on the
+# compose-internal network as `postgres:5432`.
 #
 # Requires (already in place on this VPS):
 #   - traefik-traefik-1 running with --providers.docker=true and a "letsencrypt" certresolver
@@ -9,9 +15,31 @@
 #   - Firewall already allowing 80/443 (do not reset it)
 
 services:
+  # KCL portal database. Internal-only — no host port, no Traefik labels.
+  # n8n + future portal API reach it as `postgres:5432` on the compose network.
+  # Stores customer/case/person/document/extracted_fields records (NOT n8n's
+  # own state — n8n keeps its own SQLite in /home/node/.n8n).
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   n8n:
     image: n8nio/n8n:latest
     restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
     ports:
       - "5678"
     environment:
@@ -36,6 +64,12 @@ services:
       TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
       CLERK_SECRET_KEY: ${CLERK_SECRET_KEY}
       CLERK_JWT_ISSUER: ${CLERK_JWT_ISSUER}
+      # Portal DB connection (so n8n Postgres-node configs can pull from env).
+      PORTAL_DB_HOST: postgres
+      PORTAL_DB_PORT: 5432
+      PORTAL_DB_USER: ${POSTGRES_USER}
+      PORTAL_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      PORTAL_DB_NAME: ${POSTGRES_DB}
     volumes:
       - n8n_data:/home/node/.n8n
       - ./forms:/data/forms:ro
@@ -49,3 +83,4 @@ services:
 
 volumes:
   n8n_data:
+  postgres_data:

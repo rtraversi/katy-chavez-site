@@ -311,7 +311,7 @@
     </ul>
     <div class="nav-right">
       <a class="nav-phone" href="tel:9198381616">(919) 838-1616</a>
-      <a class="nav-pay" href="https://www.convergepay.com/hosted-payments?ssl_txn_auth_token=IK1m1pZHRIGQ3v5RJ6apsgAAAZ4xa9dZ" target="_blank" rel="noopener">💳 Pay Now</a>
+      <a href="#" class="nav-pay nav-link" data-page="payment">💳 Pay Now</a>
       <div class="lang-toggle">
         <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
         <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
@@ -1012,6 +1012,55 @@
 </div>
 <div class="copy-toast" id="copyToast">✓ Phone number copied!</div>
 
+<!--  PAGE: PAYMENT  -->
+<div class="page" id="page-payment">
+  <div class="page-header contact">
+    <div class="page-header-inner">
+      <span class="page-header-icon">💳</span>
+      <h1><span class="en">Make a Payment</span><span class="es">Realizar un Pago</span></h1>
+      <p class="en">Securely pay your attorney fees online using any major credit card.</p>
+      <p class="es">Pague sus honorarios de abogado de forma segura en línea con cualquier tarjeta de crédito.</p>
+    </div>
+  </div>
+  <div class="content-area" style="max-width:680px;margin:0 auto;">
+
+    <!-- Important Notice -->
+    <div style="background:#fff8e1;border:2px solid #f59e0b;border-radius:12px;padding:22px 24px;margin-bottom:28px;display:flex;gap:16px;align-items:flex-start;">
+      <span style="font-size:1.8rem;flex-shrink:0;">⚠️</span>
+      <div>
+        <p style="font-weight:700;color:#92400e;font-size:1rem;margin-bottom:6px;"><span class="en">Important — Please Read Before Paying</span><span class="es">Importante — Por Favor Lea Antes de Pagar</span></p>
+        <p style="color:#78350f;font-size:0.92rem;line-height:1.6;">
+          <span class="en">This payment link is for <strong>attorney's fees only</strong>. Please <strong>do not</strong> use this link to pay filing fees, court costs, or any government fees. If you are unsure what you owe, please contact Katy directly at <span onclick="copyEmail()" style="cursor:pointer;font-weight:700;text-decoration:underline;" title="Click to copy">katycab@yahoo.com</span> before making a payment.</span>
+          <span class="es">Este enlace de pago es <strong>solo para honorarios de abogados</strong>. Por favor <strong>no</strong> use este enlace para pagar tarifas de presentación, costas judiciales ni ninguna tarifa gubernamental. Si no está seguro de lo que debe, comuníquese con Katy directamente a <span onclick="copyEmail()" style="cursor:pointer;font-weight:700;text-decoration:underline;" title="Clic para copiar">katycab@yahoo.com</span> antes de realizar un pago.</span>
+        </p>
+      </div>
+    </div>
+
+    <!-- Payment Tile -->
+    <div class="pay-box" style="padding:36px 32px;">
+      <p style="font-size:2rem;margin-bottom:10px;">🔒</p>
+      <h2 style="font-family:'Playfair Display',serif;color:#2e7d4f;margin-bottom:6px;"><span class="en">Pay Attorney Fees</span><span class="es">Pagar Honorarios de Abogado</span></h2>
+      <p style="font-size:0.9rem;color:var(--text-mid);margin-bottom:4px;"><span class="en">Secure payment powered by Converge</span><span class="es">Pago seguro procesado por Converge</span></p>
+      <div class="card-brands" style="margin:14px 0;">
+        <span class="card-brand visa">VISA</span>
+        <span class="card-brand mc">Mastercard</span>
+        <span class="card-brand amex">AMEX</span>
+        <span class="card-brand discover">DISCOVER</span>
+      </div>
+      <a href="https://www.convergepay.com/hosted-payments?ssl_txn_auth_token=IK1m1pZHRIGQ3v5RJ6apsgAAAZ4xa9dZ" class="pay-btn-big" target="_blank" rel="noopener">
+        <span class="en">PAY NOW →</span><span class="es">PAGAR AHORA →</span>
+      </a>
+      <p style="font-size:0.8rem;color:var(--text-light);margin-top:14px;"><span class="en">You will be redirected to a secure Converge payment page.</span><span class="es">Será redirigido a una página de pago seguro de Converge.</span></p>
+    </div>
+
+    <p style="text-align:center;font-size:0.88rem;color:var(--text-light);margin-top:8px;">
+      <span class="en">Questions about your balance? <span onclick="copyEmail()" style="cursor:pointer;color:var(--terracotta);font-weight:700;" title="Click to copy">Email Katy</span> or call <a href="tel:9198381616" style="color:var(--terracotta);font-weight:700;">(919) 838-1616</a>.</span>
+      <span class="es">¿Preguntas sobre su saldo? <span onclick="copyEmail()" style="cursor:pointer;color:var(--terracotta);font-weight:700;" title="Clic para copiar">Escriba a Katy</span> o llame al <a href="tel:9198381616" style="color:var(--terracotta);font-weight:700;">(919) 838-1616</a>.</span>
+    </p>
+
+  </div>
+</div>
+
 <!--  FOOTER  -->
 <footer>
   <div class="footer-inner">
@@ -1034,6 +1083,7 @@
       <ul>
         <li><a href="#" class="nav-link" data-page="about"><span class="en">About Us</span><span class="es">Nosotros</span></a></li>
         <li><a href="#" class="nav-link" data-page="contact"><span class="en">Contact</span><span class="es">Contacto</span></a></li>
+        <li><a href="#" class="nav-link" data-page="payment"><span class="en">💳 Pay Now</span><span class="es">💳 Pagar Ahora</span></a></li>
         <li><a href="tel:9198381616"><span class="en">Call (919) 838-1616</span><span class="es">Llame al (919) 838-1616</span></a></li>
       </ul>
     </div>

@@ -235,6 +235,20 @@
     footer ul a:hover { color: var(--terracotta-light); padding-left: 4px; }
     .footer-bottom { max-width: 1000px; margin: 36px auto 0; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.08); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; font-size: 0.82rem; }
 
+    /* PAY NOW */
+    .nav-pay { background: #2e7d4f; color: #fff !important; padding: 6px 13px !important; border-radius: 6px !important; font-weight: 700 !important; font-size: 0.8rem !important; text-decoration: none; transition: background 0.18s; white-space: nowrap; border: none; }
+    .nav-pay:hover { background: #246040 !important; color: #fff !important; }
+    .pay-box { background: #f0faf4; border: 2px solid #2e7d4f; border-radius: 12px; padding: 24px; margin-bottom: 24px; text-align: center; }
+    .card-brands { display: flex; gap: 8px; flex-wrap: wrap; margin: 12px 0; align-items: center; justify-content: center; }
+    .card-brand { display: inline-flex; align-items: center; justify-content: center; padding: 5px 11px; border-radius: 5px; font-size: 0.78rem; font-weight: 900; letter-spacing: 0.05em; border: 1px solid rgba(0,0,0,0.12); }
+    .card-brand.visa { background: #1a1f71; color: #fff; font-style: italic; }
+    .card-brand.mc { background: #252525; color: #fff; }
+    .card-brand.amex { background: #007bc1; color: #fff; }
+    .card-brand.discover { background: #f76f20; color: #fff; }
+    .pay-btn-big { display: inline-block; background: #2e7d4f; color: #fff !important; padding: 14px 40px; border-radius: 8px; font-weight: 700; font-size: 1.1rem; text-decoration: none; transition: background 0.18s, transform 0.12s; box-shadow: 0 4px 16px rgba(46,125,79,0.35); margin: 14px 0 10px; }
+    .pay-btn-big:hover { background: #246040; transform: translateY(-2px); }
+    .pay-disclaimer { font-size: 0.8rem; color: #666; margin-top: 10px; line-height: 1.5; }
+
     /*  RESPONSIVE  */
     @media (max-width: 960px) { .nav-links, .nav-phone { display: none; } .hamburger { display: flex; } .lang-toggle { display: none; } }
     @media (max-width: 600px) { .stats-inner { grid-template-columns: 1fr 1fr; } .hero-cards { gap: 10px; } .hero-card { min-width: 120px; padding: 14px 16px; } }
@@ -297,6 +311,7 @@
     </ul>
     <div class="nav-right">
       <a class="nav-phone" href="tel:9198381616">(919) 838-1616</a>
+      <a class="nav-pay" href="https://www.convergepay.com/hosted-payments?ssl_txn_auth_token=IK1m1pZHRIGQ3v5RJ6apsgAAAZ4xa9dZ" target="_blank" rel="noopener">💳 Pay Now</a>
       <div class="lang-toggle">
         <button class="lang-btn active" id="btn-en" onclick="setLang('en')">EN</button>
         <button class="lang-btn" id="btn-es" onclick="setLang('es')">ES</button>
@@ -950,6 +965,23 @@
             <span class="es">Responde todos los correos con prontitud — incluso si aún no es cliente. Esto no crea una relación abogado-cliente.</span>
           </p>
         </div>
+        <div class="pay-box">
+          <p style="font-size:1.8rem;margin-bottom:8px;">💳</p>
+          <h3 style="font-family:'Playfair Display',serif;color:#2e7d4f;margin-bottom:6px;font-size:1.2rem;"><span class="en">Pay Attorney Fees Online</span><span class="es">Pague Honorarios en Línea</span></h3>
+          <p style="font-size:0.88rem;color:var(--text-mid);margin-bottom:4px;"><span class="en">We accept all major credit cards</span><span class="es">Aceptamos todas las tarjetas principales</span></p>
+          <div class="card-brands">
+            <span class="card-brand visa">VISA</span>
+            <span class="card-brand mc">Mastercard</span>
+            <span class="card-brand amex">AMEX</span>
+            <span class="card-brand discover">DISCOVER</span>
+          </div>
+          <a href="https://www.convergepay.com/hosted-payments?ssl_txn_auth_token=IK1m1pZHRIGQ3v5RJ6apsgAAAZ4xa9dZ" class="pay-btn-big" target="_blank" rel="noopener"><span class="en">PAY NOW</span><span class="es">PAGAR AHORA</span></a>
+          <p class="pay-disclaimer">
+            <span class="en">⚠️ <strong>For attorney's fees only.</strong> This payment link cannot be used to pay filing fees or court costs.</span>
+            <span class="es">⚠️ <strong>Solo para honorarios de abogados.</strong> Este enlace no puede usarse para pagar tarifas de presentación ni costas judiciales.</span>
+          </p>
+        </div>
+
         <div style="border-radius:12px;overflow:hidden;border:1px solid var(--border);box-shadow:0 4px 16px rgba(0,0,0,0.08);">
           <iframe
             title="Office Location"

@@ -172,6 +172,11 @@
     /*  ABOUT  */
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px; }
     @media (max-width: 680px) { .about-grid { grid-template-columns: 1fr; } }
+    .attorneys-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+    @media (max-width: 760px) { .attorneys-grid { grid-template-columns: 1fr; } }
+    .attorney-card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 28px 24px; box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+    .attorney-photo-placeholder { width: 88px; height: 88px; border-radius: 50%; background: var(--navy); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 1.6rem; font-weight: 700; flex-shrink: 0; border: 3px solid var(--gold); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
+    .attorney-photo-img { width: 88px; height: 88px; border-radius: 50%; object-fit: cover; object-position: top; flex-shrink: 0; border: 3px solid var(--gold); box-shadow: 0 4px 16px rgba(0,0,0,0.15); }
     .about-header-inner { display: flex; align-items: flex-end; gap: 32px; }
     .about-header-inner .header-text { flex: 1; }
     .about-header-photo { flex-shrink: 0; align-self: flex-end; }
@@ -777,46 +782,73 @@
     </div>
   </div>
   <div class="content-area">
-    <div class="about-grid">
-      <div>
+    <!-- Attorneys Side by Side -->
+    <div class="attorneys-grid">
+      <!-- Katy Chavez -->
+      <div class="attorney-card">
         <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
-          <img src="katyprofile.jpg" alt="Katy Chavez, Attorney" style="width:88px;height:88px;border-radius:50%;object-fit:cover;border:3px solid var(--gold);box-shadow:0 4px 16px rgba(0,0,0,0.15);flex-shrink:0;" />
+          <img src="katyprofile.jpg" alt="Katy Chavez, Attorney" class="attorney-photo-img" />
           <div>
             <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:4px;">Katy Chavez</h2>
-            <p style="color:var(--terracotta);font-weight:700;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0;"><span class="en">Attorney at Law</span><span class="es">Abogada</span></p>
+            <p style="color:var(--terracotta);font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0;"><span class="en">Attorney at Law</span><span class="es">Abogada</span></p>
+            <p style="color:var(--text-light);font-size:0.78rem;margin-top:2px;"><span class="en">NC State Bar</span><span class="es">Barra Estatal de NC</span></p>
           </div>
         </div>
-        <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">I am a lawyer passionate about helping each of my clients get the best result possible. My mission is to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I generally don't spend money on advertising — it doesn't bring value to clients and only adds cost.</p>
-        <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Soy una abogada apasionada por ayudar a cada uno de mis clientes a obtener el mejor resultado posible. Mi misión es cobrar las tarifas más bajas posibles para que las personas con recursos limitados puedan beneficiarse de una representación legal de calidad. Generalmente no gasto dinero en publicidad — no aporta valor a los clientes y solo añade costos.</p>
-        <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">I care about my clients, and I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients. I am bilingual in English and Spanish.</p>
-        <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Me preocupo por mis clientes, y siempre respondo correos y llamadas sin cobrar tarifa — incluso para personas que aún no son mis clientes. Soy bilingüe en inglés y español.</p>
-        <p class="en" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">If I'm not the best person to handle your case, I will happily refer you to a great attorney who will care about your matter.</p>
-        <p class="es" style="font-size:0.96rem;color:var(--text-mid);margin-bottom:12px;">Si no soy la mejor persona para manejar su caso, con mucho gusto le referiré a un excelente abogado que se preocupará por su asunto.</p>
-        <div style="margin-top:16px;">
+        <p class="en" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">I am a lawyer passionate about helping each of my clients get the best result possible. My mission is to charge the lowest rates possible so that people with limited funds can still benefit from quality legal representation. I generally don't spend money on advertising — it doesn't bring value to clients and only adds cost.</p>
+        <p class="es" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">Soy una abogada apasionada por ayudar a cada uno de mis clientes a obtener el mejor resultado posible. Mi misión es cobrar las tarifas más bajas posibles. Generalmente no gasto dinero en publicidad — no aporta valor a los clientes y solo añade costos.</p>
+        <p class="en" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">I always respond to emails and phone calls without charging a fee — even for people who are not yet my clients. I am bilingual in English and Spanish.</p>
+        <p class="es" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">Siempre respondo correos y llamadas sin cobrar tarifa — incluso para personas que aún no son mis clientes. Soy bilingüe en inglés y español.</p>
+        <div style="margin-top:14px;">
           <span class="highlight-pill"><span class="en">English &amp; Spanish</span><span class="es">Inglés &amp; Español</span></span>
-          <span class="highlight-pill"><span class="en">Wake County Focus</span><span class="es">Enfocada en Condado de Wake</span></span>
-          <span class="highlight-pill"><span class="en">Free Phone Consultations</span><span class="es">Consultas Gratuitas</span></span>
+          <span class="highlight-pill"><span class="en">Wake County Focus</span><span class="es">Condado de Wake</span></span>
+          <span class="highlight-pill"><span class="en">Free Consultations</span><span class="es">Consultas Gratuitas</span></span>
           <span class="highlight-pill"><span class="en">Lowest Rates Possible</span><span class="es">Tarifas Más Bajas</span></span>
         </div>
       </div>
-      <div>
-        <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;"><span class="en">Practice Areas</span><span class="es">Áreas de Práctica</span></h2>
-        <div class="divider"></div>
-        <div class="info-card" style="margin-bottom:14px;">
-          <h3>🚗 <span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></h3>
-          <p class="en">Tickets, DWI defense, DWLR, license reinstatement — Wake County courts.</p>
-          <p class="es">Multas, defensa DWI, DWLR, reinstalación de licencia — tribunales del Condado de Wake.</p>
+      <!-- Daniel Bello -->
+      <div class="attorney-card">
+        <div style="display:flex;align-items:center;gap:18px;margin-bottom:18px;">
+          <div class="attorney-photo-placeholder">DB</div>
+          <div>
+            <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:4px;">Daniel Bello</h2>
+            <p style="color:var(--terracotta);font-weight:700;font-size:0.82rem;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0;"><span class="en">Attorney at Law</span><span class="es">Abogado</span></p>
+            <p style="color:var(--text-light);font-size:0.78rem;margin-top:2px;"><span class="en">NC &amp; SC State Bar</span><span class="es">Barra Estatal de NC y SC</span></p>
+          </div>
         </div>
-        <div class="info-card" style="margin-bottom:14px;">
-          <h3>⚖️ <span class="en">Criminal Defense</span><span class="es">Defensa Criminal</span></h3>
-          <p class="en">Assault, larceny, drug charges, and more — misdemeanors and felonies in Wake County.</p>
-          <p class="es">Agresión, robo, cargos por drogas y más — delitos menores y graves en el Condado de Wake.</p>
+        <p class="en" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">Daniel Bello is a dedicated personal injury attorney and founder of Bello Law Firm, PLLC, built on the principles of compassion, integrity, and relentless advocacy. He earned his Bachelor's Degree from Western Carolina University and his Juris Doctor from Campbell University School of Law in Raleigh, NC.</p>
+        <p class="es" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">Daniel Bello es un dedicado abogado de lesiones personales y fundador de Bello Law Firm, PLLC, construido sobre los principios de compasión, integridad y defensa incansable. Obtuvo su licenciatura en Western Carolina University y su Juris Doctor en Campbell University School of Law en Raleigh, NC.</p>
+        <p class="en" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">His early career included representing labor trafficking victims with Legal Aid of NC and asylum seekers with the U.S. Committee for Refugees and Immigrants. He has successfully resolved hundreds of personal injury cases and recovered millions of dollars for clients across North Carolina and South Carolina.</p>
+        <p class="es" style="font-size:0.93rem;color:var(--text-mid);margin-bottom:10px;">Su carrera temprana incluyó representar víctimas de tráfico laboral con Legal Aid de NC y solicitantes de asilo. Ha resuelto exitosamente cientos de casos de lesiones personales y recuperado millones de dólares para clientes en Carolina del Norte y del Sur.</p>
+        <div style="margin-top:14px;">
+          <span class="highlight-pill"><span class="en">English &amp; Spanish</span><span class="es">Inglés &amp; Español</span></span>
+          <span class="highlight-pill"><span class="en">Personal Injury</span><span class="es">Lesiones Personales</span></span>
+          <span class="highlight-pill"><span class="en">NC &amp; SC</span><span class="es">NC y SC</span></span>
+          <span class="highlight-pill"><span class="en">Campbell Law Alum</span><span class="es">Graduado Campbell Law</span></span>
         </div>
-        <div class="info-card">
-          <h3>🌎 <span class="en">Immigration</span><span class="es">Inmigración</span></h3>
-          <p class="en">Family petitions, naturalization, TPS, green card renewals, and I-601a provisional waivers — serving clients nationwide.</p>
-          <p class="es">Peticiones familiares, naturalización, TPS, renovaciones de tarjeta verde y exenciones provisionales I-601a — clientes en todo el país.</p>
+        <div style="margin-top:16px;">
+          <a href="https://bellolawfirm.com" target="_blank" rel="noopener" style="font-size:0.82rem;color:var(--terracotta);font-weight:700;text-decoration:none;">🔗 bellolawfirm.com</a>
         </div>
+      </div>
+    </div>
+
+    <!-- Practice Areas (full width below bios) -->
+    <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;"><span class="en">Practice Areas</span><span class="es">Áreas de Práctica</span></h2>
+    <div class="divider"></div>
+    <div class="three-col" style="margin-bottom:40px;">
+      <div class="info-card">
+        <h3>🚗 <span class="en">Traffic &amp; DWI</span><span class="es">Tráfico y DWI</span></h3>
+        <p class="en">Tickets, DWI defense, DWLR, license reinstatement — Wake County courts.</p>
+        <p class="es">Multas, defensa DWI, DWLR, reinstalación de licencia — tribunales del Condado de Wake.</p>
+      </div>
+      <div class="info-card">
+        <h3>⚖️ <span class="en">Criminal Defense</span><span class="es">Defensa Criminal</span></h3>
+        <p class="en">Assault, larceny, drug charges, and more — misdemeanors and felonies in Wake County.</p>
+        <p class="es">Agresión, robo, cargos por drogas y más — delitos menores y graves en el Condado de Wake.</p>
+      </div>
+      <div class="info-card">
+        <h3>🌎 <span class="en">Immigration</span><span class="es">Inmigración</span></h3>
+        <p class="en">Family petitions, naturalization, TPS, green card renewals, and I-601a provisional waivers — serving clients nationwide.</p>
+        <p class="es">Peticiones familiares, naturalización, TPS, renovaciones de tarjeta verde y exenciones provisionales I-601a — clientes en todo el país.</p>
       </div>
     </div>
     <h2 style="font-family:'Playfair Display',serif;color:var(--navy);margin-bottom:6px;"><span class="en">Our Team</span><span class="es">Nuestro Equipo</span></h2>

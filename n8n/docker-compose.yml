@@ -68,6 +68,7 @@ services:
       # Classify+Extract step). n8n blocks env access in Code by default.
       N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
       ANTHROPIC_API_KEY: ${ANTHROPIC_API_KEY}
+      MONDAY_API_KEY: ${MONDAY_API_KEY}
       PORTAL_USER: ${PORTAL_USER}
       PORTAL_PASS: ${PORTAL_PASS}
       PORTAL_SECRET: ${PORTAL_SECRET}

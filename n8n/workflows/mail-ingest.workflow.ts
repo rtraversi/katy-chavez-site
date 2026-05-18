@@ -359,12 +359,13 @@ var foundClients = [];
 var notFoundClients = [];
 
 async function searchMonday(term) {
-  var gql = 'query ($boardId: ID!, $term: [String]!) { boards(ids: [$boardId]) { items_page(limit: 10, query_params: {rules: [{column_id: "name", compare_value: $term, operator: contains_text}]}) { items { id name } } } }';
+  var safe = term.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+  var gql = 'query ($boardId: ID!) { boards(ids: [$boardId]) { items_page(limit: 10, query_params: {rules: [{column_id: "name", compare_value: "' + safe + '", operator: contains_text}]}) { items { id name } } } }';
   var resp = await self.helpers.httpRequest({
     method: 'POST',
     url: 'https://api.monday.com/v2',
     headers: { 'Authorization': mondayApiKey, 'Content-Type': 'application/json', 'API-Version': '2024-10' },
-    body: { query: gql, variables: { boardId: BOARD_ID, term: [term] } },
+    body: { query: gql, variables: { boardId: BOARD_ID } },
     json: true,
   });
   if (resp.errors) throw new Error('Monday search error: ' + JSON.stringify(resp.errors[0]));

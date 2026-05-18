@@ -164,37 +164,36 @@ if (!response || !response.content || !response.content[0]) {
 
 const rawText = response.content[0].text;
 
-// Escape all invalid chars inside JSON strings: control chars, invalid escape sequences
+// Sanitize Claude JSON: fix literal control chars and invalid escape sequences inside string values.
+// Uses String.fromCharCode(92) for backslash to avoid JS escape-sequence ambiguity across eval layers.
 function sanitizeJsonStrings(str) {
-  let result = '';
-  let inString = false;
-  let escape = false;
-  for (let i = 0; i < str.length; i++) {
-    const c = str[i];
-    const code = c.charCodeAt(0);
+  var bs = String.fromCharCode(92);
+  var result = '';
+  var inString = false;
+  var escape = false;
+  for (var i = 0; i < str.length; i++) {
+    var c = str[i];
+    var code = c.charCodeAt(0);
     if (escape) {
-      // Valid JSON escape chars after backslash: " \ / n r t b f u
-      if (c === '"' || c === '\\\\' || c === '/' || c === 'n' || c === 'r' || c === 't' || c === 'b' || c === 'f' || c === 'u') {
+      if (c === '"' || c === bs || c === '/' || c === 'n' || c === 'r' || c === 't' || c === 'b' || c === 'f' || c === 'u') {
         result += c;
       } else {
-        // Invalid escape — re-escape the backslash already in result
-        result += '\\\\' + c;
+        result += bs + c;
       }
       escape = false;
-    } else if (inString && c === '\\\\') {
+    } else if (inString && c === bs) {
       result += c;
       escape = true;
     } else if (c === '"') {
       inString = !inString;
       result += c;
     } else if (inString && code < 32) {
-      // Any control character inside a string
-      if (code === 10) result += '\\\\n';
-      else if (code === 13) result += '\\\\r';
-      else if (code === 9) result += '\\\\t';
-      else if (code === 8) result += '\\\\b';
-      else if (code === 12) result += '\\\\f';
-      else result += '\\\\u' + code.toString(16).padStart(4, '0');
+      if (code === 10) result += bs + 'n';
+      else if (code === 13) result += bs + 'r';
+      else if (code === 9) result += bs + 't';
+      else if (code === 8) result += bs + 'b';
+      else if (code === 12) result += bs + 'f';
+      else result += bs + 'u' + code.toString(16).padStart(4, '0');
     } else {
       result += c;
     }
@@ -204,26 +203,26 @@ function sanitizeJsonStrings(str) {
 
 function tryParse(s) {
   try { return JSON.parse(s); } catch (_e) {}
-  const san = sanitizeJsonStrings(s);
+  var san = sanitizeJsonStrings(s);
   try { return JSON.parse(san); } catch (e2) {
-    const posMatch = e2 && e2.message && e2.message.match(/position (\\d+)/);
-    const pos = posMatch ? parseInt(posMatch[1]) : 0;
-    const ctx = san.slice(Math.max(0, pos - 120), pos + 120);
+    var posMatch = e2 && e2.message && e2.message.match(/position (\\d+)/);
+    var pos = posMatch ? parseInt(posMatch[1]) : 0;
+    var ctx = san.slice(Math.max(0, pos - 120), pos + 120);
     throw new Error('JSON parse failed after sanitize: ' + (e2 && e2.message) + ' | context: ' + ctx);
   }
 }
 
-let items;
+var items;
 try {
-  let s = rawText.trim();
+  var s = rawText.trim();
   // Strip markdown fences if present
   if (s.startsWith('\`\`\`')) {
     s = s.replace(/^\`\`\`(?:json)?\\s*\\n?/, '').replace(/\\n?\`\`\`\\s*$/, '');
   }
   items = tryParse(s);
 } catch (e) {
-  const start = rawText.indexOf('[');
-  const end = rawText.lastIndexOf(']');
+  var start = rawText.indexOf('[');
+  var end = rawText.lastIndexOf(']');
   if (start >= 0 && end > start) {
     items = tryParse(rawText.slice(start, end + 1));
   } else {

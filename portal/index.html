@@ -100,16 +100,33 @@
     /* ── Mail Sorting tab ────────────────────────────────────────── */
     .mail-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; padding-top: 20px; }
     .mail-toolbar h2 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; }
-    .mail-search { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; min-width: 240px; background: var(--warm-white); }
-    .mail-search:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
 
-    .mail-list { display: flex; flex-direction: column; gap: 10px; }
-    .mail-card { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--sage); border-radius: 12px; padding: 16px 20px; text-decoration: none; color: inherit; transition: box-shadow 0.18s, transform 0.12s; display: flex; align-items: center; gap: 16px; }
-    .mail-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); transform: translateY(-1px); }
-    .mail-card-body { flex: 1; min-width: 0; }
-    .mail-card-name { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.05rem; margin-bottom: 4px; }
-    .mail-card-meta { font-size: 0.82rem; color: var(--text-mid); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .mail-card-date { font-size: 0.78rem; color: var(--text-light); white-space: nowrap; }
+    /* Calendar grid */
+    .cal-wrap { padding-top: 4px; }
+    .cal-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .cal-header h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.15rem; }
+    .cal-nav { background: none; border: 1.5px solid var(--border); color: var(--navy-mid); width: 32px; height: 32px; border-radius: 6px; cursor: pointer; font-size: 1rem; display: flex; align-items: center; justify-content: center; transition: border-color 0.15s, color 0.15s; }
+    .cal-nav:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+    .cal-dow { text-align: center; font-size: 0.7rem; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.06em; padding: 4px 0 8px; }
+    .cal-day { min-height: 54px; background: #fff; border: 1.5px solid var(--border); border-radius: 8px; padding: 6px 8px; cursor: default; display: flex; flex-direction: column; align-items: flex-start; transition: border-color 0.15s, background 0.15s; }
+    .cal-day.other-month { background: var(--cream); opacity: 0.45; }
+    .cal-day.has-mail { border-color: var(--sage); cursor: pointer; }
+    .cal-day.has-mail:hover { background: var(--sage-pale); }
+    .cal-day.selected { background: var(--sage-pale); border-color: var(--sage); border-width: 2px; }
+    .cal-day.today { box-shadow: 0 0 0 2px var(--terracotta-pale); }
+    .cal-day-num { font-size: 0.82rem; font-weight: 700; color: var(--text-dark); }
+    .cal-day.other-month .cal-day-num { color: var(--text-light); }
+    .cal-dot { width: 8px; height: 8px; background: var(--sage); border-radius: 50%; margin-top: 4px; }
+    .cal-detail { margin-top: 22px; }
+    .cal-detail-header { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.1rem; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 2px solid var(--border); }
+    .cal-batch { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--sage); border-radius: 10px; padding: 14px 18px; margin-bottom: 10px; }
+    .cal-batch-title { display: block; font-size: 0.82rem; font-weight: 600; color: var(--text-mid); margin-bottom: 8px; }
+    .cal-mail-row { display: flex; align-items: center; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--border); }
+    .cal-mail-row:last-child { border-bottom: none; }
+    .cal-mail-name { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 0.98rem; flex: 1; }
+    .cal-download { background: var(--sage); color: #fff; padding: 5px 12px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; text-decoration: none; white-space: nowrap; transition: opacity 0.15s; }
+    .cal-download:hover { opacity: 0.82; }
     .notice-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 10px; white-space: nowrap; }
     .notice-badge.biometrics_notice   { background: #dbeafe; color: #1e40af; }
     .notice-badge.approval_notice     { background: #dcfce7; color: #166534; }
@@ -238,12 +255,11 @@
           <div class="mail-toolbar">
             <h2>USCIS Mail <span class="total" id="mail-total-count"></span></h2>
             <div class="toolbar-right">
-              <input type="search" id="mail-search" class="mail-search" placeholder="Search by client name…" />
               <button class="btn-primary" id="upload-mail-btn">+ Upload mail scan</button>
             </div>
           </div>
           <div id="mail-error-slot"></div>
-          <div id="mail-list-container"></div>
+          <div id="mail-calendar-wrap"></div>
         </div>
       </div>
     </div>
@@ -328,7 +344,6 @@
 
     let signInMounted = false;
     let searchTimer = null;
-    let mailSearchTimer = null;
 
     // ── Init ─────────────────────────────────────────────────────────
     async function init() {
@@ -447,7 +462,7 @@
 
       // Load content for the activated tab on first visit
       if (tabId === 'clients' && listContainer.innerHTML === '') loadCustomers();
-      if (tabId === 'mail' && document.getElementById('mail-list-container').innerHTML === '') loadMail();
+      if (tabId === 'mail' && mailCalendarWrap.innerHTML === '') loadMailCalendar();
     }
 
     document.getElementById('tab-btn-clients').addEventListener('click', () => activateTab('clients'));
@@ -530,28 +545,133 @@
       searchTimer = setTimeout(loadCustomers, 300);
     });
 
-    // ── Mail Sorting tab ─────────────────────────────────────────────
-    const mailListContainer = document.getElementById('mail-list-container');
+    // ── Mail Calendar tab ─────────────────────────────────────────────
+    const mailCalendarWrap = document.getElementById('mail-calendar-wrap');
     const mailErrorSlot = document.getElementById('mail-error-slot');
     const mailTotalCount = document.getElementById('mail-total-count');
-    const mailSearchInput = document.getElementById('mail-search');
 
-    async function loadMail() {
-      const q = mailSearchInput.value.trim();
-      mailListContainer.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading mail…</div></div>';
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth() + 1;
+    let calData = null;
+    let calSelectedDate = null;
+
+    async function loadMailCalendar(year, month) {
+      year = year || calYear;
+      month = month || calMonth;
+      calYear = year;
+      calMonth = month;
+      calSelectedDate = null;
+      mailCalendarWrap.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading mail…</div></div>';
       mailErrorSlot.innerHTML = '';
       try {
-        const data = await api('/webhook/mail-list', { search: q, limit: 100, offset: 0 });
-        renderMailItems(data);
+        const data = await api('/webhook/mail-calendar', { year: year, month: month });
+        calData = data;
+        const totalItems = Object.values(data.batches_by_date || {}).reduce(function(sum, batches) {
+          return sum + batches.reduce(function(s, b) { return s + (b.item_count || 0); }, 0);
+        }, 0);
+        mailTotalCount.textContent = totalItems > 0 ? '(' + totalItems + ')' : '';
+        renderCalendar();
       } catch (e) {
         mailErrorSlot.innerHTML = '<div class="error-box">' + escapeHtml(e.message) + '</div>';
-        mailListContainer.innerHTML = '';
+        mailCalendarWrap.innerHTML = '';
         if (e.message.indexOf('Authentication failed') >= 0) ensureSecretLoaded();
       }
     }
 
+    function renderCalendar() {
+      if (!calData) return;
+      var byDate = calData.batches_by_date || {};
+      var year = calData.year;
+      var month = calData.month;
+
+      var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var monthLabel = monthNames[month - 1] + ' ' + year;
+
+      var firstDay = new Date(year, month - 1, 1).getDay();
+      var daysInMonth = new Date(year, month, 0).getDate();
+      var prevMonthDays = new Date(year, month - 1, 0).getDate();
+      var today = new Date();
+      var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+      var cells = '';
+      var dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      cells += dows.map(function(d) { return '<div class="cal-dow">' + d + '</div>'; }).join('');
+
+      for (var pi = firstDay - 1; pi >= 0; pi--) {
+        cells += '<div class="cal-day other-month"><span class="cal-day-num">' + (prevMonthDays - pi) + '</span></div>';
+      }
+      for (var dd = 1; dd <= daysInMonth; dd++) {
+        var dateStr = year + '-' + String(month).padStart(2, '0') + '-' + String(dd).padStart(2, '0');
+        var hasMail = !!byDate[dateStr];
+        var isToday = dateStr === todayStr;
+        var isSelected = dateStr === calSelectedDate;
+        var cls = 'cal-day' + (hasMail ? ' has-mail' : '') + (isToday ? ' today' : '') + (isSelected ? ' selected' : '');
+        var dotHtml = hasMail ? '<div class="cal-dot"></div>' : '';
+        var clickAttr = hasMail ? ' data-date="' + dateStr + '"' : '';
+        cells += '<div class="' + cls + '"' + clickAttr + '><span class="cal-day-num">' + dd + '</span>' + dotHtml + '</div>';
+      }
+      var totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+      for (var ni = firstDay + daysInMonth, nd = 1; ni < totalCells; ni++, nd++) {
+        cells += '<div class="cal-day other-month"><span class="cal-day-num">' + nd + '</span></div>';
+      }
+
+      var prevYear = year, prevMonth = month - 1;
+      if (prevMonth === 0) { prevMonth = 12; prevYear--; }
+      var nextYear = year, nextMonth = month + 1;
+      if (nextMonth === 13) { nextMonth = 1; nextYear++; }
+
+      var detailHtml = calSelectedDate ? buildCalendarDetail(calSelectedDate) : '';
+
+      mailCalendarWrap.innerHTML =
+        '<div class="cal-wrap">'
+        + '<div class="cal-header">'
+        + '<button class="cal-nav" id="cal-prev">&#8592;</button>'
+        + '<h3>' + monthLabel + '</h3>'
+        + '<button class="cal-nav" id="cal-next">&#8594;</button>'
+        + '</div>'
+        + '<div class="cal-grid">' + cells + '</div>'
+        + detailHtml
+        + '</div>';
+
+      document.getElementById('cal-prev').addEventListener('click', function() {
+        loadMailCalendar(prevYear, prevMonth);
+      });
+      document.getElementById('cal-next').addEventListener('click', function() {
+        loadMailCalendar(nextYear, nextMonth);
+      });
+      mailCalendarWrap.querySelectorAll('.cal-day.has-mail').forEach(function(el) {
+        el.addEventListener('click', function() {
+          calSelectedDate = el.dataset.date;
+          renderCalendar();
+        });
+      });
+    }
+
+    function buildCalendarDetail(dateStr) {
+      var byDate = calData ? (calData.batches_by_date || {}) : {};
+      var batches = byDate[dateStr] || [];
+      if (batches.length === 0) return '';
+      var secret = localStorage.getItem(LS_SECRET);
+      var formatted = formatDate(dateStr);
+      var batchHtml = batches.map(function(batch) {
+        var title = '<span class="cal-batch-title">Scan: ' + escapeHtml(batch.original_filename || 'unknown') + ' &mdash; ' + (batch.item_count || 0) + ' notice' + ((batch.item_count || 0) === 1 ? '' : 's') + '</span>';
+        var rows = (batch.items || []).map(function(item) {
+          var name = item.client_name || '(unknown client)';
+          var type = item.notice_type || 'other';
+          var dlUrl = N8N_BASE + '/webhook/mail-file?id=' + encodeURIComponent(item.id) + '&token=' + encodeURIComponent(secret || '');
+          return '<div class="cal-mail-row">'
+            + '<div class="cal-mail-name">' + escapeHtml(name) + '</div>'
+            + '<span class="notice-badge ' + escapeHtml(type) + '">' + noticeBadgeLabel(type) + '</span>'
+            + '<a href="' + dlUrl + '" class="cal-download" target="_blank">Download PDF</a>'
+            + '</div>';
+        }).join('');
+        return '<div class="cal-batch">' + title + rows + '</div>';
+      }).join('');
+      return '<div class="cal-detail"><div class="cal-detail-header">Mail for ' + escapeHtml(formatted) + '</div>' + batchHtml + '</div>';
+    }
+
     function noticeBadgeLabel(type) {
-      const labels = {
+      var labels = {
         biometrics_notice: 'Biometrics',
         approval_notice: 'Approval',
         receipt_notice: 'Receipt',
@@ -566,50 +686,10 @@
 
     function formatDate(dateStr) {
       if (!dateStr) return null;
-      const d = new Date(dateStr + 'T00:00:00');
+      var d = new Date(dateStr + 'T00:00:00');
       if (isNaN(d)) return dateStr;
       return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
-
-    function renderMailItems(data) {
-      const items = data.items || [];
-      mailTotalCount.textContent = data.total > 0 ? '(' + data.total + ')' : '';
-
-      if (items.length === 0) {
-        const qLabel = mailSearchInput.value ? ' matching "' + escapeHtml(mailSearchInput.value) + '"' : '';
-        mailListContainer.innerHTML = '<div class="mail-empty"><span class="icon">📬</span><div>No mail processed yet' + qLabel + '.<br>Upload a scan to get started.</div></div>';
-        return;
-      }
-
-      const cards = items.map(item => {
-        const name = item.client_name
-          || ((item.client_last_name || '') + (item.client_first_name ? ', ' + item.client_first_name : ''))
-          || '(unknown client)';
-        const type = item.notice_type || 'other';
-        const appType = item.application_type ? ' · ' + escapeHtml(item.application_type) : '';
-        const dateStr = item.notice_date ? formatDate(item.notice_date) : formatDate(item.created_at);
-        const apptStr = item.appointment_date ? ' · Appt: ' + formatDate(item.appointment_date) : '';
-        const hasPdf = item.has_pdf ? '' : ' · <em>PDF pending</em>';
-
-        return '<a href="/portal/mail-item.html?id=' + encodeURIComponent(item.id) + '" class="mail-card">'
-          + '<div class="mail-card-body">'
-          + '<div class="mail-card-name">' + escapeHtml(name) + '</div>'
-          + '<div class="mail-card-meta">'
-          + '<span class="notice-badge ' + escapeHtml(type) + '">' + noticeBadgeLabel(type) + '</span>'
-          + escapeHtml(appType) + escapeHtml(apptStr) + hasPdf
-          + '</div>'
-          + '</div>'
-          + '<div class="mail-card-date">' + escapeHtml(dateStr || '') + '</div>'
-          + '</a>';
-      }).join('');
-
-      mailListContainer.innerHTML = '<div class="mail-list">' + cards + '</div>';
-    }
-
-    mailSearchInput.addEventListener('input', () => {
-      clearTimeout(mailSearchTimer);
-      mailSearchTimer = setTimeout(loadMail, 300);
-    });
 
     // ── Client Documents upload modal ────────────────────────────────
     const uploadModal = document.getElementById('upload-modal');
@@ -798,7 +878,7 @@
         const count = data.item_count || 0;
         mailUploadStatus.innerHTML = '✅ Processed ' + count + ' client notice' + (count === 1 ? '' : 's') + '. Refreshing mail list…';
         mailUploading = false;
-        setTimeout(() => { closeMailModal(); loadMail(); }, 1200);
+        setTimeout(() => { closeMailModal(); loadMailCalendar(); }, 1200);
       } catch (err) {
         mailUploadStatus.className = 'upload-status error';
         mailUploadStatus.innerHTML = 'Upload failed: ' + escapeHtml(err.message);

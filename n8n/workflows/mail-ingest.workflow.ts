@@ -3,22 +3,23 @@
 // Receives a staff-uploaded USCIS mail scan (one PDF containing multiple
 // client notices). Sends the full PDF to Claude for analysis, extracts one
 // structured record per client, splits the PDF into individual files with
-// pdf-lib, persists everything to the mail_batches + mail_items tables.
+// pdf-lib, persists everything to the mail_batches + mail_items tables,
+// posts a Monday.com update per client with a download link, and emails a
+// summary to katychavezlaw@gmail.com.
 //
 // Prerequisites:
 //   - KCL n8n container built from n8n/Dockerfile (includes pdf-lib)
 //   - NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib in docker-compose.yml
 //   - Migration 004_mail_tables.sql applied to the portal DB
 //   - /data/mail/ volume mounted (./mail:/data/mail in docker-compose.yml)
+//   - Portal Postgres credential configured in n8n
+//   - KCL Gmail (smtp) credential configured in n8n
+//   - KCL Monday (mondayComApi) credential configured in n8n
 //
 // Deploy to n8n:
-//   1. Create a new workflow in n8n at https://n8n.katychavez.com
-//   2. Import this TypeScript via the n8n MCP create_workflow_from_code tool
-//      OR paste the generated JSON via the n8n UI Import menu.
-//   3. After creation, update the workflow() ID below with the real n8n ID.
-//   4. Publish the workflow.
+//   - Workflow ID: WxijwOWgZ3dTm3J6 (n8n.katychavez.com)
 
-import { workflow, trigger, node, newCredential } from '@n8n/workflow-sdk';
+import { workflow, trigger, node, newCredential, expr } from '@n8n/workflow-sdk';
 
 // ── Webhook trigger ──────────────────────────────────────────────────
 const webhookTrigger = trigger({
@@ -37,7 +38,7 @@ const webhookTrigger = trigger({
           'https://katychavez.com,https://www.katychavez.com,https://katy-chavez-law.netlify.app',
       },
     },
-    position: [160, 300],
+    position: [0, 0],
   },
   output: [{ body: {} }],
 });
@@ -63,7 +64,6 @@ fs.mkdirSync(baseDir, { recursive: true });
 const keys = Object.keys(binary);
 if (keys.length === 0) throw new Error('No file uploaded');
 
-// Accept the first uploaded file. Staff should upload one scan per run.
 const fileKey = keys[0];
 const file = binary[fileKey];
 const originalFilename = file.fileName || 'scan.pdf';
@@ -74,7 +74,7 @@ fs.writeFileSync(storagePath, buf);
 
 return [{ json: { execId, storagePath, originalFilename, fileSize: buf.length, baseDir } }];`,
     },
-    position: [380, 300],
+    position: [224, 0],
   },
   output: [{ execId: 'abc', storagePath: '/data/mail/abc/original.pdf', originalFilename: 'scan.pdf', fileSize: 12345, baseDir: '/data/mail/abc' }],
 });
@@ -89,42 +89,40 @@ const analyzeWithClaude = node({
       mode: 'runOnceForAllItems',
       language: 'javaScript',
       jsCode: `const fs = require('fs');
-
 const info = $input.first().json;
 const apiKey = $env.ANTHROPIC_API_KEY;
 if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set in container env');
-
 const buf = fs.readFileSync(info.storagePath);
 const base64 = buf.toString('base64');
 
-const SYSTEM = 'You are a document processing assistant for an immigration law firm. Respond with valid JSON only. No markdown fences, no preamble, no explanation. Begin your response with [ and end with ]. All string values must be on a single line — do not include literal newline or tab characters inside JSON string values.';
+const SYSTEM = 'You are a document processing assistant for an immigration law firm. Respond with valid JSON only. No markdown fences, no preamble, no explanation. Begin your response with [ and end with ]. All string values must be on a single line with no literal newline or tab characters inside them.';
 
-const PROMPT = \`You are analyzing a batch scan of USCIS mail received by Katy Chavez Law, an immigration law firm. The scan is a single PDF that may contain multiple separate USCIS notices for different clients — they are scanned consecutively.
+const PROMPT = \`You are analyzing a batch scan of USCIS mail received by Katy Chavez Law. The scan is a single PDF that may contain multiple separate USCIS notices for different clients scanned consecutively.
 
 Your task:
-1. Identify each distinct USCIS mail piece. A new piece typically begins with a USCIS letterhead, case number, or "NOTICE TYPE" heading.
+1. Identify each distinct USCIS mail piece.
 2. For each piece, extract all key information using the exact field names below.
 3. Return ONLY a JSON array, one object per mail piece.
 
-For each mail piece, return exactly this structure (use null for missing fields):
+For each mail piece return exactly this structure (use null for missing fields):
 {
-  "client_name": "LAST, FIRST MI exactly as printed on the notice",
+  "client_name": "LAST, FIRST MI exactly as printed",
   "client_first_name": "first name only",
   "client_last_name": "last name only",
-  "receipt_number": "e.g. LIN2112345678 — no dashes unless USCIS printed them",
-  "a_number": "digits only, e.g. 123456789, or null",
-  "notice_type": one of exactly: "biometrics_notice" | "approval_notice" | "receipt_notice" | "rfe" | "transfer_notice" | "rejection" | "card_production_ordered" | "other",
-  "application_type": "e.g. I-485, I-765, I-131, I-130, I-821D, etc., or null",
+  "receipt_number": "e.g. LIN2112345678",
+  "a_number": "digits only or null",
+  "notice_type": one of: "biometrics_notice" | "approval_notice" | "receipt_notice" | "rfe" | "transfer_notice" | "rejection" | "card_production_ordered" | "other",
+  "application_type": "e.g. I-485 or null",
   "notice_date": "YYYY-MM-DD or null",
-  "appointment_date": "YYYY-MM-DD or null — only for biometrics_notice",
-  "appointment_time": "e.g. 8:30 AM or null — only for biometrics_notice",
-  "appointment_location": "full address string or null — only for biometrics_notice",
-  "appointment_bring": "plain text list of what to bring or null — only for biometrics_notice",
-  "summary": "2-3 sentences of plain English on a single line: what this notice is, what it means for the client, and what action if any they must take. Include dates and deadlines.",
-  "page_numbers": [1, 2]  — 1-indexed list of page numbers in the scan that belong to this mail piece. Blank pages, cover sheets, and separator pages should be attributed to the nearest mail piece.
+  "appointment_date": "YYYY-MM-DD or null",
+  "appointment_time": "e.g. 8:30 AM or null",
+  "appointment_location": "full address on one line or null",
+  "appointment_bring": "comma-separated list of items to bring or null",
+  "summary": "2-3 sentences on a single line: what this notice is, what it means, and any action required. Include dates.",
+  "page_numbers": [1, 2]
 }
 
-Return the array even if only one mail piece is found. Do not include explanatory text outside the JSON array.\`;
+Return the array even if only one mail piece is found. No text outside the JSON array.\`;
 
 let response;
 try {
@@ -140,16 +138,10 @@ try {
       model: 'claude-sonnet-4-6',
       max_tokens: 4096,
       system: SYSTEM,
-      messages: [{
-        role: 'user',
-        content: [
-          {
-            type: 'document',
-            source: { type: 'base64', media_type: 'application/pdf', data: base64 },
-          },
-          { type: 'text', text: PROMPT },
-        ],
-      }],
+      messages: [{ role: 'user', content: [
+        { type: 'document', source: { type: 'base64', media_type: 'application/pdf', data: base64 } },
+        { type: 'text', text: PROMPT },
+      ]}],
     },
     json: true,
   });
@@ -215,7 +207,6 @@ function tryParse(s) {
 var items;
 try {
   var s = rawText.trim();
-  // Strip markdown fences if present
   if (s.startsWith('\`\`\`')) {
     s = s.replace(/^\`\`\`(?:json)?\\s*\\n?/, '').replace(/\\n?\`\`\`\\s*$/, '');
   }
@@ -236,12 +227,11 @@ if (!Array.isArray(items) || items.length === 0) {
 
 return [{ json: { ...info, items, _claudeRaw: rawText.slice(0, 1000) } }];`,
     },
-    position: [600, 300],
+    position: [448, 0],
   },
   output: [{
     execId: 'abc',
     storagePath: '/data/mail/abc/original.pdf',
-    originalFilename: 'scan.pdf',
     baseDir: '/data/mail/abc',
     items: [{ client_name: 'GARCIA, MARIA', client_first_name: 'MARIA', client_last_name: 'GARCIA', notice_type: 'biometrics_notice', page_numbers: [1, 2] }],
   }],
@@ -258,29 +248,19 @@ const splitPdfs = node({
       language: 'javaScript',
       jsCode: `const { PDFDocument } = require('pdf-lib');
 const fs = require('fs');
-
 const info = $input.first().json;
 const { execId, storagePath, baseDir, items } = info;
-
 const originalBytes = fs.readFileSync(storagePath);
 const originalPdf = await PDFDocument.load(originalBytes);
 const totalPages = originalPdf.getPageCount();
-
 const itemsWithPaths = [];
-
 for (let i = 0; i < items.length; i++) {
   const item = items[i];
-
-  // Build a filesystem-safe slug from the client name
   const last = (item.client_last_name || 'unknown').toLowerCase().replace(/[^a-z0-9]/g, '');
   const first = (item.client_first_name || '').toLowerCase().replace(/[^a-z0-9]/g, '');
   const slug = last + (first ? '-' + first : '') + '-' + String(i + 1).padStart(2, '0');
   const itemPath = baseDir + '/' + slug + '.pdf';
-
-  const pageIndices = (item.page_numbers || [])
-    .map(n => Number(n) - 1)                        // convert to 0-indexed
-    .filter(n => n >= 0 && n < totalPages);
-
+  const pageIndices = (item.page_numbers || []).map(n => Number(n) - 1).filter(n => n >= 0 && n < totalPages);
   let splitPath = null;
   if (pageIndices.length > 0) {
     try {
@@ -291,17 +271,14 @@ for (let i = 0; i < items.length; i++) {
       fs.writeFileSync(itemPath, Buffer.from(pdfBytes));
       splitPath = itemPath;
     } catch (e) {
-      // Log but don't fail — item will be recorded without individual PDF
       console.error('PDF split error for ' + slug + ': ' + (e && e.message ? e.message : String(e)));
     }
   }
-
   itemsWithPaths.push({ ...item, storage_path: splitPath });
 }
-
 return [{ json: { ...info, items: itemsWithPaths, pageCount: totalPages } }];`,
     },
-    position: [820, 300],
+    position: [672, 0],
   },
   output: [{
     execId: 'abc',
@@ -330,9 +307,177 @@ const mailInsert = node({
         ") AS result;",
     },
     credentials: { postgres: newCredential('Portal Postgres') },
-    position: [1040, 300],
+    position: [896, 0],
   },
-  output: [{ result: { batch_id: '...', item_ids: [], item_count: 1 } }],
+  output: [{ result: { batch_id: 'batch-uuid', item_ids: ['item-uuid-1'], item_count: 1 } }],
+});
+
+// ── Fetch inserted items with their UUIDs for Monday + email ─────────
+const getBatchItems = node({
+  type: 'n8n-nodes-base.postgres',
+  version: 2.6,
+  config: {
+    name: 'Get Batch Items',
+    parameters: {
+      operation: 'executeQuery',
+      query: "=SELECT id, client_name, client_first_name, client_last_name, notice_type, application_type, summary, notice_date FROM mail_items WHERE batch_id = '{{ $json.result.batch_id }}' ORDER BY created_at",
+    },
+    credentials: { postgres: newCredential('Portal Postgres') },
+    position: [1120, 0],
+  },
+  output: [{ id: 'item-uuid-1', client_name: 'GARCIA, MARIA', client_first_name: 'MARIA', client_last_name: 'GARCIA', notice_type: 'biometrics_notice', application_type: 'I-485', summary: 'Biometrics appointment scheduled.', notice_date: '2026-05-15' }],
+});
+
+// ── Post Monday updates + build email summary ────────────────────────
+const mondayAndEmail = node({
+  type: 'n8n-nodes-base.code',
+  version: 2,
+  config: {
+    name: 'Monday and Email',
+    parameters: {
+      mode: 'runOnceForAllItems',
+      language: 'javaScript',
+      jsCode: `var self = this;
+var items = $input.all().map(function(i) { return i.json; });
+var portalSecret = $env.PORTAL_SECRET;
+var creds = await self.getCredentials('mondayComApi');
+var mondayApiKey = creds.apiKey || creds.token || creds.apiToken || '';
+var BOARD_ID = '2468110147';
+var BASE_URL = 'https://n8n.katychavez.com/webhook/mail-file';
+var today = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+var clientMap = {};
+for (var i = 0; i < items.length; i++) {
+  var item = items[i];
+  var key = item.client_name || 'UNKNOWN';
+  if (!clientMap[key]) {
+    clientMap[key] = { name: key, firstName: item.client_first_name || '', lastName: item.client_last_name || '', notices: [] };
+  }
+  clientMap[key].notices.push(item);
+}
+var clients = Object.values(clientMap);
+var foundClients = [];
+var notFoundClients = [];
+
+async function searchMonday(term) {
+  var gql = 'query Search($boardId: ID!, $term: String!) { items_page_by_column_values(limit: 5, board_id: $boardId, columns: [{column_id: "name", column_values: [$term]}]) { items { id name } } }';
+  var resp = await self.helpers.httpRequest({
+    method: 'POST',
+    url: 'https://api.monday.com/v2',
+    headers: { 'Authorization': mondayApiKey, 'Content-Type': 'application/json', 'API-Version': '2024-10' },
+    body: { query: gql, variables: { boardId: BOARD_ID, term: term } },
+    json: true,
+  });
+  var r = resp && resp.data && resp.data.items_page_by_column_values;
+  return r ? r.items : [];
+}
+
+async function postUpdate(mondayItemId, body) {
+  var mutation = 'mutation Post($itemId: ID!, $body: String!) { create_update(item_id: $itemId, body: $body) { id } }';
+  await self.helpers.httpRequest({
+    method: 'POST',
+    url: 'https://api.monday.com/v2',
+    headers: { 'Authorization': mondayApiKey, 'Content-Type': 'application/json', 'API-Version': '2024-10' },
+    body: { query: mutation, variables: { itemId: String(mondayItemId), body: body } },
+    json: true,
+  });
+}
+
+for (var ci = 0; ci < clients.length; ci++) {
+  var client = clients[ci];
+  var lastName = client.lastName;
+  var firstName = client.firstName;
+  var lastLower = lastName.toLowerCase();
+  var firstLower = firstName.toLowerCase();
+
+  var matched = lastName ? await searchMonday(lastName) : [];
+  var mondayItem = null;
+  for (var mi = 0; mi < matched.length; mi++) {
+    var mName = matched[mi].name.toLowerCase();
+    if (mName.includes(lastLower) && (!firstLower || mName.includes(firstLower))) {
+      mondayItem = matched[mi];
+      break;
+    }
+  }
+  if (!mondayItem && matched.length > 0) mondayItem = matched[0];
+
+  if (!mondayItem && firstName) {
+    var byFirst = await searchMonday(firstName);
+    for (var fi = 0; fi < byFirst.length; fi++) {
+      if (byFirst[fi].name.toLowerCase().includes(lastLower)) {
+        mondayItem = byFirst[fi];
+        break;
+      }
+    }
+  }
+
+  if (mondayItem) {
+    var lines = ['USCIS Mail Received — ' + today, ''];
+    for (var ni = 0; ni < client.notices.length; ni++) {
+      var notice = client.notices[ni];
+      var noticeType = (notice.notice_type || 'notice').split('_').join(' ');
+      var appType = notice.application_type ? ' (' + notice.application_type + ')' : '';
+      lines.push(noticeType + appType);
+      if (notice.summary) lines.push(notice.summary);
+      lines.push('Download: ' + BASE_URL + '?id=' + notice.id + '&token=' + portalSecret);
+      if (ni < client.notices.length - 1) lines.push('');
+    }
+    var updateText = lines.join('\n');
+    try {
+      await postUpdate(mondayItem.id, updateText);
+      foundClients.push({ client_name: client.name, monday_name: mondayItem.name, notice_count: client.notices.length });
+    } catch (e) {
+      notFoundClients.push({ client_name: client.name, reason: 'Monday update error: ' + (e && e.message ? e.message.slice(0, 100) : String(e)) });
+    }
+  } else {
+    notFoundClients.push({ client_name: client.name, reason: 'Not found in Monday' });
+  }
+}
+
+var tableRows = '';
+for (var fc = 0; fc < foundClients.length; fc++) {
+  var f = foundClients[fc];
+  tableRows += '<tr><td>' + f.client_name + '</td><td>' + f.monday_name + '</td><td style="color:green">Updated</td><td>' + f.notice_count + '</td></tr>';
+}
+for (var nc = 0; nc < notFoundClients.length; nc++) {
+  var nf = notFoundClients[nc];
+  tableRows += '<tr><td>' + nf.client_name + '</td><td colspan="2" style="color:#cc0000">' + nf.reason + '</td><td>-</td></tr>';
+}
+
+var emailHtml = '<h2>USCIS Mail Ingest — ' + today + '</h2>' +
+  '<p>Processed <strong>' + items.length + '</strong> notice(s) for <strong>' + clients.length + '</strong> client(s).</p>' +
+  '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;font-family:sans-serif;font-size:13px">' +
+  '<tr style="background:#f0f0f0"><th>Client (notice)</th><th>Monday Match</th><th>Status</th><th>Notices</th></tr>' +
+  tableRows + '</table>' +
+  (notFoundClients.length > 0
+    ? '<p style="color:#cc0000"><strong>' + notFoundClients.length + ' client(s) not found in Monday</strong> — please add manually.</p>'
+    : '<p style="color:green">All clients updated in Monday successfully.</p>');
+
+return [{ json: { foundClients: foundClients, notFoundClients: notFoundClients, totalClients: clients.length, emailHtml: emailHtml } }];`,
+    },
+    position: [1344, 0],
+  },
+  output: [{ foundClients: [], notFoundClients: [], totalClients: 1, emailHtml: '<p>Summary</p>' }],
+});
+
+// ── Send summary email ───────────────────────────────────────────────
+const sendEmail = node({
+  type: 'n8n-nodes-base.emailSend',
+  version: 2.1,
+  config: {
+    name: 'Send Summary Email',
+    parameters: {
+      fromEmail: 'katychavezlaw@gmail.com',
+      toEmail: 'katychavezlaw@gmail.com',
+      subject: expr("USCIS Mail Ingest — {{ $json.totalClients }} client(s) processed — {{ new Date().toLocaleDateString() }}"),
+      emailFormat: 'html',
+      html: expr('{{ $json.emailHtml }}'),
+      options: { appendAttribution: false },
+    },
+    credentials: { smtp: newCredential('KCL Gmail') },
+    position: [1568, 0],
+  },
+  output: [{}],
 });
 
 // ── Respond to webhook ───────────────────────────────────────────────
@@ -344,9 +489,9 @@ const respond = node({
     parameters: {
       respondWith: 'json',
       responseBody:
-        "={{ JSON.stringify({ success: true, batch_id: $json.result.batch_id, item_count: $json.result.item_count, item_ids: $json.result.item_ids }) }}",
+        "={{ JSON.stringify({ success: true, batch_id: $('Insert via mail_intake').first().json.result.batch_id, item_count: $('Insert via mail_intake').first().json.result.item_count, item_ids: $('Insert via mail_intake').first().json.result.item_ids }) }}",
     },
-    position: [1260, 300],
+    position: [1792, 0],
     executeOnce: true,
   },
   output: [{}],
@@ -358,4 +503,7 @@ export default workflow('WxijwOWgZ3dTm3J6', 'mail-ingest')
   .to(analyzeWithClaude)
   .to(splitPdfs)
   .to(mailInsert)
+  .to(getBatchItems)
+  .to(mondayAndEmail)
+  .to(sendEmail)
   .to(respond);

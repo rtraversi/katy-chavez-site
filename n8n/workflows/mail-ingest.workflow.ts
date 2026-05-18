@@ -164,33 +164,53 @@ if (!response || !response.content || !response.content[0]) {
 
 const rawText = response.content[0].text;
 
-// Escape literal control chars that appear inside JSON strings (e.g. bare newlines in summary field)
+// Escape all invalid chars inside JSON strings: control chars, invalid escape sequences
 function sanitizeJsonStrings(str) {
   let result = '';
   let inString = false;
   let escape = false;
   for (let i = 0; i < str.length; i++) {
     const c = str[i];
+    const code = c.charCodeAt(0);
     if (escape) {
-      result += c;
+      // Valid JSON escape chars after backslash: " \ / n r t b f u
+      if (c === '"' || c === '\\\\' || c === '/' || c === 'n' || c === 'r' || c === 't' || c === 'b' || c === 'f' || c === 'u') {
+        result += c;
+      } else {
+        // Invalid escape — re-escape the backslash already in result
+        result += '\\\\' + c;
+      }
       escape = false;
-    } else if (c === '\\\\' && inString) {
+    } else if (inString && c === '\\\\') {
       result += c;
       escape = true;
     } else if (c === '"') {
       inString = !inString;
       result += c;
-    } else if (inString && c === '\\n') {
-      result += '\\\\n';
-    } else if (inString && c === '\\r') {
-      result += '\\\\r';
-    } else if (inString && c === '\\t') {
-      result += '\\\\t';
+    } else if (inString && code < 32) {
+      // Any control character inside a string
+      if (code === 10) result += '\\\\n';
+      else if (code === 13) result += '\\\\r';
+      else if (code === 9) result += '\\\\t';
+      else if (code === 8) result += '\\\\b';
+      else if (code === 12) result += '\\\\f';
+      else result += '\\\\u' + code.toString(16).padStart(4, '0');
     } else {
       result += c;
     }
   }
   return result;
+}
+
+function tryParse(s) {
+  try { return JSON.parse(s); } catch (_e) {}
+  const san = sanitizeJsonStrings(s);
+  try { return JSON.parse(san); } catch (e2) {
+    const posMatch = e2 && e2.message && e2.message.match(/position (\\d+)/);
+    const pos = posMatch ? parseInt(posMatch[1]) : 0;
+    const ctx = san.slice(Math.max(0, pos - 120), pos + 120);
+    throw new Error('JSON parse failed after sanitize: ' + (e2 && e2.message) + ' | context: ' + ctx);
+  }
 }
 
 let items;
@@ -200,19 +220,14 @@ try {
   if (s.startsWith('\`\`\`')) {
     s = s.replace(/^\`\`\`(?:json)?\\s*\\n?/, '').replace(/\\n?\`\`\`\\s*$/, '');
   }
-  try {
-    items = JSON.parse(s);
-  } catch (_e1) {
-    items = JSON.parse(sanitizeJsonStrings(s));
-  }
+  items = tryParse(s);
 } catch (e) {
-  // Fallback: find the JSON array in the response
   const start = rawText.indexOf('[');
   const end = rawText.lastIndexOf(']');
   if (start >= 0 && end > start) {
-    items = JSON.parse(sanitizeJsonStrings(rawText.slice(start, end + 1)));
+    items = tryParse(rawText.slice(start, end + 1));
   } else {
-    throw new Error('Could not parse Claude response as JSON array. Raw: ' + rawText.slice(0, 500));
+    throw new Error('Could not find JSON array in Claude response. Raw: ' + rawText.slice(0, 500));
   }
 }
 

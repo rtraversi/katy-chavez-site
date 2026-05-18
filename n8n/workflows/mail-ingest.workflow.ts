@@ -97,7 +97,7 @@ if (!apiKey) throw new Error('ANTHROPIC_API_KEY not set in container env');
 const buf = fs.readFileSync(info.storagePath);
 const base64 = buf.toString('base64');
 
-const SYSTEM = 'You are a document processing assistant for an immigration law firm. Respond with valid JSON only. No markdown fences, no preamble, no explanation. Begin your response with [ and end with ].';
+const SYSTEM = 'You are a document processing assistant for an immigration law firm. Respond with valid JSON only. No markdown fences, no preamble, no explanation. Begin your response with [ and end with ]. All string values must be on a single line — do not include literal newline or tab characters inside JSON string values.';
 
 const PROMPT = \`You are analyzing a batch scan of USCIS mail received by Katy Chavez Law, an immigration law firm. The scan is a single PDF that may contain multiple separate USCIS notices for different clients — they are scanned consecutively.
 
@@ -120,7 +120,7 @@ For each mail piece, return exactly this structure (use null for missing fields)
   "appointment_time": "e.g. 8:30 AM or null — only for biometrics_notice",
   "appointment_location": "full address string or null — only for biometrics_notice",
   "appointment_bring": "plain text list of what to bring or null — only for biometrics_notice",
-  "summary": "2-3 sentences of plain English: what this notice is, what it means for the client, and what action (if any) they must take. Be specific — include dates and deadlines.",
+  "summary": "2-3 sentences of plain English on a single line: what this notice is, what it means for the client, and what action if any they must take. Include dates and deadlines.",
   "page_numbers": [1, 2]  — 1-indexed list of page numbers in the scan that belong to this mail piece. Blank pages, cover sheets, and separator pages should be attributed to the nearest mail piece.
 }
 
@@ -163,6 +163,36 @@ if (!response || !response.content || !response.content[0]) {
 }
 
 const rawText = response.content[0].text;
+
+// Escape literal control chars that appear inside JSON strings (e.g. bare newlines in summary field)
+function sanitizeJsonStrings(str) {
+  let result = '';
+  let inString = false;
+  let escape = false;
+  for (let i = 0; i < str.length; i++) {
+    const c = str[i];
+    if (escape) {
+      result += c;
+      escape = false;
+    } else if (c === '\\\\' && inString) {
+      result += c;
+      escape = true;
+    } else if (c === '"') {
+      inString = !inString;
+      result += c;
+    } else if (inString && c === '\\n') {
+      result += '\\\\n';
+    } else if (inString && c === '\\r') {
+      result += '\\\\r';
+    } else if (inString && c === '\\t') {
+      result += '\\\\t';
+    } else {
+      result += c;
+    }
+  }
+  return result;
+}
+
 let items;
 try {
   let s = rawText.trim();
@@ -170,13 +200,17 @@ try {
   if (s.startsWith('\`\`\`')) {
     s = s.replace(/^\`\`\`(?:json)?\\s*\\n?/, '').replace(/\\n?\`\`\`\\s*$/, '');
   }
-  items = JSON.parse(s);
+  try {
+    items = JSON.parse(s);
+  } catch (_e1) {
+    items = JSON.parse(sanitizeJsonStrings(s));
+  }
 } catch (e) {
   // Fallback: find the JSON array in the response
   const start = rawText.indexOf('[');
   const end = rawText.lastIndexOf(']');
   if (start >= 0 && end > start) {
-    items = JSON.parse(rawText.slice(start, end + 1));
+    items = JSON.parse(sanitizeJsonStrings(rawText.slice(start, end + 1)));
   } else {
     throw new Error('Could not parse Claude response as JSON array. Raw: ' + rawText.slice(0, 500));
   }

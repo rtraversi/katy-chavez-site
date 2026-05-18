@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mail Item | Katy Chavez Law</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      --terracotta: #C9674F;
+      --terracotta-light: #E8896E;
+      --terracotta-pale: #F5DDD7;
+      --sage: #6A8F72;
+      --sage-pale: #E4EEE6;
+      --gold: #D4A84B;
+      --gold-pale: #F5EDD8;
+      --navy: #2B3A52;
+      --navy-mid: #4A5E78;
+      --cream: #FDFAF5;
+      --warm-white: #FFFEF9;
+      --text-dark: #2B2B2B;
+      --text-mid: #555;
+      --text-light: #888;
+      --border: #E8E0D4;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+
+    nav { background: var(--warm-white); border-bottom: 3px solid var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
+    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
+    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
+    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--navy); }
+    .nav-brand .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
+    .nav-brand .tagline { font-size: 0.65rem; color: var(--navy-mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+
+    .page-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 36px 24px 48px; color: #fff; position: relative; overflow: hidden; }
+    .page-header::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); }
+    .page-header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
+    .back-link { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.88rem; font-weight: 600; margin-bottom: 16px; transition: color 0.15s; }
+    .back-link:hover { color: #fff; }
+    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3.5vw, 2rem); margin-bottom: 8px; }
+    .header-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; opacity: 0.9; font-size: 0.9rem; }
+
+    .notice-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; padding: 4px 12px; border-radius: 12px; white-space: nowrap; }
+    .notice-badge.biometrics_notice   { background: #dbeafe; color: #1e40af; }
+    .notice-badge.approval_notice     { background: #dcfce7; color: #166534; }
+    .notice-badge.receipt_notice      { background: var(--gold-pale); color: #6b5a2e; }
+    .notice-badge.rfe                 { background: #fef9c3; color: #713f12; }
+    .notice-badge.transfer_notice     { background: #f3e8ff; color: #6b21a8; }
+    .notice-badge.rejection           { background: #fee2e2; color: #991b1b; }
+    .notice-badge.card_production_ordered { background: var(--sage-pale); color: #2d5a34; }
+    .notice-badge.other               { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+
+    main { flex: 1; padding: 32px 24px 56px; max-width: 1100px; margin: -28px auto 0; width: 100%; }
+
+    .card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; }
+    .card-title { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
+    .card-title .icon { font-size: 1.1rem; }
+
+    .field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
+    .field-group { display: flex; flex-direction: column; gap: 4px; }
+    .field-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); }
+    .field-value { font-size: 0.95rem; color: var(--text-dark); font-weight: 600; }
+    .field-value.empty { color: var(--text-light); font-weight: 400; font-style: italic; }
+
+    /* Biometrics appointment box */
+    .appt-box { background: #dbeafe; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px 24px; }
+    .appt-box .appt-title { font-family: 'Playfair Display', serif; color: #1e40af; font-size: 1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
+    .appt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 14px; }
+    .appt-field-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #3b82f6; }
+    .appt-field-value { font-size: 0.94rem; color: #1e3a8a; font-weight: 600; }
+    .appt-bring { margin-top: 10px; }
+    .appt-bring .appt-field-label { margin-bottom: 6px; display: block; }
+    .appt-bring p { font-size: 0.9rem; color: #1e3a8a; line-height: 1.6; white-space: pre-wrap; }
+
+    /* Summary */
+    .summary-text { font-size: 0.97rem; line-height: 1.7; color: var(--text-dark); }
+
+    /* PDF download */
+    .btn-download { display: inline-flex; align-items: center; gap: 8px; background: var(--navy); color: #fff; padding: 12px 22px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: background 0.15s; }
+    .btn-download:hover { background: var(--navy-mid); }
+    .btn-download:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
+    .btn-download-note { font-size: 0.82rem; color: var(--text-light); margin-top: 8px; }
+
+    /* Batch info footer */
+    .batch-meta { font-size: 0.82rem; color: var(--text-light); padding-top: 8px; }
+
+    .loading-state { text-align: center; padding: 80px 24px; color: var(--text-mid); }
+    .loading-state .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 16px 20px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
+    .not-found { text-align: center; padding: 80px 24px; color: var(--text-mid); }
+    .not-found h2 { font-family: 'Playfair Display', serif; color: var(--navy); margin-bottom: 10px; }
+
+    footer { background: var(--navy); color: #c8d8f0; padding: 20px 24px; text-align: center; font-size: 0.82rem; }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <img src="/katynewheadshot.jpg" alt="Katy Chavez" class="nav-logo" />
+        <div class="nav-brand-text">
+          <span class="name">Katy Chavez Law</span>
+          <span class="tagline">Portal</span>
+        </div>
+      </a>
+      <div class="nav-right">
+        <div id="user-slot"></div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header" id="page-header">
+    <div class="page-header-inner">
+      <a href="/portal/index.html#mail" class="back-link">&#8592; Back to Mail Sorting</a>
+      <h1 id="header-name">USCIS Mail Notice</h1>
+      <div class="header-meta" id="header-meta"></div>
+    </div>
+  </header>
+
+  <main>
+    <div id="content">
+      <div class="loading-state">
+        <div class="spinner"></div>
+        <div>Loading notice…</div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Katy Chavez Law &middot; Staff Portal
+  </footer>
+
+  <script>
+    const N8N_BASE = 'https://n8n.katychavez.com';
+    const LS_SECRET = 'kcl_portal_secret';
+
+    const params = new URLSearchParams(window.location.search);
+    const itemId = params.get('id');
+
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d)) return dateStr;
+      return d.toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+    }
+
+    function formatDateShort(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d)) return dateStr;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function noticeBadgeLabel(type) {
+      const labels = {
+        biometrics_notice: 'Biometrics Appointment',
+        approval_notice: 'Approval Notice',
+        receipt_notice: 'Receipt Notice',
+        rfe: 'Request for Evidence',
+        transfer_notice: 'Transfer Notice',
+        rejection: 'Rejection Notice',
+        card_production_ordered: 'Card Production Ordered',
+        other: 'Other Notice',
+      };
+      return labels[type] || type || 'Unknown';
+    }
+
+    function fieldHtml(label, value) {
+      const isEmpty = !value;
+      return '<div class="field-group">'
+        + '<div class="field-label">' + escapeHtml(label) + '</div>'
+        + '<div class="field-value' + (isEmpty ? ' empty' : '') + '">' + (isEmpty ? '—' : escapeHtml(String(value))) + '</div>'
+        + '</div>';
+    }
+
+    async function load() {
+      const secret = localStorage.getItem(LS_SECRET);
+      if (!secret) {
+        // Redirect to portal with a message
+        window.location.href = '/portal/index.html#mail';
+        return;
+      }
+      if (!itemId) {
+        document.getElementById('content').innerHTML = '<div class="not-found"><h2>No item specified</h2><p><a href="/portal/index.html#mail">Back to Mail Sorting</a></p></div>';
+        return;
+      }
+
+      try {
+        const res = await fetch(N8N_BASE + '/webhook/mail-get', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Portal-Secret': secret },
+          body: JSON.stringify({ id: itemId }),
+        });
+        if (res.status === 401 || res.status === 403) {
+          localStorage.removeItem(LS_SECRET);
+          window.location.href = '/portal/index.html#mail';
+          return;
+        }
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error('API ' + res.status + ': ' + t.slice(0, 200));
+        }
+        const data = await res.json();
+        if (data.error) throw new Error(data.error);
+        render(data);
+      } catch (e) {
+        document.getElementById('content').innerHTML = '<div class="error-box">Failed to load notice: ' + escapeHtml(e.message) + '</div>';
+      }
+    }
+
+    function render(data) {
+      const item = data.item || {};
+      const batch = data.batch || {};
+      const pdfBase64 = data.pdf_base64 || null;
+
+      // ── Page header ─────────────────────────────────────────────
+      const clientName = item.client_name
+        || ((item.client_last_name || '') + (item.client_first_name ? ', ' + item.client_first_name : ''))
+        || 'Unknown Client';
+      document.getElementById('header-name').textContent = clientName;
+      document.title = clientName + ' | Mail Notice | Katy Chavez Law';
+
+      const noticeType = item.notice_type || 'other';
+      const metaEl = document.getElementById('header-meta');
+      const appTypePart = item.application_type ? '<span>' + escapeHtml(item.application_type) + '</span>' : '';
+      const noticeDatePart = item.notice_date ? '<span>' + escapeHtml(formatDateShort(item.notice_date)) + '</span>' : '';
+      metaEl.innerHTML = '<span class="notice-badge ' + escapeHtml(noticeType) + '">' + escapeHtml(noticeBadgeLabel(noticeType)) + '</span>'
+        + appTypePart + noticeDatePart;
+
+      // ── Build content ────────────────────────────────────────────
+      const sections = [];
+
+      // Case Details card
+      sections.push('<div class="card">'
+        + '<div class="card-title"><span class="icon">📋</span> Case Details</div>'
+        + '<div class="field-grid">'
+        + fieldHtml('Receipt Number', item.receipt_number)
+        + fieldHtml('A-Number', item.a_number)
+        + fieldHtml('Application Type', item.application_type)
+        + fieldHtml('Notice Date', item.notice_date ? formatDate(item.notice_date) : null)
+        + '</div>'
+        + '</div>');
+
+      // Biometrics appointment card (only if biometrics_notice)
+      if (noticeType === 'biometrics_notice' && (item.appointment_date || item.appointment_location)) {
+        const bringHtml = item.appointment_bring
+          ? '<div class="appt-bring"><span class="appt-field-label">What to Bring</span><p>' + escapeHtml(item.appointment_bring) + '</p></div>'
+          : '';
+        sections.push('<div class="appt-box">'
+          + '<div class="appt-title"><span>📅</span> Biometrics Appointment</div>'
+          + '<div class="appt-grid">'
+          + (item.appointment_date ? '<div class="field-group"><div class="appt-field-label">Date</div><div class="appt-field-value">' + escapeHtml(formatDate(item.appointment_date)) + '</div></div>' : '')
+          + (item.appointment_time ? '<div class="field-group"><div class="appt-field-label">Time</div><div class="appt-field-value">' + escapeHtml(item.appointment_time) + '</div></div>' : '')
+          + (item.appointment_location ? '<div class="field-group"><div class="appt-field-label">Location</div><div class="appt-field-value">' + escapeHtml(item.appointment_location) + '</div></div>' : '')
+          + '</div>'
+          + bringHtml
+          + '</div>');
+      }
+
+      // Summary card
+      if (item.summary) {
+        sections.push('<div class="card">'
+          + '<div class="card-title"><span class="icon">💬</span> Summary</div>'
+          + '<p class="summary-text">' + escapeHtml(item.summary) + '</p>'
+          + '</div>');
+      }
+
+      // PDF download card
+      const pdfCard = buildPdfCard(item, pdfBase64, batch);
+      sections.push(pdfCard);
+
+      // Batch metadata
+      if (batch && batch.original_filename) {
+        sections.push('<div class="batch-meta">Scanned from: ' + escapeHtml(batch.original_filename)
+          + (batch.created_at ? ' · ' + escapeHtml(formatDateShort(batch.created_at)) : '')
+          + (batch.page_count ? ' · ' + batch.page_count + '-page scan' : '')
+          + '</div>');
+      }
+
+      document.getElementById('content').innerHTML = sections.join('');
+
+      // Wire up download button after render
+      const dlBtn = document.getElementById('pdf-download-btn');
+      if (dlBtn && pdfBase64) {
+        dlBtn.addEventListener('click', () => {
+          const slug = (item.client_last_name || 'notice').toLowerCase().replace(/[^a-z0-9]/g, '-');
+          const fname = 'uscis-' + slug + '-' + (item.notice_date || 'notice') + '.pdf';
+          const bytes = atob(pdfBase64);
+          const arr = new Uint8Array(bytes.length);
+          for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+          const blob = new Blob([arr], { type: 'application/pdf' });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = fname;
+          a.click();
+          setTimeout(() => URL.revokeObjectURL(url), 3000);
+        });
+      }
+    }
+
+    function buildPdfCard(item, pdfBase64, batch) {
+      if (pdfBase64) {
+        return '<div class="card">'
+          + '<div class="card-title"><span class="icon">📄</span> Individual PDF</div>'
+          + '<button class="btn-download" id="pdf-download-btn">&#8681; Download client PDF</button>'
+          + '</div>';
+      }
+      // No individual PDF — offer the original batch scan as fallback
+      return '<div class="card">'
+        + '<div class="card-title"><span class="icon">📄</span> PDF</div>'
+        + '<p class="btn-download-note">Individual PDF not available for this notice (the split may have failed during processing). '
+        + 'The original batch scan is stored on the VPS at: <code>' + escapeHtml(item.storage_path || 'unknown') + '</code></p>'
+        + '</div>';
+    }
+
+    load();
+  </script>
+</body>
+</html>

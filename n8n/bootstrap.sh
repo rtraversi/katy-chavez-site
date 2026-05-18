@@ -40,17 +40,18 @@ if ! docker ps --format '{{.Names}}' | grep -q '^traefik-traefik-1$'; then
 fi
 
 # ── Stage stack directory ──
-mkdir -p "$DIR" "$DIR/forms" "$DIR/jobs"
+mkdir -p "$DIR" "$DIR/forms" "$DIR/jobs" "$DIR/mail"
 
 # n8n container runs as uid 1000 (user "node"). Give it ownership of the
-# mounted dirs so Code-node fs.mkdirSync / writeFileSync can persist job
-# data. /data/forms is mounted read-only so it can stay root-owned, but
-# /data/jobs is read-write.
-chown -R 1000:1000 "$DIR/jobs"
+# mounted dirs so Code-node fs.mkdirSync / writeFileSync can persist data.
+# /data/forms is mounted read-only so it can stay root-owned.
+chown -R 1000:1000 "$DIR/jobs" "$DIR/mail"
 
-# ── docker-compose.yml: copy canonical from repo into stack dir ──
+# ── docker-compose.yml + Dockerfile: copy canonical from repo ──
 echo "==> Writing $DIR/docker-compose.yml"
 cp "$REPO_DIR/docker-compose.yml" "$DIR/docker-compose.yml"
+echo "==> Writing $DIR/Dockerfile"
+cp "$REPO_DIR/Dockerfile" "$DIR/Dockerfile"
 
 # ── Remove any stale Caddyfile from earlier dedicated-VPS layout ──
 if [[ -f "$DIR/Caddyfile" ]]; then
@@ -99,8 +100,8 @@ chmod 600 "$DIR/.env"
 
 # ── Bring up the stack ──
 cd "$DIR"
-echo "==> Pulling images"
-docker compose pull
+echo "==> Building custom n8n image (includes pdf-lib)"
+docker compose build
 echo "==> (Re)starting stack"
 docker compose up -d --remove-orphans
 

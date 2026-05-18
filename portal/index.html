@@ -66,7 +66,16 @@
     .secret-row button { background: var(--terracotta); color: #fff; border: none; padding: 0 18px; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif; cursor: pointer; }
     .secret-row button:hover { background: var(--terracotta-light); }
 
-    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
+    /* ── Tab bar ─────────────────────────────────────────────────── */
+    .tab-bar { display: flex; gap: 4px; background: #fff; border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 8px 8px 0; margin-bottom: 0; }
+    .tab-btn { font-family: 'Nunito', sans-serif; font-size: 0.9rem; font-weight: 700; padding: 10px 20px; border: none; background: none; color: var(--text-mid); cursor: pointer; border-radius: 8px 8px 0 0; border-bottom: 3px solid transparent; transition: color 0.15s, border-color 0.15s, background 0.15s; display: flex; align-items: center; gap: 8px; }
+    .tab-btn:hover { color: var(--navy); background: var(--cream); }
+    .tab-btn.active { color: var(--navy); border-bottom-color: var(--terracotta); background: var(--cream); }
+    .tab-btn .tab-count { font-size: 0.72rem; font-weight: 700; background: var(--terracotta-pale); color: var(--terracotta); padding: 1px 8px; border-radius: 10px; }
+    .tab-pane { background: var(--cream); border-radius: 0 0 12px 12px; }
+
+    /* ── Client Documents tab ────────────────────────────────────── */
+    .toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; padding-top: 20px; }
     .toolbar h2 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; }
     .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .search { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; min-width: 260px; background: var(--warm-white); }
@@ -87,15 +96,41 @@
     .cust-card .doc-pill { font-size: 0.7rem; font-weight: 700; padding: 2px 10px; border-radius: 12px; background: var(--gold-pale); color: #6b5a2e; }
     .cust-card h3 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.1rem; margin-bottom: 4px; }
     .cust-card .meta { font-size: 0.82rem; color: var(--text-mid); }
-    .cust-card .meta .email { color: var(--text-mid); }
 
+    /* ── Mail Sorting tab ────────────────────────────────────────── */
+    .mail-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; padding-top: 20px; }
+    .mail-toolbar h2 { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.4rem; }
+    .mail-search { padding: 8px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; min-width: 240px; background: var(--warm-white); }
+    .mail-search:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
+
+    .mail-list { display: flex; flex-direction: column; gap: 10px; }
+    .mail-card { background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--sage); border-radius: 12px; padding: 16px 20px; text-decoration: none; color: inherit; transition: box-shadow 0.18s, transform 0.12s; display: flex; align-items: center; gap: 16px; }
+    .mail-card:hover { box-shadow: 0 6px 20px rgba(0,0,0,0.07); transform: translateY(-1px); }
+    .mail-card-body { flex: 1; min-width: 0; }
+    .mail-card-name { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.05rem; margin-bottom: 4px; }
+    .mail-card-meta { font-size: 0.82rem; color: var(--text-mid); display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .mail-card-date { font-size: 0.78rem; color: var(--text-light); white-space: nowrap; }
+    .notice-badge { display: inline-block; font-size: 0.68rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; padding: 3px 10px; border-radius: 10px; white-space: nowrap; }
+    .notice-badge.biometrics_notice   { background: #dbeafe; color: #1e40af; }
+    .notice-badge.approval_notice     { background: #dcfce7; color: #166534; }
+    .notice-badge.receipt_notice      { background: var(--gold-pale); color: #6b5a2e; }
+    .notice-badge.rfe                 { background: #fef9c3; color: #713f12; }
+    .notice-badge.transfer_notice     { background: #f3e8ff; color: #6b21a8; }
+    .notice-badge.rejection           { background: #fee2e2; color: #991b1b; }
+    .notice-badge.card_production_ordered { background: var(--sage-pale); color: #2d5a34; }
+    .notice-badge.other               { background: var(--cream); color: var(--text-mid); border: 1px solid var(--border); }
+
+    .mail-empty { background: #fff; border-radius: 14px; border: 1px dashed var(--border); padding: 48px 24px; text-align: center; color: var(--text-mid); }
+    .mail-empty .icon { font-size: 2.4rem; display: block; margin-bottom: 10px; color: var(--text-light); }
+
+    /* Shared */
     .loading-state { text-align: center; padding: 48px 24px; color: var(--text-mid); }
     .loading-state .spinner { display: inline-block; width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 12px; }
     @keyframes spin { to { transform: rotate(360deg); } }
 
     .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 14px 18px; border-radius: 8px; margin-bottom: 18px; font-size: 0.9rem; }
 
-    /* Upload modal */
+    /* Upload modal (shared for both tabs) */
     .modal-backdrop { position: fixed; inset: 0; background: rgba(20, 25, 40, 0.55); display: flex; align-items: flex-start; justify-content: center; padding: 60px 20px 20px; z-index: 200; overflow-y: auto; }
     .modal { background: #fff; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.25); width: 100%; max-width: 620px; padding: 28px 32px 24px; position: relative; }
     .modal-close { position: absolute; top: 12px; right: 16px; background: none; border: none; font-size: 1.8rem; line-height: 1; color: var(--text-light); cursor: pointer; padding: 6px 10px; border-radius: 6px; }
@@ -147,7 +182,7 @@
   <header class="page-header">
     <div class="page-header-inner">
       <span class="badge">Staff Only</span>
-      <h1>Customer Records</h1>
+      <h1>Staff Portal</h1>
       <p id="header-sub">Sign in to view and manage client cases.</p>
     </div>
   </header>
@@ -172,19 +207,46 @@
       </div>
 
       <div id="main-section" style="display: none;">
-        <div class="toolbar">
-          <h2>Customers <span class="total" id="total-count"></span></h2>
-          <div class="toolbar-right">
-            <input type="search" id="search" class="search" placeholder="Search by name…" />
-            <a href="#" class="btn-primary" id="new-customer">+ New case</a>
-          </div>
+        <!-- ── Tab bar ───────────────────────────────────────────── -->
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tab-btn-clients" data-tab="clients">
+            Client Documents
+            <span class="tab-count" id="clients-count" style="display:none;"></span>
+          </button>
+          <button class="tab-btn" id="tab-btn-mail" data-tab="mail">
+            Mail Sorting
+            <span class="tab-count" id="mail-count" style="display:none;"></span>
+          </button>
         </div>
 
-        <div id="list-container"></div>
+        <!-- ── Client Documents pane ────────────────────────────── -->
+        <div id="tab-clients" class="tab-pane">
+          <div class="toolbar">
+            <h2>Customers <span class="total" id="total-count"></span></h2>
+            <div class="toolbar-right">
+              <input type="search" id="search" class="search" placeholder="Search by name…" />
+              <a href="#" class="btn-primary" id="new-customer">+ New case</a>
+            </div>
+          </div>
+          <div id="list-container"></div>
+        </div>
+
+        <!-- ── Mail Sorting pane ─────────────────────────────────── -->
+        <div id="tab-mail" class="tab-pane" style="display:none;">
+          <div class="mail-toolbar">
+            <h2>USCIS Mail <span class="total" id="mail-total-count"></span></h2>
+            <div class="toolbar-right">
+              <input type="search" id="mail-search" class="mail-search" placeholder="Search by client name…" />
+              <button class="btn-primary" id="upload-mail-btn">+ Upload mail scan</button>
+            </div>
+          </div>
+          <div id="mail-error-slot"></div>
+          <div id="mail-list-container"></div>
+        </div>
       </div>
     </div>
 
-    <!-- Upload modal -->
+    <!-- ── Client Documents upload modal ────────────────────────── -->
     <div id="upload-modal" class="modal-backdrop" style="display:none;">
       <div class="modal">
         <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
@@ -204,6 +266,30 @@
         <div class="modal-actions">
           <button class="btn-cancel" id="upload-cancel">Cancel</button>
           <button class="btn-upload" id="upload-submit" disabled>Upload &amp; analyze</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Mail scan upload modal ────────────────────────────────── -->
+    <div id="mail-upload-modal" class="modal-backdrop" style="display:none;">
+      <div class="modal">
+        <button class="modal-close" id="mail-modal-close" aria-label="Close">&times;</button>
+        <h2>Upload USCIS mail scan</h2>
+        <p class="modal-help">Upload a single PDF scan containing one or more USCIS notices. The AI will identify each client's mail, extract key information, and create individual PDFs. Processing takes 30–90 seconds.</p>
+
+        <label class="dropzone" id="mail-dropzone">
+          <input type="file" id="mail-file-input" accept=".pdf" />
+          <span class="icon">📬</span>
+          <div class="label">Drop the mail scan PDF here or click to choose</div>
+          <div class="hint">PDF only — one scan file at a time</div>
+        </label>
+
+        <div class="file-list" id="mail-file-list"></div>
+        <div class="upload-status" id="mail-upload-status"></div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="mail-upload-cancel">Cancel</button>
+          <button class="btn-upload" id="mail-upload-submit" disabled>Upload &amp; sort</button>
         </div>
       </div>
     </div>
@@ -236,14 +322,14 @@
     const listContainer = document.getElementById('list-container');
     const totalCount = document.getElementById('total-count');
 
-    // Clerk gate temporarily disabled — dev instance hits needs_client_trust
-    // which the SDK can't resolve. API secret alone gates the portal until
-    // we move to production Clerk (or switch to Cloudflare Access / Keycloak).
+    // Clerk gate temporarily disabled — dev instance hits needs_client_trust.
     const REQUIRE_CLERK = false;
 
     let signInMounted = false;
     let searchTimer = null;
+    let mailSearchTimer = null;
 
+    // ── Init ─────────────────────────────────────────────────────────
     async function init() {
       if (REQUIRE_CLERK) {
         while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
@@ -296,7 +382,9 @@
       if (cached) {
         secretSection.style.display = 'none';
         mainSection.style.display = 'block';
-        loadCustomers();
+        // Activate the tab indicated by URL hash (default: clients)
+        const hash = window.location.hash.replace('#', '');
+        activateTab(hash === 'mail' ? 'mail' : 'clients');
       } else {
         secretSection.style.display = 'block';
         mainSection.style.display = 'none';
@@ -315,6 +403,31 @@
       if (e.key === 'Enter') document.getElementById('secret-save').click();
     });
 
+    // ── Tab management ───────────────────────────────────────────────
+    function activateTab(tabId) {
+      const tabs = ['clients', 'mail'];
+      tabs.forEach(id => {
+        const btn = document.getElementById('tab-btn-' + id);
+        const pane = document.getElementById('tab-' + id);
+        if (id === tabId) {
+          btn.classList.add('active');
+          pane.style.display = 'block';
+        } else {
+          btn.classList.remove('active');
+          pane.style.display = 'none';
+        }
+      });
+      window.location.hash = tabId === 'clients' ? '' : tabId;
+
+      // Load content for the activated tab on first visit
+      if (tabId === 'clients' && listContainer.innerHTML === '') loadCustomers();
+      if (tabId === 'mail' && document.getElementById('mail-list-container').innerHTML === '') loadMail();
+    }
+
+    document.getElementById('tab-btn-clients').addEventListener('click', () => activateTab('clients'));
+    document.getElementById('tab-btn-mail').addEventListener('click', () => activateTab('mail'));
+
+    // ── API helper ───────────────────────────────────────────────────
     async function api(path, body) {
       const secret = localStorage.getItem(LS_SECRET);
       if (!secret) throw new Error('Portal secret not set');
@@ -337,6 +450,7 @@
       return res.json();
     }
 
+    // ── Client Documents tab ─────────────────────────────────────────
     async function loadCustomers() {
       const q = searchInput.value.trim();
       listContainer.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading customers…</div></div>';
@@ -385,48 +499,93 @@
       listContainer.innerHTML = '<div class="cust-grid">' + cards + '</div>';
     }
 
-    function escapeHtml(s) {
-      if (s === null || s === undefined) return '';
-      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-    }
-
-    function cleanCaseLabel(label) {
-      // Strip trailing " (Job N)" suffix the workflow currently appends.
-      return String(label || '').replace(/\s*\(Job\s+\d+\)\s*$/i, '').trim() || label;
-    }
-
-    function getViewedSet() {
-      try {
-        const arr = JSON.parse(localStorage.getItem('kcl_viewed_customers') || '[]');
-        return new Set(Array.isArray(arr) ? arr : []);
-      } catch (e) {
-        return new Set();
-      }
-    }
-
-    function renderLogoutButton() {
-      // Visible whenever the secret is set — gives staff a way to clear it.
-      const hasSecret = !!localStorage.getItem(LS_SECRET);
-      if (hasSecret) {
-        userSlot.style.display = 'flex';
-        userSlot.innerHTML = '<button class="btn-signout" id="logout-btn">Log out</button>';
-        document.getElementById('logout-btn').addEventListener('click', () => {
-          if (!confirm('Log out? This clears your portal session on this browser.')) return;
-          localStorage.removeItem(LS_SECRET);
-          window.location.reload();
-        });
-      } else {
-        userSlot.style.display = 'none';
-        userSlot.innerHTML = '';
-      }
-    }
-
     searchInput.addEventListener('input', () => {
       clearTimeout(searchTimer);
       searchTimer = setTimeout(loadCustomers, 300);
     });
 
-    // ── Upload modal ─────────────────────────────────────────────────
+    // ── Mail Sorting tab ─────────────────────────────────────────────
+    const mailListContainer = document.getElementById('mail-list-container');
+    const mailErrorSlot = document.getElementById('mail-error-slot');
+    const mailTotalCount = document.getElementById('mail-total-count');
+    const mailSearchInput = document.getElementById('mail-search');
+
+    async function loadMail() {
+      const q = mailSearchInput.value.trim();
+      mailListContainer.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading mail…</div></div>';
+      mailErrorSlot.innerHTML = '';
+      try {
+        const data = await api('/webhook/mail-list', { search: q, limit: 100, offset: 0 });
+        renderMailItems(data);
+      } catch (e) {
+        mailErrorSlot.innerHTML = '<div class="error-box">' + escapeHtml(e.message) + '</div>';
+        mailListContainer.innerHTML = '';
+        if (e.message.indexOf('Authentication failed') >= 0) ensureSecretLoaded();
+      }
+    }
+
+    function noticeBadgeLabel(type) {
+      const labels = {
+        biometrics_notice: 'Biometrics',
+        approval_notice: 'Approval',
+        receipt_notice: 'Receipt',
+        rfe: 'RFE',
+        transfer_notice: 'Transfer',
+        rejection: 'Rejection',
+        card_production_ordered: 'Card Ordered',
+        other: 'Other',
+      };
+      return labels[type] || type || 'Unknown';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return null;
+      const d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d)) return dateStr;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    function renderMailItems(data) {
+      const items = data.items || [];
+      mailTotalCount.textContent = data.total > 0 ? '(' + data.total + ')' : '';
+
+      if (items.length === 0) {
+        const qLabel = mailSearchInput.value ? ' matching "' + escapeHtml(mailSearchInput.value) + '"' : '';
+        mailListContainer.innerHTML = '<div class="mail-empty"><span class="icon">📬</span><div>No mail processed yet' + qLabel + '.<br>Upload a scan to get started.</div></div>';
+        return;
+      }
+
+      const cards = items.map(item => {
+        const name = item.client_name
+          || ((item.client_last_name || '') + (item.client_first_name ? ', ' + item.client_first_name : ''))
+          || '(unknown client)';
+        const type = item.notice_type || 'other';
+        const appType = item.application_type ? ' · ' + escapeHtml(item.application_type) : '';
+        const dateStr = item.notice_date ? formatDate(item.notice_date) : formatDate(item.created_at);
+        const apptStr = item.appointment_date ? ' · Appt: ' + formatDate(item.appointment_date) : '';
+        const hasPdf = item.has_pdf ? '' : ' · <em>PDF pending</em>';
+
+        return '<a href="/portal/mail-item.html?id=' + encodeURIComponent(item.id) + '" class="mail-card">'
+          + '<div class="mail-card-body">'
+          + '<div class="mail-card-name">' + escapeHtml(name) + '</div>'
+          + '<div class="mail-card-meta">'
+          + '<span class="notice-badge ' + escapeHtml(type) + '">' + noticeBadgeLabel(type) + '</span>'
+          + escapeHtml(appType) + escapeHtml(apptStr) + hasPdf
+          + '</div>'
+          + '</div>'
+          + '<div class="mail-card-date">' + escapeHtml(dateStr || '') + '</div>'
+          + '</a>';
+      }).join('');
+
+      mailListContainer.innerHTML = '<div class="mail-list">' + cards + '</div>';
+    }
+
+    mailSearchInput.addEventListener('input', () => {
+      clearTimeout(mailSearchTimer);
+      mailSearchTimer = setTimeout(loadMail, 300);
+    });
+
+    // ── Client Documents upload modal ────────────────────────────────
     const uploadModal = document.getElementById('upload-modal');
     const dropzone = document.getElementById('dropzone');
     const fileInput = document.getElementById('file-input');
@@ -453,10 +612,7 @@
 
     function renderPendingFiles() {
       uploadSubmit.disabled = pendingFiles.length === 0 || uploading;
-      if (pendingFiles.length === 0) {
-        fileList.innerHTML = '';
-        return;
-      }
+      if (pendingFiles.length === 0) { fileList.innerHTML = ''; return; }
       fileList.innerHTML = pendingFiles.map((f, i) =>
         '<div class="file-row">'
         + '<span class="file-name">' + escapeHtml(f.name) + '</span>'
@@ -474,28 +630,17 @@
       });
     }
 
-    function addFiles(fileList) {
-      for (const f of fileList) {
-        if (f && f.size > 0) pendingFiles.push(f);
-      }
+    function addFiles(fl) {
+      for (const f of fl) { if (f && f.size > 0) pendingFiles.push(f); }
       renderPendingFiles();
     }
 
-    document.getElementById('new-customer').addEventListener('click', (e) => {
-      e.preventDefault();
-      openUploadModal();
-    });
+    document.getElementById('new-customer').addEventListener('click', (e) => { e.preventDefault(); openUploadModal(); });
     document.getElementById('modal-close').addEventListener('click', closeUploadModal);
     document.getElementById('upload-cancel').addEventListener('click', closeUploadModal);
-    uploadModal.addEventListener('click', (e) => {
-      if (e.target === uploadModal) closeUploadModal();
-    });
-
+    uploadModal.addEventListener('click', (e) => { if (e.target === uploadModal) closeUploadModal(); });
     fileInput.addEventListener('change', () => addFiles(fileInput.files));
-    dropzone.addEventListener('dragover', (e) => {
-      e.preventDefault();
-      dropzone.classList.add('drag-over');
-    });
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
     dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
     dropzone.addEventListener('drop', (e) => {
       e.preventDefault();
@@ -508,26 +653,20 @@
       uploading = true;
       uploadSubmit.disabled = true;
       uploadStatus.className = 'upload-status info';
-      uploadStatus.innerHTML = '<span class="spinner"></span>Uploading ' + pendingFiles.length + ' file' + (pendingFiles.length === 1 ? '' : 's') + ' and analyzing with AI… this can take 30-90 seconds.';
+      uploadStatus.innerHTML = '<span class="spinner"></span>Uploading ' + pendingFiles.length + ' file' + (pendingFiles.length === 1 ? '' : 's') + ' and analyzing with AI… this can take 30–90 seconds.';
 
       try {
         const fd = new FormData();
         pendingFiles.forEach(f => fd.append('files', f, f.name));
         fd.append('uploadedAt', new Date().toISOString());
 
-        const res = await fetch(N8N_BASE + '/webhook/portal-submit', {
-          method: 'POST',
-          body: fd,
-        });
+        const res = await fetch(N8N_BASE + '/webhook/portal-submit', { method: 'POST', body: fd });
         if (!res.ok) {
           const t = await res.text();
           throw new Error('Server returned ' + res.status + ': ' + t.slice(0, 200));
         }
         const data = await res.json();
-
-        if (!data || !data.success) {
-          throw new Error('Upload returned no success flag: ' + JSON.stringify(data).slice(0, 200));
-        }
+        if (!data || !data.success) throw new Error('Upload returned no success flag: ' + JSON.stringify(data).slice(0, 200));
 
         const personIds = (data.case && data.case.person_ids) || [];
         const fileCount = (data.summary && data.summary.files) || pendingFiles.length;
@@ -535,16 +674,11 @@
 
         if (personIds.length > 0) {
           uploadStatus.innerHTML = '✅ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' (' + analyzed + ' analyzed, ' + personIds.length + ' person' + (personIds.length === 1 ? '' : 's') + ' created). Opening customer card…';
-          setTimeout(() => {
-            window.location.href = '/portal/customer.html?id=' + encodeURIComponent(personIds[0]);
-          }, 900);
+          setTimeout(() => { window.location.href = '/portal/customer.html?id=' + encodeURIComponent(personIds[0]); }, 900);
         } else {
-          uploadStatus.innerHTML = '⚠️ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' but no customer info was extracted (no analyzable documents recognized). Refreshing list…';
+          uploadStatus.innerHTML = '⚠️ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' but no customer info was extracted. Refreshing list…';
           uploading = false;
-          setTimeout(() => {
-            closeUploadModal();
-            loadCustomers();
-          }, 1500);
+          setTimeout(() => { closeUploadModal(); loadCustomers(); }, 1500);
         }
       } catch (err) {
         uploadStatus.className = 'upload-status error';
@@ -553,6 +687,132 @@
         uploadSubmit.disabled = pendingFiles.length === 0;
       }
     });
+
+    // ── Mail scan upload modal ────────────────────────────────────────
+    const mailUploadModal = document.getElementById('mail-upload-modal');
+    const mailDropzone = document.getElementById('mail-dropzone');
+    const mailFileInput = document.getElementById('mail-file-input');
+    const mailFileList = document.getElementById('mail-file-list');
+    const mailUploadStatus = document.getElementById('mail-upload-status');
+    const mailUploadSubmit = document.getElementById('mail-upload-submit');
+    let mailPendingFile = null;
+    let mailUploading = false;
+
+    function openMailModal() {
+      mailPendingFile = null;
+      mailUploading = false;
+      mailUploadStatus.className = 'upload-status';
+      mailUploadStatus.innerHTML = '';
+      mailFileInput.value = '';
+      renderMailPendingFile();
+      mailUploadModal.style.display = 'flex';
+    }
+
+    function closeMailModal() {
+      if (mailUploading) return;
+      mailUploadModal.style.display = 'none';
+    }
+
+    function renderMailPendingFile() {
+      mailUploadSubmit.disabled = !mailPendingFile || mailUploading;
+      if (!mailPendingFile) { mailFileList.innerHTML = ''; return; }
+      const f = mailPendingFile;
+      mailFileList.innerHTML = '<div class="file-row">'
+        + '<span class="file-name">' + escapeHtml(f.name) + '</span>'
+        + '<span class="file-size">' + Math.max(1, Math.round(f.size / 1024)) + ' KB</span>'
+        + '<button class="file-remove" id="mail-file-remove" aria-label="Remove">&times;</button>'
+        + '</div>';
+      document.getElementById('mail-file-remove').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (mailUploading) return;
+        mailPendingFile = null;
+        renderMailPendingFile();
+      });
+    }
+
+    document.getElementById('upload-mail-btn').addEventListener('click', openMailModal);
+    document.getElementById('mail-modal-close').addEventListener('click', closeMailModal);
+    document.getElementById('mail-upload-cancel').addEventListener('click', closeMailModal);
+    mailUploadModal.addEventListener('click', (e) => { if (e.target === mailUploadModal) closeMailModal(); });
+
+    mailFileInput.addEventListener('change', () => {
+      if (mailFileInput.files && mailFileInput.files[0]) {
+        mailPendingFile = mailFileInput.files[0];
+        renderMailPendingFile();
+      }
+    });
+    mailDropzone.addEventListener('dragover', (e) => { e.preventDefault(); mailDropzone.classList.add('drag-over'); });
+    mailDropzone.addEventListener('dragleave', () => mailDropzone.classList.remove('drag-over'));
+    mailDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      mailDropzone.classList.remove('drag-over');
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f && f.type === 'application/pdf') { mailPendingFile = f; renderMailPendingFile(); }
+    });
+
+    mailUploadSubmit.addEventListener('click', async () => {
+      if (!mailPendingFile || mailUploading) return;
+      mailUploading = true;
+      mailUploadSubmit.disabled = true;
+      mailUploadStatus.className = 'upload-status info';
+      mailUploadStatus.innerHTML = '<span class="spinner"></span>Uploading scan and analyzing with AI… this can take 30–90 seconds for a large batch.';
+
+      try {
+        const fd = new FormData();
+        fd.append('file', mailPendingFile, mailPendingFile.name);
+
+        const res = await fetch(N8N_BASE + '/webhook/mail-ingest', { method: 'POST', body: fd });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error('Server returned ' + res.status + ': ' + t.slice(0, 200));
+        }
+        const data = await res.json();
+        if (!data || !data.success) throw new Error('Ingest returned no success flag: ' + JSON.stringify(data).slice(0, 200));
+
+        const count = data.item_count || 0;
+        mailUploadStatus.innerHTML = '✅ Processed ' + count + ' client notice' + (count === 1 ? '' : 's') + '. Refreshing mail list…';
+        mailUploading = false;
+        setTimeout(() => { closeMailModal(); loadMail(); }, 1200);
+      } catch (err) {
+        mailUploadStatus.className = 'upload-status error';
+        mailUploadStatus.innerHTML = 'Upload failed: ' + escapeHtml(err.message);
+        mailUploading = false;
+        mailUploadSubmit.disabled = false;
+      }
+    });
+
+    // ── Utilities ────────────────────────────────────────────────────
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function cleanCaseLabel(label) {
+      return String(label || '').replace(/\s*\(Job\s+\d+\)\s*$/i, '').trim() || label;
+    }
+
+    function getViewedSet() {
+      try {
+        const arr = JSON.parse(localStorage.getItem('kcl_viewed_customers') || '[]');
+        return new Set(Array.isArray(arr) ? arr : []);
+      } catch (e) { return new Set(); }
+    }
+
+    function renderLogoutButton() {
+      const hasSecret = !!localStorage.getItem(LS_SECRET);
+      if (hasSecret) {
+        userSlot.style.display = 'flex';
+        userSlot.innerHTML = '<button class="btn-signout" id="logout-btn">Log out</button>';
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          if (!confirm('Log out? This clears your portal session on this browser.')) return;
+          localStorage.removeItem(LS_SECRET);
+          window.location.reload();
+        });
+      } else {
+        userSlot.style.display = 'none';
+        userSlot.innerHTML = '';
+      }
+    }
 
     init();
   </script>

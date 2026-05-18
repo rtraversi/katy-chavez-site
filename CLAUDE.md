@@ -28,23 +28,29 @@ This project is also intended as a **template** for similar portals at other imm
 /                        marketing site (index.html)
   netlify.toml           redirects + security headers
   portal/
-    index.html           staff dashboard (list + search) — Phase 1
+    index.html           staff dashboard — two tabs: Client Docs + Mail Sorting
     customer.html        contact card with editable tabs — Phase 1
+    mail-item.html       individual USCIS mail notice detail — Phase 3
     admin.html           OLD job-list dashboard (deprecated; not deleted yet)
     dev-jwt.html         abandoned Clerk debug page (not deleted yet)
   n8n/
-    docker-compose.yml   VPS stack: n8n + postgres
+    Dockerfile           custom n8n image (adds pdf-lib for PDF splitting/filling)
+    docker-compose.yml   VPS stack: n8n (custom image) + postgres
     bootstrap.sh         idempotent VPS provisioning script
     .env.example         template for /opt/kcl-n8n/.env on VPS
     schema/              ordered SQL migrations
       001_init.sql                tables + indexes + triggers
       002_intake_function.sql     portal_intake() — AI-extract → DB insert
       003_portal_functions.sql    portal_list/get/update functions
+      004_mail_tables.sql         mail_batches + mail_items + mail_* functions
     workflows/           n8n workflow SDK source (canonical copies)
       portal-submit.workflow.ts   upload + classify + extract
       portal-list.workflow.ts     paginated list with search
       portal-get.workflow.ts      full record
       portal-update.workflow.ts   whitelisted field updates
+      mail-ingest.workflow.ts     mail scan → Claude → PDF split → DB
+      mail-list.workflow.ts       paginated mail item list
+      mail-get.workflow.ts        mail item detail + PDF as base64
   *.jpg / *.png          marketing site images
 ```
 
@@ -73,9 +79,49 @@ POSTGRES_PASSWORD=…
 POSTGRES_DB=kcl_portal
 ```
 
-Two n8n env vars matter for the Code nodes:
-- `NODE_FUNCTION_ALLOW_BUILTIN=fs,path` — lets the portal-submit Code node mkdir + writeFileSync
-- `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` — lets the Code node read `$env.ANTHROPIC_API_KEY`
+Three n8n env vars matter for Code nodes:
+- `NODE_FUNCTION_ALLOW_BUILTIN=fs,path` — lets Code nodes mkdir + write files to disk
+- `NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib` — allows pdf-lib in Code nodes (installed via Dockerfile)
+- `N8N_BLOCK_ENV_ACCESS_IN_NODE=false` — lets Code nodes read `$env.ANTHROPIC_API_KEY`
+
+The n8n container is now built from a custom Dockerfile (not pulled directly from Docker Hub). The Dockerfile adds pdf-lib globally. On deploy, run `docker compose up --build -d` (not just `up -d`) to rebuild the image. The `./mail` directory must exist at `/opt/kcl-n8n/mail/` — bootstrap.sh creates it automatically.
+
+## Phase 3 — USCIS mail sorting (built 2026-05-18)
+
+Staff uploads a batch PDF scan of incoming USCIS mail. Claude analyzes the whole scan, identifies each client's notice, extracts key fields, and creates an individual PDF per client using pdf-lib. Results appear in the portal's **Mail Sorting** tab.
+
+### Scope as built
+
+1. **Upload portal** — new "Mail Sorting" tab on `portal/index.html` with its own upload modal (PDF only, one scan at a time).
+2. **mail-ingest workflow** — saves scan → sends full PDF to Claude → parses structured JSON (one object per client) → splits PDF by page with pdf-lib → inserts `mail_batches` + `mail_items` rows.
+3. **mail-list / mail-get workflows** — authenticated list + detail endpoints.
+4. **mail-item.html** — detail page: client name, notice type badge, case details, biometrics appointment box (when applicable), Claude's plain-English summary, PDF download.
+5. **pdf-lib infrastructure** — custom Dockerfile installs pdf-lib; `NODE_FUNCTION_ALLOW_EXTERNAL=pdf-lib` enables it in Code nodes. Also unblocks Phase 2 form-fill.
+
+### What Claude extracts per mail piece
+
+- client_name, client_first_name, client_last_name
+- receipt_number, a_number
+- notice_type: `biometrics_notice` | `approval_notice` | `receipt_notice` | `rfe` | `transfer_notice` | `rejection` | `card_production_ordered` | `other`
+- application_type (I-485, I-765, etc.)
+- notice_date
+- appointment_date / time / location / what-to-bring (biometrics only)
+- summary (2–3 sentences plain English)
+- page_numbers (which pages belong to this client)
+
+### Storage paths
+
+- Original scan: `/data/mail/{execId}/original.pdf`
+- Individual client PDF: `/data/mail/{execId}/{lastname-firstname-NN}.pdf`
+- Volume mount: `./mail:/data/mail` in docker-compose.yml
+
+### Phase 4 — Monday + email digest (next)
+
+Match extracted client name against Monday.com board, update client card, send summary email to katychavezlaw@gmail.com + katycab@yahoo.com.
+
+### Phase 5 — WhatsApp / Twilio (parked)
+
+Use extracted appointment/approval data to send client notifications via WhatsApp or Twilio SMS. Pending Twilio account setup.
 
 ## Postgres schema
 
@@ -91,6 +137,9 @@ Stored functions (called from n8n workflows):
 - `portal_list(search, limit, offset) → jsonb` — paginated list with name substring search.
 - `portal_get(person_id) → jsonb` — person + case + related_persons + documents + extracted_fields in one call.
 - `portal_update(person_id, fields) → jsonb` — whitelisted column updates via dynamic SQL.
+- `mail_intake(exec_id, original_filename, storage_path, page_count, items) → jsonb` — atomic insert of one mail_batches row + N mail_items rows.
+- `mail_list(search, limit, offset) → jsonb` — paginated mail items list.
+- `mail_get(item_id) → jsonb` — single mail item + batch metadata.
 
 Schema changes are migration files in `n8n/schema/NNN_*.sql`. Apply via:
 ```bash
@@ -113,6 +162,11 @@ Updates flow: edit the `.workflow.ts` file → push via `mcp__claude_ai_n8n__upd
 | portal-list | `L3bd4UHZCcARP20h` | POST `/webhook/portal-list` | headerAuth `X-Portal-Secret` |
 | portal-get | `SXqe3pjmo61JM0la` | POST `/webhook/portal-get` | headerAuth `X-Portal-Secret` |
 | portal-update | `MTSTqeGlb2mAqHVh` | POST `/webhook/portal-update` | headerAuth `X-Portal-Secret` |
+| mail-ingest | `TBD — create in n8n` | POST `/webhook/mail-ingest` | none (public — scan upload form) |
+| mail-list | `TBD — create in n8n` | POST `/webhook/mail-list` | headerAuth `X-Portal-Secret` |
+| mail-get | `TBD — create in n8n` | POST `/webhook/mail-get` | headerAuth `X-Portal-Secret` |
+
+**After creating the mail workflows in n8n:** update the `workflow('mail-ingest-tbd', ...)` ID in each `.workflow.ts` file with the real n8n ID, then update this table.
 
 n8n credentials configured (all in n8n UI, never in git):
 - `Portal Postgres` — connects to `postgres:5432`

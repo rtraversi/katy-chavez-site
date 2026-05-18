@@ -48,6 +48,7 @@ This project is also intended as a **template** for similar portals at other imm
       portal-list.workflow.ts     paginated list with search
       portal-get.workflow.ts      full record
       portal-update.workflow.ts   whitelisted field updates
+      portal-auth.workflow.ts     username/password → returns portal API secret token
       mail-ingest.workflow.ts     mail scan → Claude → PDF split → DB
       mail-list.workflow.ts       paginated mail item list
       mail-get.workflow.ts        mail item detail + PDF as base64
@@ -77,6 +78,9 @@ CLERK_JWT_ISSUER=https://decent-seahorse-78.clerk.accounts.dev
 POSTGRES_USER=portal
 POSTGRES_PASSWORD=…
 POSTGRES_DB=kcl_portal
+PORTAL_USER=…
+PORTAL_PASS=…
+PORTAL_SECRET=…
 ```
 
 Three n8n env vars matter for Code nodes:
@@ -162,11 +166,10 @@ Updates flow: edit the `.workflow.ts` file → push via `mcp__claude_ai_n8n__upd
 | portal-list | `L3bd4UHZCcARP20h` | POST `/webhook/portal-list` | headerAuth `X-Portal-Secret` |
 | portal-get | `SXqe3pjmo61JM0la` | POST `/webhook/portal-get` | headerAuth `X-Portal-Secret` |
 | portal-update | `MTSTqeGlb2mAqHVh` | POST `/webhook/portal-update` | headerAuth `X-Portal-Secret` |
-| mail-ingest | `TBD — create in n8n` | POST `/webhook/mail-ingest` | none (public — scan upload form) |
-| mail-list | `TBD — create in n8n` | POST `/webhook/mail-list` | headerAuth `X-Portal-Secret` |
-| mail-get | `TBD — create in n8n` | POST `/webhook/mail-get` | headerAuth `X-Portal-Secret` |
-
-**After creating the mail workflows in n8n:** update the `workflow('mail-ingest-tbd', ...)` ID in each `.workflow.ts` file with the real n8n ID, then update this table.
+| portal-auth | `y55JVRRE7dRFahvK` | POST `/webhook/portal-auth` | none (this IS the auth endpoint) |
+| mail-ingest | `WxijwOWgZ3dTm3J6` | POST `/webhook/mail-ingest` | none (public — scan upload form) |
+| mail-list | `s9px1YlEI7eJlBPk` | POST `/webhook/mail-list` | headerAuth `X-Portal-Secret` |
+| mail-get | `eAUb4gNHZ0Y0YMZ8` | POST `/webhook/mail-get` | headerAuth `X-Portal-Secret` |
 
 n8n credentials configured (all in n8n UI, never in git):
 - `Portal Postgres` — connects to `postgres:5432`
@@ -175,7 +178,7 @@ n8n credentials configured (all in n8n UI, never in git):
 
 ## Auth state
 
-**Currently:** API-secret-only. Both portal pages have `const REQUIRE_CLERK = false` — Clerk gate is bypassed. Anyone visiting `/portal` lands at the secret prompt; pasting the right secret unlocks the dashboard. CRUD webhooks check the `X-Portal-Secret` header.
+**Currently:** Username/password login. Both portal pages have `const REQUIRE_CLERK = false` — Clerk gate is bypassed. Staff sign in with `PORTAL_USER` / `PORTAL_PASS` credentials via the `portal-auth` webhook, which returns the `PORTAL_SECRET` token and caches it in localStorage. CRUD webhooks check the `X-Portal-Secret` header (value = `PORTAL_SECRET`).
 
 **Why bypassed:** Clerk dev instance returns `needs_client_trust` after successful password verification, and the Clerk JS SDK (5.125.10) doesn't yet have code to resolve that challenge. Spent multiple rounds debugging; not a config issue on our side.
 

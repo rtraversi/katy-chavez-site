@@ -304,7 +304,7 @@ const respond = node({
   output: [{}],
 });
 
-export default workflow('mail-ingest-tbd', 'mail-ingest')
+export default workflow('WxijwOWgZ3dTm3J6', 'mail-ingest')
   .add(webhookTrigger)
   .to(persistScan)
   .to(analyzeWithClaude)

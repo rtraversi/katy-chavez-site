@@ -57,14 +57,14 @@
     .gate p { color: var(--text-mid); margin-bottom: 24px; font-size: 0.95rem; }
     #sign-in-mount { display: flex; justify-content: center; }
 
-    .secret-prompt { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 24px; margin-bottom: 24px; }
-    .secret-prompt label { display: block; font-weight: 600; color: var(--navy); margin-bottom: 8px; font-size: 0.95rem; }
-    .secret-prompt .help { color: var(--text-mid); font-size: 0.85rem; margin-bottom: 12px; }
-    .secret-row { display: flex; gap: 8px; }
-    .secret-row input { flex: 1; padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.9rem; background: var(--warm-white); }
-    .secret-row input:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
-    .secret-row button { background: var(--terracotta); color: #fff; border: none; padding: 0 18px; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif; cursor: pointer; }
-    .secret-row button:hover { background: var(--terracotta-light); }
+    .login-form { background: #fff; border-radius: 12px; border: 1px solid var(--border); padding: 24px; margin-bottom: 24px; display: flex; flex-direction: column; gap: 8px; }
+    .login-form label { font-weight: 600; color: var(--navy); font-size: 0.95rem; }
+    .login-form input[type=text], .login-form input[type=password] { padding: 10px 14px; border: 1.5px solid var(--border); border-radius: 8px; font-family: 'Nunito', sans-serif; font-size: 0.95rem; background: var(--warm-white); }
+    .login-form input:focus { outline: none; border-color: var(--terracotta); box-shadow: 0 0 0 3px var(--terracotta-pale); }
+    .login-error { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 10px 14px; border-radius: 8px; font-size: 0.88rem; margin-top: 4px; }
+    .btn-login { background: var(--terracotta); color: #fff; border: none; padding: 12px; border-radius: 8px; font-weight: 700; font-family: 'Nunito', sans-serif; font-size: 0.95rem; cursor: pointer; margin-top: 4px; transition: background 0.15s; }
+    .btn-login:hover { background: var(--terracotta-light); }
+    .btn-login:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
 
     /* ── Tab bar ─────────────────────────────────────────────────── */
     .tab-bar { display: flex; gap: 4px; background: #fff; border: 1px solid var(--border); border-radius: 12px 12px 0 0; padding: 8px 8px 0; margin-bottom: 0; }
@@ -197,13 +197,15 @@
     <div id="dashboard" style="display: none;">
       <div id="error-slot"></div>
 
-      <div id="secret-section" class="secret-prompt" style="display: none;">
-        <label for="secret-input">Portal API Secret</label>
-        <p class="help">One-time setup per browser. Paste the value from your password manager — we'll cache it here for future visits.</p>
-        <div class="secret-row">
-          <input type="password" id="secret-input" placeholder="paste secret here…" autocomplete="off" />
-          <button id="secret-save">Save</button>
-        </div>
+      <div id="login-form-section" style="display: none;">
+        <form id="login-form" class="login-form" autocomplete="on">
+          <label for="login-username">Username</label>
+          <input type="text" id="login-username" name="username" autocomplete="username" placeholder="Username" />
+          <label for="login-password">Password</label>
+          <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="Password" />
+          <div id="login-error" class="login-error" style="display:none;"></div>
+          <button type="submit" class="btn-login" id="login-submit">Sign in</button>
+        </form>
       </div>
 
       <div id="main-section" style="display: none;">
@@ -315,8 +317,7 @@
     const userSlot = document.getElementById('user-slot');
     const headerSub = document.getElementById('header-sub');
     const errorSlot = document.getElementById('error-slot');
-    const secretSection = document.getElementById('secret-section');
-    const secretInput = document.getElementById('secret-input');
+    const loginFormSection = document.getElementById('login-form-section');
     const mainSection = document.getElementById('main-section');
     const searchInput = document.getElementById('search');
     const listContainer = document.getElementById('list-container');
@@ -380,28 +381,53 @@
     function ensureSecretLoaded() {
       const cached = localStorage.getItem(LS_SECRET);
       if (cached) {
-        secretSection.style.display = 'none';
+        loginFormSection.style.display = 'none';
         mainSection.style.display = 'block';
-        // Activate the tab indicated by URL hash (default: clients)
         const hash = window.location.hash.replace('#', '');
         activateTab(hash === 'mail' ? 'mail' : 'clients');
       } else {
-        secretSection.style.display = 'block';
+        loginFormSection.style.display = 'block';
         mainSection.style.display = 'none';
       }
     }
 
-    document.getElementById('secret-save').addEventListener('click', () => {
-      const v = secretInput.value.trim();
-      if (!v) return;
-      localStorage.setItem(LS_SECRET, v);
-      secretInput.value = '';
-      renderLogoutButton();
-      ensureSecretLoaded();
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await doLogin();
     });
-    secretInput.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter') document.getElementById('secret-save').click();
-    });
+
+    async function doLogin() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const loginError = document.getElementById('login-error');
+      const loginSubmit = document.getElementById('login-submit');
+      if (!username || !password) return;
+      loginError.style.display = 'none';
+      loginSubmit.disabled = true;
+      loginSubmit.textContent = 'Signing in…';
+      try {
+        const res = await fetch(N8N_BASE + '/webhook/portal-auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!data.valid || !data.token) {
+          loginError.textContent = 'Incorrect username or password.';
+          loginError.style.display = 'block';
+          return;
+        }
+        localStorage.setItem(LS_SECRET, data.token);
+        renderLogoutButton();
+        ensureSecretLoaded();
+      } catch (err) {
+        loginError.textContent = 'Sign-in failed: ' + escapeHtml(err.message);
+        loginError.style.display = 'block';
+      } finally {
+        loginSubmit.disabled = false;
+        loginSubmit.textContent = 'Sign in';
+      }
+    }
 
     // ── Tab management ───────────────────────────────────────────────
     function activateTab(tabId) {
@@ -441,7 +467,7 @@
       });
       if (res.status === 401 || res.status === 403) {
         localStorage.removeItem(LS_SECRET);
-        throw new Error('Authentication failed. The portal secret may be wrong — please re-enter.');
+        throw new Error('Authentication failed. Please sign in again.');
       }
       if (!res.ok) {
         const t = await res.text();

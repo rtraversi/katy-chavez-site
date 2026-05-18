@@ -101,7 +101,7 @@ const respond = node({
   output: [{}],
 });
 
-export default workflow('mail-get-tbd', 'mail-get')
+export default workflow('eAUb4gNHZ0Y0YMZ8', 'mail-get')
   .add(webhookTrigger)
   .to(getQuery)
   .to(readPdf)

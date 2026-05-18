@@ -64,7 +64,7 @@ const respond = node({
   output: [{}],
 });
 
-export default workflow('mail-list-tbd', 'mail-list')
+export default workflow('s9px1YlEI7eJlBPk', 'mail-list')
   .add(webhookTrigger)
   .to(listQuery)
   .to(respond);

@@ -359,17 +359,19 @@ var foundClients = [];
 var notFoundClients = [];
 
 async function searchMonday(term) {
-  var gql = 'query ($term: String!) { items_page(limit: 10, query_params: {term: $term}) { items { id name board { id } } } }';
+  var gql = 'query ($boardId: ID!, $term: [String]!) { boards(ids: [$boardId]) { items_page(limit: 10, query_params: {rules: [{column_id: "name", compare_value: $term, operator: contains_text}]}) { items { id name } } } }';
   var resp = await self.helpers.httpRequest({
     method: 'POST',
     url: 'https://api.monday.com/v2',
     headers: { 'Authorization': mondayApiKey, 'Content-Type': 'application/json', 'API-Version': '2024-10' },
-    body: { query: gql, variables: { term: term } },
+    body: { query: gql, variables: { boardId: BOARD_ID, term: [term] } },
     json: true,
   });
-  var page = resp && resp.data && resp.data.items_page;
-  if (!page) return [];
-  return (page.items || []).filter(function(item) { return item.board && String(item.board.id) === BOARD_ID; });
+  if (resp.errors) throw new Error('Monday search error: ' + JSON.stringify(resp.errors[0]));
+  var boards = resp && resp.data && resp.data.boards;
+  if (!boards || boards.length === 0) return [];
+  var page = boards[0].items_page;
+  return page ? (page.items || []) : [];
 }
 
 async function postUpdate(mondayItemId, body) {

@@ -83,17 +83,19 @@ for (var i = 0; i < items.length; i++) {
 }
 
 async function searchMonday(term) {
-  var gql = 'query ($term: String!) { items_page(limit: 10, query_params: {term: $term}) { items { id name board { id } } } }';
+  var gql = 'query ($boardId: ID!, $term: [String]!) { boards(ids: [$boardId]) { items_page(limit: 10, query_params: {rules: [{column_id: "name", compare_value: $term, operator: contains_text}]}) { items { id name } } } }';
   var result = await self.helpers.httpRequest({
     method: 'POST',
     url: 'https://api.monday.com/v2',
     headers: { 'Authorization': mondayApiKey, 'Content-Type': 'application/json', 'API-Version': '2024-10' },
-    body: JSON.stringify({ query: gql, variables: { term: term } }),
+    body: JSON.stringify({ query: gql, variables: { boardId: BOARD_ID, term: [term] } }),
   });
   var parsed = typeof result === 'string' ? JSON.parse(result) : result;
-  var page = parsed.data && parsed.data.items_page;
-  if (!page) return [];
-  return (page.items || []).filter(function(item) { return item.board && String(item.board.id) === BOARD_ID; });
+  if (parsed.errors) throw new Error('Monday search error: ' + JSON.stringify(parsed.errors[0]));
+  var boards = parsed.data && parsed.data.boards;
+  if (!boards || boards.length === 0) return [];
+  var page = boards[0].items_page;
+  return page ? (page.items || []) : [];
 }
 
 async function postUpdate(mondayItemId, body) {

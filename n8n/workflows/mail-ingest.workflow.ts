@@ -359,7 +359,7 @@ var foundClients = [];
 var notFoundClients = [];
 
 async function searchMonday(term) {
-  var gql = 'query Search($boardId: ID!, $term: String!) { items_page_by_column_values(limit: 5, board_id: $boardId, columns: [{column_id: "name", column_values: [$term]}]) { items { id name } } }';
+  var gql = 'query ($boardId: ID!, $term: String!) { boards(ids: [$boardId]) { items_page(limit: 5, query_params: {term: $term}) { items { id name } } } }';
   var resp = await self.helpers.httpRequest({
     method: 'POST',
     url: 'https://api.monday.com/v2',
@@ -367,8 +367,10 @@ async function searchMonday(term) {
     body: { query: gql, variables: { boardId: BOARD_ID, term: term } },
     json: true,
   });
-  var r = resp && resp.data && resp.data.items_page_by_column_values;
-  return r ? r.items : [];
+  var boards = resp && resp.data && resp.data.boards;
+  if (!boards || boards.length === 0) return [];
+  var page = boards[0].items_page;
+  return page ? (page.items || []) : [];
 }
 
 async function postUpdate(mondayItemId, body) {

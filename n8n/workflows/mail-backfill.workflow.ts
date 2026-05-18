@@ -83,8 +83,7 @@ for (var i = 0; i < items.length; i++) {
 }
 
 async function searchMonday(term) {
-  var safe = term.replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-  var gql = 'query ($boardId: ID!) { boards(ids: [$boardId]) { items_page(limit: 10, query_params: {rules: [{column_id: "name", compare_value: "' + safe + '", operator: contains_text}]}) { items { id name } } } }';
+  var gql = 'query ($boardId: ID!) { boards(ids: [$boardId]) { items_page(limit: 10, query_params: {rules: [{column_id: "name", compare_value: "' + term + '", operator: contains_text}]}) { items { id name } } } }';
   var result = await self.helpers.httpRequest({
     method: 'POST',
     url: 'https://api.monday.com/v2',

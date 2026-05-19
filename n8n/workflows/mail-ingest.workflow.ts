@@ -97,19 +97,29 @@ const base64 = buf.toString('base64');
 
 const SYSTEM = 'You are a document processing assistant for an immigration law firm. Respond with valid JSON only. No markdown fences, no preamble, no explanation. Begin your response with [ and end with ]. All string values must be on a single line with no literal newline or tab characters inside them.';
 
-const PROMPT = \`You are analyzing a batch scan of USCIS mail received by Katy Chavez Law. The scan is a single PDF that may contain multiple separate USCIS notices for different clients scanned consecutively.
+const PROMPT = \`You are analyzing a batch scan of USCIS mail received by Katy Chavez Law. The scan is a single PDF that may contain multiple separate USCIS mail pieces for different clients scanned consecutively.
 
 Your task:
 1. Identify each distinct USCIS mail piece.
 2. For each piece, extract all key information using the exact field names below.
 3. Return ONLY a JSON array, one object per mail piece.
 
-For each mail piece return exactly this structure (use null for missing fields):
+DOCUMENT TYPE IDENTIFICATION — use these visual and content cues:
+- receipt_notice: USCIS I-797C Notice of Action (white paper). Confirms a filing was received. Has a receipt number.
+- approval_notice: USCIS I-797 Notice of Action (white paper). Confirms case is approved. May reference card production.
+- biometrics_notice: USCIS I-797C (white paper). Schedules a biometrics appointment with a specific date, time, and location.
+- transfer_notice: USCIS I-797C (white paper). States the case is being transferred to a different USCIS office.
+- card_production_ordered: USCIS notice that a card (EAD, green card) has been ordered or is being mailed.
+- rejection: The original application package has been RETURNED unprocessed. Look for a GREEN page or green-colored cover sheet explaining why USCIS rejected (did not accept) the filing — common reasons include incorrect fee amount, missing signature, wrong form edition, or wrong filing location. This is NOT a denial of the case; it means the filing was never opened. The green page is the rejection notice; the rest of the packet is the returned original documents.
+- rfe: Request for Evidence. This is NOT an I-797. Look for a YELLOW page or yellow-highlighted header. The document lists the case, form type, and a specific numbered or bulleted list of documents or evidence USCIS needs before they can continue processing. Always includes a response deadline date. Capture the complete list of evidence items requested.
+- other: Any USCIS correspondence not matching the above categories.
+
+For each mail piece return exactly this structure (use null for missing or not-applicable fields):
 {
   "client_name": "LAST, FIRST MI exactly as printed",
   "client_first_name": "first name only",
   "client_last_name": "last name only",
-  "receipt_number": "e.g. LIN2112345678",
+  "receipt_number": "e.g. LIN2112345678 or null",
   "a_number": "digits only or null",
   "notice_type": one of: "biometrics_notice" | "approval_notice" | "receipt_notice" | "rfe" | "transfer_notice" | "rejection" | "card_production_ordered" | "other",
   "application_type": "e.g. I-485 or null",
@@ -118,7 +128,10 @@ For each mail piece return exactly this structure (use null for missing fields):
   "appointment_time": "e.g. 8:30 AM or null",
   "appointment_location": "full address on one line or null",
   "appointment_bring": "comma-separated list of items to bring or null",
-  "summary": "2-3 sentences on a single line: what this notice is, what it means, and any action required. Include dates.",
+  "response_due_date": "YYYY-MM-DD — populate for rfe, otherwise null",
+  "rfe_evidence_requested": ["item 1", "item 2"] — full list of evidence items for rfe, otherwise null,
+  "rejection_reason": "brief plain-English reason USCIS rejected the filing, or null",
+  "summary": "2-3 sentences on a single line: what this notice is, what it means, and what action is required. For RFE include the response deadline. For rejection include the reason returned. Include all key dates.",
   "page_numbers": [1, 2]
 }
 

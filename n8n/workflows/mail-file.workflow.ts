@@ -5,6 +5,9 @@
 // DB, reads the individual split PDF from /data/mail/, and streams it back as a
 // binary PDF download attachment.
 //
+// If storage_path is NULL (backfill items predate PDF splitting) or the file is
+// missing from disk, returns a plain-text 404 instead of hanging.
+//
 // UUID-based (not path-based) so that Monday.com links remain valid even if
 // /data/mail/ is migrated to a different VPS or storage provider.
 //
@@ -18,7 +21,7 @@
 //   - Workflow ID: fGW97vB7688WCeDC (n8n.katychavez.com)
 //   - Production URL: https://n8n.katychavez.com/webhook/mail-file?id=...&token=...
 
-import { workflow, trigger, node, newCredential, expr } from '@n8n/workflow-sdk';
+import { workflow, trigger, node, newCredential, expr, ifElse } from '@n8n/workflow-sdk';
 
 const webhookTrigger = trigger({
   type: 'n8n-nodes-base.webhook',
@@ -31,7 +34,7 @@ const webhookTrigger = trigger({
       responseMode: 'responseNode',
       options: {},
     },
-    position: [160, 300],
+    position: [0, 0],
   },
   output: [{ query: { id: 'abc-123', token: 'secret' } }],
 });
@@ -56,7 +59,7 @@ if (!id || !/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.te
 }
 return [{ json: { id } }];`,
     },
-    position: [380, 300],
+    position: [224, 0],
   },
   output: [{ id: 'abc-123' }],
 });
@@ -71,7 +74,7 @@ const getFilePath = node({
       query: "=SELECT storage_path, original_filename FROM mail_items WHERE id = '{{ $json.id }}'",
     },
     credentials: { postgres: newCredential('Portal Postgres') },
-    position: [600, 300],
+    position: [448, 0],
   },
   output: [{ storage_path: '/data/mail/abc/garcia-maria-01.pdf', original_filename: 'scan.pdf' }],
 });
@@ -88,19 +91,47 @@ const readFile = node({
 const info = $input.first().json;
 const storagePath = info.storage_path;
 
-if (!storagePath) throw new Error('File not found in database');
-if (!fs.existsSync(storagePath)) throw new Error('File not on disk: ' + storagePath);
+if (!storagePath) {
+  return [{ json: { ok: false, error: 'This notice was recorded before secure file storage was enabled. Please contact the office for a copy.' } }];
+}
 
-const buf = fs.readFileSync(storagePath);
-const parts = storagePath.split('/');
-const filename = parts[parts.length - 1] || 'notice.pdf';
-const binaryData = await this.helpers.prepareBinaryData(buf, filename, 'application/pdf');
-
-return [{ json: { filename }, binary: { data: binaryData } }];`,
+try {
+  if (!fs.existsSync(storagePath)) {
+    return [{ json: { ok: false, error: 'File not found. It may have been moved or deleted. Please contact the office.' } }];
+  }
+  const buf = fs.readFileSync(storagePath);
+  const parts = storagePath.split('/');
+  const filename = parts[parts.length - 1] || 'notice.pdf';
+  const binaryData = await this.helpers.prepareBinaryData(buf, filename, 'application/pdf');
+  return [{ json: { ok: true, filename }, binary: { data: binaryData } }];
+} catch (e) {
+  return [{ json: { ok: false, error: 'Unable to read file: ' + e.message } }];
+}`,
     },
-    position: [820, 300],
+    position: [672, 0],
   },
-  output: [{ filename: 'garcia-maria-01.pdf' }],
+  output: [{ ok: true, filename: 'garcia-maria-01.pdf' }],
+});
+
+const checkFileOk = ifElse({
+  version: 2.2,
+  config: {
+    name: 'File OK?',
+    parameters: {
+      conditions: {
+        options: { caseSensitive: true, leftValue: '', typeValidation: 'strict' },
+        conditions: [
+          {
+            leftValue: expr('{{ $json.ok }}'),
+            rightValue: true,
+            operator: { type: 'boolean', operation: 'equal' },
+          },
+        ],
+        combinator: 'and',
+      },
+    },
+    position: [896, 0],
+  },
 });
 
 const respondWithFile = node({
@@ -122,7 +153,23 @@ const respondWithFile = node({
         },
       },
     },
-    position: [1040, 300],
+    position: [1120, -80],
+  },
+  output: [{}],
+});
+
+const respondWithError = node({
+  type: 'n8n-nodes-base.respondToWebhook',
+  version: 1.5,
+  config: {
+    name: 'Respond with Error',
+    parameters: {
+      respondWith: 'text',
+      responseCode: 404,
+      responseBody: expr('{{ $json.error || "File not available" }}'),
+      options: {},
+    },
+    position: [1120, 80],
   },
   output: [{}],
 });
@@ -132,4 +179,7 @@ export default workflow('fGW97vB7688WCeDC', 'mail-file')
   .to(validateRequest)
   .to(getFilePath)
   .to(readFile)
-  .to(respondWithFile);
+  .to(checkFileOk
+    .onTrue(respondWithFile)
+    .onFalse(respondWithError)
+  );

@@ -1,0 +1,1984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Despacho · Katy Chavez Law</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <meta name="robots" content="noindex, nofollow" />
+  <style>
+    :root {
+      /* Brand colors — kept from existing, deepened for ink-on-paper feel */
+      --terracotta:        #b85a3f;
+      --terracotta-soft:   #d5836a;
+      --terracotta-wash:   #f1d9cf;
+      --sage:              #5d7e63;
+      --sage-soft:         #9bb39f;
+      --sage-wash:         #e0ebe1;
+      --gold:              #c79633;
+      --gold-soft:         #e0bd6a;
+      --gold-wash:         #f0e2bd;
+      --navy:              #1e2d40;
+      --navy-mid:          #44546d;
+      --navy-soft:         #6c7a93;
+
+      /* Paper */
+      --paper:             #f3ecdc;
+      --paper-2:           #ebe2cd;
+      --paper-3:           #e0d4b8;
+      --paper-card:        #fbf6e9;
+      --paper-card-2:      #fefaf0;
+
+      /* Ink */
+      --ink:               #1c1916;
+      --ink-soft:          #5a544b;
+      --ink-mute:          #8d8678;
+
+      /* Rules */
+      --rule:              #c8baa0;
+      --rule-soft:         #ddd1b5;
+      --rule-hard:         #1c1916;
+
+      --shadow-card:       0 1px 0 rgba(28,25,22,.04), 0 24px 50px -28px rgba(28,25,22,.22);
+      --shadow-modal:      0 30px 80px -20px rgba(28,25,22,.45);
+
+      --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1 0 0 0 0 .09 0 0 0 0 .07 0 0 0 .32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      --grid:              radial-gradient(circle at 1px 1px, rgba(28,25,22,.07) 1px, transparent 0);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { min-height: 100%; }
+    body {
+      font-family: 'DM Sans', 'Helvetica Neue', system-ui, sans-serif;
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      background-image: var(--noise), var(--grid);
+      background-size: 160px 160px, 22px 22px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==================== type helpers ==================== */
+    .serif {
+      font-family: 'Newsreader', 'Times New Roman', serif;
+      font-feature-settings: "ss01","kern";
+    }
+    .mono {
+      font-family: 'JetBrains Mono', ui-monospace, monospace;
+      font-feature-settings: "ss02","zero","cv11";
+    }
+    .es {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      color: var(--ink-mute);
+      font-weight: 400;
+    }
+    .smallcaps {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10.5px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--ink-soft);
+      font-weight: 600;
+    }
+
+    a { color: inherit; }
+    button { font-family: inherit; }
+    input, select, textarea { font-family: inherit; color: inherit; }
+
+    /* ==================== NAV ==================== */
+    nav {
+      background: rgba(251,246,233,.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      position: sticky; top: 0; z-index: 100;
+    }
+    nav::after {
+      /* second hairline */
+      content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 3px;
+      background: linear-gradient(180deg, var(--rule) 0 1px, transparent 1px 2px, var(--rule) 2px 3px);
+      pointer-events: none;
+    }
+    .nav-inner {
+      max-width: 1280px; margin: 0 auto;
+      padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; gap: 18px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .seal {
+      width: 38px; height: 38px;
+      border: 1.2px solid var(--navy);
+      display: grid; place-items: center;
+      background: var(--paper-card);
+      position: relative;
+      transform: rotate(-3deg);
+    }
+    .seal svg { width: 24px; height: 24px; }
+    .seal::after {
+      content:""; position:absolute; inset:-3px;
+      border: 1px solid var(--navy); opacity:.16;
+      transform: rotate(4deg);
+    }
+    .nav-brand .wordmark { display: flex; flex-direction: column; line-height: 1; }
+    .nav-brand .name {
+      font-family: 'Newsreader', serif;
+      font-size: 19px; font-weight: 500;
+      color: var(--navy);
+      letter-spacing: .005em;
+    }
+    .nav-brand .tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: var(--ink-soft);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-top: 5px;
+    }
+    .nav-right { display: flex; align-items: center; gap: 14px; }
+
+    #user-slot { display: none; align-items: center; gap: 10px; }
+    .user-pill {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13px; color: var(--navy);
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 5px 12px 5px 5px;
+      border-radius: 999px;
+    }
+    .user-pill .avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 12px; font-weight: 700;
+    }
+    .btn-signout {
+      background: transparent;
+      border: 1px solid var(--rule);
+      color: var(--navy-mid);
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 12.5px;
+      font-weight: 500;
+      letter-spacing: .04em;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .btn-signout:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-wash); }
+
+    /* ==================== PAGE BANNER ==================== */
+    .page-header {
+      padding: 56px 28px 40px;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--rule);
+    }
+    .page-header-inner {
+      max-width: 1280px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 28px;
+      position: relative; z-index: 2;
+    }
+    .page-header .crown { display: flex; flex-direction: column; gap: 12px; }
+    .page-header .eyebrow {
+      display: inline-flex; align-items: center; gap: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      color: var(--ink-soft);
+      letter-spacing: .22em; text-transform: uppercase;
+    }
+    .page-header .eyebrow::after {
+      content: ""; width: 56px; height: 1px; background: var(--rule-hard);
+    }
+    .page-header h1 {
+      font-family: 'Newsreader', serif;
+      font-size: clamp(38px, 5vw, 64px);
+      font-weight: 400;
+      line-height: .96;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .page-header h1 .em {
+      font-style: italic;
+      color: var(--terracotta);
+    }
+    .page-header .sub {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 18px;
+      color: var(--ink-soft);
+      max-width: 620px;
+      margin-top: 6px;
+    }
+    .page-header .sub b { font-style: normal; color: var(--navy); font-weight: 500; }
+
+    .page-header .crest {
+      display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--ink-soft);
+      letter-spacing: .14em; text-transform: uppercase;
+    }
+    .page-header .crest .row { display: flex; gap: 18px; align-items: baseline; }
+    .page-header .crest .row b {
+      color: var(--navy); font-family: 'Newsreader', serif;
+      font-size: 16px; font-weight: 500; letter-spacing: -.005em; text-transform: none;
+    }
+    .page-header .crest .row b.accent { color: var(--terracotta); }
+    .live-dot {
+      display: inline-block; width: 7px; height: 7px; border-radius: 50%;
+      background: var(--terracotta);
+      box-shadow: 0 0 0 0 var(--terracotta);
+      animation: pulse 1.8s ease-out infinite;
+      margin-right: 6px; vertical-align: middle;
+    }
+    @keyframes pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(184,90,63,.55); }
+      70%  { box-shadow: 0 0 0 10px rgba(184,90,63,0); }
+      100% { box-shadow: 0 0 0 0 rgba(184,90,63,0); }
+    }
+
+    /* compass mark in corner */
+    .page-header::before {
+      content: "";
+      position: absolute; right: -60px; top: -60px;
+      width: 380px; height: 380px;
+      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%231e2d40' stroke-width='.35' opacity='.10'><circle cx='50' cy='50' r='48'/><circle cx='50' cy='50' r='38'/><circle cx='50' cy='50' r='28'/><circle cx='50' cy='50' r='18'/><path d='M50 2 L50 98 M2 50 L98 50 M14 14 L86 86 M14 86 L86 14' stroke-width='.25'/></g></svg>") center/contain no-repeat;
+      pointer-events: none; z-index: 1;
+    }
+
+    /* ==================== MAIN ==================== */
+    main {
+      flex: 1;
+      max-width: 1280px; width: 100%;
+      margin: 0 auto;
+      padding: 36px 28px 56px;
+    }
+
+    /* ==================== GATE / SIGN-IN ==================== */
+    .gate {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 36px;
+      align-items: stretch;
+      max-width: 920px; margin: 32px auto;
+    }
+    .gate-panel {
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 36px 36px 32px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+    .gate-panel::before {
+      /* top corner notch */
+      content: "";
+      position: absolute; top: 0; right: 0;
+      width: 36px; height: 36px;
+      background:
+        linear-gradient(225deg, var(--paper) 50%, transparent 50%);
+      border-left: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+    }
+    .gate-panel .label-row {
+      display: flex; align-items: center; gap: 10px;
+      margin-bottom: 22px;
+    }
+    .gate-panel .label-row .smallcaps { color: var(--terracotta); }
+    .gate-panel h2 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 36px;
+      line-height: 1;
+      letter-spacing: -.02em;
+      color: var(--navy);
+      margin: 0 0 8px;
+    }
+    .gate-panel h2 .em { font-style: italic; color: var(--terracotta); }
+    .gate-panel > p {
+      color: var(--ink-soft);
+      margin: 0 0 24px;
+      font-size: 14.5px;
+      max-width: 38ch;
+    }
+
+    .gate-side {
+      background:
+        linear-gradient(180deg, rgba(30,45,64,.96), rgba(30,45,64,.88)),
+        radial-gradient(circle at 30% 80%, rgba(199,150,51,.18), transparent 60%);
+      color: #f3ecdc;
+      padding: 36px 32px;
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+    }
+    .gate-side::before {
+      content: "";
+      position: absolute; inset: 0;
+      background: var(--grid);
+      background-size: 22px 22px;
+      opacity: .12;
+    }
+    .gate-side .crest-mark {
+      width: 56px; height: 56px;
+      border: 1px solid rgba(243,236,220,.4);
+      display: grid; place-items: center;
+      background: rgba(243,236,220,.05);
+      margin-bottom: 18px;
+      position: relative;
+    }
+    .gate-side .crest-mark svg { width: 36px; height: 36px; }
+    .gate-side h3 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 28px;
+      letter-spacing: -.01em;
+      line-height: 1.1;
+      margin-bottom: 12px;
+      color: #fbf6e9;
+    }
+    .gate-side h3 .em { font-style: italic; color: var(--gold-soft); }
+    .gate-side p {
+      color: rgba(243,236,220,.78);
+      font-size: 13.5px;
+      line-height: 1.6;
+    }
+    .gate-side .stamp {
+      position: absolute;
+      bottom: 22px; right: 22px;
+      transform: rotate(-8deg);
+      border: 2px double rgba(224,189,106,.55);
+      color: rgba(224,189,106,.7);
+      padding: 6px 12px;
+      font-family: 'Newsreader', serif;
+      font-weight: 500;
+      font-size: 13px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    /* Sign-in form */
+    .login-form {
+      display: flex; flex-direction: column;
+      gap: 10px;
+      background: transparent;
+      padding: 0;
+      border: 0;
+    }
+    .login-form label {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 11px;
+      color: var(--ink-soft);
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-top: 6px;
+    }
+    .login-form input[type=text],
+    .login-form input[type=password] {
+      padding: 11px 14px;
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      border-radius: 0;
+      font-size: 15px;
+      transition: border-color .15s, background .15s, box-shadow .15s;
+    }
+    .login-form input:focus {
+      outline: none;
+      border-color: var(--terracotta);
+      background: var(--paper-card-2);
+      box-shadow: 0 0 0 3px rgba(184,90,63,.12);
+    }
+    .login-error {
+      background: var(--terracotta-wash);
+      border-left: 3px solid var(--terracotta);
+      color: var(--terracotta);
+      padding: 9px 14px;
+      font-size: 13px;
+      margin-top: 6px;
+    }
+    .btn-login {
+      margin-top: 12px;
+      padding: 13px 20px;
+      background: var(--navy);
+      color: #fbf6e9;
+      border: 1px solid var(--navy);
+      border-radius: 0;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      cursor: pointer;
+      transition: background .15s, color .15s, transform .1s;
+      position: relative;
+    }
+    .btn-login:hover { background: var(--terracotta); border-color: var(--terracotta); }
+    .btn-login:active { transform: translateY(1px); }
+    .btn-login:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; transform: none; }
+
+    /* Hidden Clerk mount (we don't use it but the JS expects the node) */
+    #sign-in-mount { display: none; }
+
+    /* ==================== DASHBOARD ==================== */
+    #dashboard { display: none; }
+
+    .tab-bar {
+      display: flex; align-items: stretch;
+      gap: 0;
+      border-bottom: 1px solid var(--rule-hard);
+      margin-bottom: 0;
+      padding-left: 0;
+    }
+    .tab-btn {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      padding: 14px 22px 12px;
+      border: 1px solid transparent;
+      border-bottom: 0;
+      background: transparent;
+      color: var(--ink-soft);
+      cursor: pointer;
+      display: flex; align-items: center; gap: 10px;
+      position: relative;
+      margin-bottom: -1px;
+      transition: color .15s, background .15s;
+    }
+    .tab-btn::before {
+      /* tab number prefix */
+      content: attr(data-num);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      color: var(--ink-mute);
+      letter-spacing: .12em;
+      font-weight: 500;
+    }
+    .tab-btn:hover { color: var(--navy); background: var(--paper-card); }
+    .tab-btn.active {
+      color: var(--navy);
+      background: var(--paper-card);
+      border-color: var(--rule-hard);
+      border-bottom-color: var(--paper-card);
+    }
+    .tab-btn.active::before { color: var(--terracotta); }
+    .tab-btn .tab-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 500;
+      letter-spacing: 0;
+      color: var(--ink-soft);
+      background: transparent;
+      padding: 0;
+      border-radius: 0;
+    }
+
+    .tab-pane {
+      background: var(--paper-card);
+      border: 1px solid var(--rule-hard);
+      border-top: 0;
+      padding: 28px 28px 32px;
+      position: relative;
+      box-shadow: var(--shadow-card);
+    }
+    .tab-pane::before {
+      /* perforation along top of pane */
+      content: "";
+      position: absolute; left: 0; right: 0; top: -1px; height: 1px;
+      background-image: linear-gradient(to right, var(--rule-hard) 50%, transparent 50%);
+      background-size: 6px 1px;
+      opacity: .5;
+    }
+
+    /* ---------- toolbar (shared by both tabs) ---------- */
+    .toolbar, .mail-toolbar {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 14px; flex-wrap: wrap;
+      margin-bottom: 22px;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .toolbar h2, .mail-toolbar h2 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 28px;
+      color: var(--navy);
+      letter-spacing: -.015em;
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .toolbar h2 .es-label, .mail-toolbar h2 .es-label {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 15px;
+      color: var(--ink-mute);
+      font-weight: 400;
+    }
+    .total {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-soft);
+      letter-spacing: .04em;
+      font-weight: 500;
+    }
+    .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+    .search {
+      padding: 9px 14px 9px 36px;
+      border: 1px solid var(--rule);
+      background: var(--paper-card-2);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      min-width: 280px;
+      border-radius: 0;
+      background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a544b' stroke-width='1.6'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");
+      background-repeat: no-repeat;
+      background-position: 12px center;
+      transition: border-color .15s, box-shadow .15s;
+    }
+    .search:focus {
+      outline: none;
+      border-color: var(--terracotta);
+      box-shadow: 0 0 0 3px rgba(184,90,63,.12);
+    }
+    .btn-primary {
+      background: var(--navy);
+      color: #fbf6e9;
+      padding: 10px 18px;
+      border: 1px solid var(--navy);
+      border-radius: 0;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      transition: background .15s, color .15s;
+      white-space: nowrap;
+    }
+    .btn-primary:hover { background: var(--terracotta); border-color: var(--terracotta); }
+
+    /* ---------- customer "case file" cards ---------- */
+    .cust-empty, .mail-empty {
+      background: var(--paper-card-2);
+      border: 1px dashed var(--rule);
+      padding: 56px 28px;
+      text-align: center;
+      color: var(--ink-soft);
+    }
+    .cust-empty .icon, .mail-empty .icon {
+      font-size: 28px; display: block; margin-bottom: 10px;
+      color: var(--ink-mute);
+    }
+
+    .cust-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 0;
+    }
+    .cust-card {
+      background: var(--paper-card-2);
+      border: 1px solid var(--rule);
+      border-top: 0; border-left: 0;
+      padding: 18px 20px 18px 24px;
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      transition: background .15s, transform .12s;
+    }
+    .cust-grid .cust-card:first-child,
+    .cust-grid .cust-card:nth-child(n+1) { border-top: 1px solid var(--rule); }
+    @media (min-width: 661px) {
+      .cust-grid { grid-template-columns: repeat(2, 1fr); }
+      .cust-grid .cust-card:nth-child(2n+1) { border-left: 1px solid var(--rule); }
+    }
+    @media (min-width: 1001px) {
+      .cust-grid { grid-template-columns: repeat(3, 1fr); }
+      .cust-grid .cust-card:nth-child(2n+1) { border-left: 0; }
+      .cust-grid .cust-card:nth-child(3n+1) { border-left: 1px solid var(--rule); }
+    }
+    .cust-card::before {
+      /* terracotta vertical stroke */
+      content: "";
+      position: absolute; left: 0; top: 18px; bottom: 18px;
+      width: 3px;
+      background: var(--terracotta);
+      opacity: .65;
+    }
+    .cust-card:hover {
+      background: var(--paper-card);
+      z-index: 2;
+      box-shadow: inset 0 0 0 1px var(--terracotta);
+    }
+    .cust-card:hover::before { opacity: 1; width: 4px; }
+
+    .cust-card .cust-head {
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 10px; margin-bottom: 8px;
+    }
+    .cust-card .case-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--terracotta);
+      font-weight: 500;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .cust-card .new-badge {
+      display: inline-block;
+      background: var(--terracotta);
+      color: #fbf6e9;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      padding: 2px 7px;
+      letter-spacing: .14em;
+      font-weight: 500;
+    }
+    .cust-card .doc-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10.5px;
+      font-weight: 500;
+      padding: 2px 9px;
+      background: var(--gold-wash);
+      color: #6b5a2e;
+      border: 1px solid var(--gold-soft);
+      letter-spacing: .04em;
+    }
+    .cust-card h3 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--navy);
+      letter-spacing: -.012em;
+      line-height: 1.15;
+      margin-bottom: 4px;
+    }
+    .cust-card .meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-soft);
+      letter-spacing: .01em;
+    }
+    .cust-card .meta .email { color: var(--ink-soft); }
+
+    /* ---------- mail calendar (ledger style) ---------- */
+    .cal-wrap { padding-top: 4px; }
+    .cal-header {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+    }
+    .cal-header h3 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 24px;
+      color: var(--navy);
+      letter-spacing: -.01em;
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .cal-header h3 .es-label {
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 14px;
+      color: var(--ink-mute);
+    }
+    .cal-nav {
+      background: transparent;
+      border: 1px solid var(--rule);
+      color: var(--navy-mid);
+      width: 34px; height: 34px;
+      border-radius: 0;
+      cursor: pointer;
+      font-size: 14px;
+      display: grid; place-items: center;
+      font-family: 'JetBrains Mono', monospace;
+      transition: border-color .15s, color .15s, background .15s;
+    }
+    .cal-nav:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-wash); }
+
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 0;
+      border-left: 1px solid var(--rule);
+      border-top: 1px solid var(--rule);
+    }
+    .cal-dow {
+      text-align: left;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--ink-mute);
+      text-transform: uppercase;
+      letter-spacing: .18em;
+      padding: 8px 10px;
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule-hard);
+      background: var(--paper-card-2);
+    }
+    .cal-day {
+      min-height: 78px;
+      background: var(--paper-card-2);
+      border-right: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      padding: 8px 10px;
+      cursor: default;
+      display: flex; flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+      position: relative;
+      transition: background .15s;
+    }
+    .cal-day.other-month {
+      background: repeating-linear-gradient(135deg, var(--paper-card-2) 0 6px, var(--paper-card) 6px 12px);
+      opacity: .55;
+    }
+    .cal-day.has-mail { cursor: pointer; }
+    .cal-day.has-mail:hover { background: var(--sage-wash); }
+    .cal-day.selected {
+      background: var(--sage-wash);
+      box-shadow: inset 0 0 0 2px var(--sage);
+    }
+    .cal-day.today .cal-day-num {
+      background: var(--terracotta);
+      color: #fbf6e9;
+      width: 22px; height: 22px;
+      display: inline-flex; align-items: center; justify-content: center;
+      border-radius: 50%;
+      padding: 0;
+    }
+    .cal-day-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--ink);
+      letter-spacing: -.01em;
+    }
+    .cal-day.other-month .cal-day-num { color: var(--ink-mute); }
+    .cal-dot {
+      width: auto; height: auto;
+      background: transparent;
+      border-radius: 0;
+      margin-top: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--sage);
+      letter-spacing: .04em;
+      display: flex; align-items: center; gap: 4px;
+    }
+    .cal-dot::before {
+      content: "";
+      width: 6px; height: 6px;
+      background: var(--sage);
+      border-radius: 50%;
+      display: inline-block;
+    }
+    /* Override dot text via attribute hack — we'll fill ::after with mail count via data attribute later if needed; for now keep dot only */
+
+    .cal-detail {
+      margin-top: 28px;
+      padding-top: 22px;
+      border-top: 1px solid var(--rule);
+    }
+    .cal-detail-header {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      font-size: 22px;
+      color: var(--navy);
+      letter-spacing: -.01em;
+      margin-bottom: 14px;
+      display: flex; align-items: baseline; gap: 12px;
+    }
+    .cal-detail-header::before {
+      content: "▸";
+      color: var(--terracotta);
+      font-size: 14px;
+    }
+    .cal-batch {
+      background: var(--paper-card-2);
+      border: 1px solid var(--rule);
+      border-left: 3px solid var(--sage);
+      padding: 16px 22px;
+      margin-bottom: 10px;
+    }
+    .cal-batch-title {
+      display: block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--ink-soft);
+      margin-bottom: 12px;
+      padding-bottom: 8px;
+      border-bottom: 1px dotted var(--rule);
+      letter-spacing: .04em;
+    }
+    .cal-mail-row {
+      display: flex; align-items: center; gap: 14px;
+      padding: 10px 0;
+      border-bottom: 1px dotted var(--rule);
+    }
+    .cal-mail-row:last-child { border-bottom: 0; }
+    .cal-mail-name {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      color: var(--navy);
+      font-size: 17px;
+      flex: 1;
+      letter-spacing: -.005em;
+    }
+    .cal-download {
+      background: transparent;
+      color: var(--sage);
+      padding: 5px 12px;
+      border: 1px solid var(--sage);
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      white-space: nowrap;
+      transition: background .15s, color .15s;
+    }
+    .cal-download:hover { background: var(--sage); color: #fbf6e9; }
+
+    .notice-badge {
+      display: inline-flex; align-items: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .14em;
+      padding: 4px 10px;
+      border-radius: 0;
+      white-space: nowrap;
+      border: 1px solid currentColor;
+    }
+    .notice-badge.biometrics_notice         { color: #1f3a6b; background: rgba(31,58,107,.07); }
+    .notice-badge.approval_notice           { color: #2d5a34; background: rgba(45,90,52,.08); }
+    .notice-badge.receipt_notice            { color: #6b5a2e; background: rgba(199,150,51,.10); }
+    .notice-badge.rfe                       { color: #8a4a14; background: rgba(199,150,51,.16); }
+    .notice-badge.transfer_notice           { color: #5a2e8a; background: rgba(90,46,138,.07); }
+    .notice-badge.rejection                 { color: #8a2418; background: rgba(184,90,63,.10); }
+    .notice-badge.card_production_ordered   { color: #2d5a34; background: rgba(93,126,99,.10); }
+    .notice-badge.other                     { color: var(--ink-soft); background: transparent; }
+
+    /* ---------- loading / error ---------- */
+    .loading-state {
+      text-align: center;
+      padding: 56px 28px;
+      color: var(--ink-soft);
+      font-family: 'Newsreader', serif;
+      font-style: italic;
+      font-size: 17px;
+    }
+    .loading-state .spinner {
+      display: inline-block;
+      width: 24px; height: 24px;
+      border: 2px solid var(--rule);
+      border-top-color: var(--terracotta);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin-bottom: 14px;
+      vertical-align: middle;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .error-box {
+      background: var(--terracotta-wash);
+      border-left: 3px solid var(--terracotta);
+      color: #6b2a18;
+      padding: 14px 18px;
+      margin-bottom: 18px;
+      font-size: 13.5px;
+    }
+
+    /* ==================== MODAL ==================== */
+    .modal-backdrop {
+      position: fixed; inset: 0;
+      background: rgba(28,25,22,.55);
+      backdrop-filter: blur(2px);
+      -webkit-backdrop-filter: blur(2px);
+      display: flex; align-items: flex-start; justify-content: center;
+      padding: 80px 20px 20px;
+      z-index: 200;
+      overflow-y: auto;
+    }
+    .modal {
+      background: var(--paper-card-2);
+      box-shadow: var(--shadow-modal);
+      width: 100%; max-width: 640px;
+      padding: 32px 36px 28px;
+      position: relative;
+      border: 1px solid var(--rule-hard);
+    }
+    .modal::before {
+      content: "";
+      position: absolute; top: 0; right: 0;
+      width: 32px; height: 32px;
+      background:
+        linear-gradient(225deg, var(--paper) 50%, transparent 50%);
+      border-left: 1px solid var(--rule-hard);
+      border-bottom: 1px solid var(--rule-hard);
+    }
+    .modal-close {
+      position: absolute; top: 12px; right: 44px;
+      background: transparent;
+      border: 1px solid var(--rule);
+      width: 32px; height: 32px;
+      font-size: 18px;
+      line-height: 1;
+      color: var(--ink-soft);
+      cursor: pointer;
+      border-radius: 0;
+      display: grid; place-items: center;
+      transition: border-color .15s, color .15s;
+    }
+    .modal-close:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .modal h2 {
+      font-family: 'Newsreader', serif;
+      font-weight: 400;
+      color: var(--navy);
+      font-size: 30px;
+      letter-spacing: -.015em;
+      margin-bottom: 8px;
+    }
+    .modal .modal-help {
+      color: var(--ink-soft);
+      font-size: 14px;
+      line-height: 1.55;
+      margin-bottom: 22px;
+      max-width: 56ch;
+    }
+    .modal .modal-help b { color: var(--navy); font-weight: 600; }
+
+    .dropzone {
+      border: 1.5px dashed var(--rule);
+      padding: 38px 22px;
+      text-align: center;
+      background: var(--paper);
+      transition: border-color .15s, background .15s;
+      cursor: pointer;
+      display: block;
+      position: relative;
+    }
+    .dropzone:hover, .dropzone.drag-over {
+      border-color: var(--terracotta);
+      background: var(--terracotta-wash);
+    }
+    .dropzone .icon {
+      font-size: 28px;
+      display: block;
+      margin-bottom: 8px;
+      color: var(--navy-mid);
+    }
+    .dropzone .label {
+      font-family: 'Newsreader', serif;
+      font-weight: 500;
+      color: var(--navy);
+      font-size: 18px;
+      margin-bottom: 4px;
+    }
+    .dropzone .hint {
+      color: var(--ink-soft);
+      font-size: 12.5px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: .04em;
+    }
+    .dropzone input[type=file] { display: none; }
+
+    .file-list {
+      margin-top: 16px;
+      display: flex; flex-direction: column;
+      gap: 4px;
+      max-height: 220px;
+      overflow-y: auto;
+    }
+    .file-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 9px 12px;
+      background: var(--paper);
+      border: 1px solid var(--rule-soft);
+      font-size: 13px;
+    }
+    .file-row .file-name {
+      flex: 1;
+      color: var(--navy);
+      font-weight: 500;
+      font-family: 'DM Sans', sans-serif;
+      word-break: break-all;
+    }
+    .file-row .file-size {
+      color: var(--ink-soft);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      white-space: nowrap;
+    }
+    .file-row .file-remove {
+      background: transparent;
+      border: 0;
+      color: var(--ink-mute);
+      cursor: pointer;
+      font-size: 18px;
+      padding: 0 6px;
+      line-height: 1;
+    }
+    .file-row .file-remove:hover { color: var(--terracotta); }
+
+    .upload-status {
+      margin-top: 18px;
+      padding: 14px 16px;
+      font-size: 13.5px;
+      display: none;
+      border-left: 3px solid;
+    }
+    .upload-status.info {
+      background: var(--gold-wash);
+      color: #5e4d20;
+      border-left-color: var(--gold);
+      display: block;
+    }
+    .upload-status.error {
+      background: var(--terracotta-wash);
+      color: #6b2a18;
+      border-left-color: var(--terracotta);
+      display: block;
+    }
+    .upload-status .spinner {
+      display: inline-block;
+      width: 13px; height: 13px;
+      border: 2px solid currentColor;
+      border-top-color: transparent;
+      border-radius: 50%;
+      animation: spin .7s linear infinite;
+      vertical-align: middle;
+      margin-right: 8px;
+      opacity: .7;
+    }
+
+    .modal-actions {
+      display: flex; justify-content: flex-end; gap: 10px;
+      margin-top: 22px;
+      padding-top: 18px;
+      border-top: 1px solid var(--rule);
+    }
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--rule);
+      color: var(--navy-mid);
+      padding: 11px 20px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 0;
+      transition: border-color .15s, color .15s;
+    }
+    .btn-cancel:hover { border-color: var(--ink-soft); color: var(--ink); }
+    .btn-upload {
+      background: var(--navy);
+      color: #fbf6e9;
+      border: 1px solid var(--navy);
+      padding: 11px 22px;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 12px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 0;
+      transition: background .15s, border-color .15s;
+    }
+    .btn-upload:hover { background: var(--terracotta); border-color: var(--terracotta); }
+    .btn-upload:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      background: var(--navy);
+      color: rgba(243,236,220,.7);
+      padding: 18px 28px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-top: 1px solid var(--navy);
+    }
+    footer .sep { margin: 0 12px; color: rgba(243,236,220,.3); }
+    footer .es-label { font-family: 'Newsreader', serif; font-style: italic; text-transform: none; letter-spacing: 0; color: rgba(243,236,220,.45); font-size: 13px; }
+
+    /* ==================== entrance reveal ==================== */
+    .rise { opacity: 0; transform: translateY(8px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }
+    .rise.d1 { animation-delay: .05s; }
+    .rise.d2 { animation-delay: .12s; }
+    .rise.d3 { animation-delay: .20s; }
+    .rise.d4 { animation-delay: .28s; }
+    @keyframes rise { to { opacity: 1; transform: translateY(0); } }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--rule-hard); }
+    ::-webkit-scrollbar-track { background: transparent; }
+
+    ::selection { background: var(--navy); color: var(--paper); }
+
+    /* ==================== responsive ==================== */
+    @media (max-width: 880px) {
+      .gate { grid-template-columns: 1fr; }
+      .page-header-inner { grid-template-columns: 1fr; gap: 18px; }
+      .page-header .crest { align-items: flex-start; }
+      .cal-grid { font-size: 11px; }
+      .cal-day { min-height: 60px; padding: 6px; }
+    }
+    @media (max-width: 540px) {
+      .nav-inner { padding: 0 18px; }
+      main { padding: 24px 18px 40px; }
+      .page-header { padding: 36px 18px 28px; }
+      .tab-btn { padding: 12px 14px 10px; font-size: 11.5px; }
+      .modal { padding: 26px 22px 22px; }
+      .modal-close { right: 18px; }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="nav-inner">
+      <a href="/" class="nav-brand">
+        <div class="seal" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--navy);">
+            <path d="M5 4 L5 18 L9 22 L9 8 Z" fill="currentColor" opacity=".18"/>
+            <path d="M19 4 L19 18 L15 22 L15 8 Z" fill="currentColor" opacity=".18"/>
+            <path d="M5 4 L19 4 L15 8 L9 8 Z" stroke="currentColor"/>
+            <path d="M5 18 L9 22 L15 22 L19 18 L15 8 L9 8 Z" stroke="currentColor"/>
+            <line x1="12" y1="11" x2="12" y2="19" stroke="currentColor" stroke-width=".6"/>
+          </svg>
+        </div>
+        <div class="wordmark">
+          <span class="name">Katy Chavez Law</span>
+          <span class="tagline">Despacho · Staff Portal</span>
+        </div>
+      </a>
+      <div class="nav-right">
+        <div id="user-slot"></div>
+      </div>
+    </div>
+  </nav>
+
+  <header class="page-header">
+    <div class="page-header-inner">
+      <div class="crown">
+        <span class="eyebrow">Acceso restringido · Staff only</span>
+        <h1 class="rise d1">El <span class="em">despacho</span>.</h1>
+        <p class="sub rise d2"><span class="es">Casos, correos, expedientes.</span> &nbsp;<b id="header-sub">Sign in to view and manage client cases.</b></p>
+      </div>
+      <div class="crest rise d3" id="crest-meta">
+        <div class="row">
+          <span>Today</span>
+          <b id="crest-date">—</b>
+        </div>
+        <div class="row">
+          <span>Service</span>
+          <b class="accent"><span class="live-dot"></span>online</b>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ====== SIGN-IN GATE ====== -->
+    <div id="gate" class="gate">
+      <div class="gate-panel">
+        <div class="label-row">
+          <span class="smallcaps">§01 — Sign in</span>
+        </div>
+        <h2>Staff <span class="em">sign in</span></h2>
+        <p>This portal is restricted to authorized Katy Chavez Law staff. <span class="es">Solo personal autorizado.</span></p>
+        <div id="sign-in-mount"></div>
+        <!-- The login form is moved into the gate panel so the unauthenticated screen is the whole experience.
+             The original DOM places it inside #dashboard > #login-form-section; we keep that for the JS, then duplicate visually here. -->
+      </div>
+      <div class="gate-side">
+        <div class="crest-mark">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(243,236,220,.75)" stroke-width=".8">
+            <circle cx="12" cy="12" r="10"/>
+            <path d="M4 12 L20 12 M12 4 L12 20"/>
+            <path d="M6.5 6.5 L17.5 17.5 M17.5 6.5 L6.5 17.5" stroke-width=".5" opacity=".7"/>
+            <circle cx="12" cy="12" r="1.4" fill="rgba(243,236,220,.7)" stroke="none"/>
+          </svg>
+        </div>
+        <h3>Cada expediente <span class="em">cuenta una historia</span>.</h3>
+        <p>Every file is a story — a journey, a family, a hearing date that won't move. Sign in to pick up where you left off. We hold the work; the firm holds the trust.</p>
+        <div class="stamp">Confidencial</div>
+      </div>
+    </div>
+
+    <!-- ====== DASHBOARD ====== -->
+    <div id="dashboard">
+      <div id="error-slot"></div>
+
+      <!-- Login form (visible when no portal secret cached). Styled but JS-compatible. -->
+      <div id="login-form-section" style="display: none;">
+        <div class="gate" style="margin-top: 0;">
+          <div class="gate-panel">
+            <div class="label-row">
+              <span class="smallcaps">§01 — Sign in</span>
+            </div>
+            <h2>Staff <span class="em">sign in</span></h2>
+            <p>Enter your portal credentials to continue. <span class="es">Ingresa tus credenciales.</span></p>
+            <form id="login-form" class="login-form" autocomplete="on">
+              <label for="login-username">Username · <span class="es">usuario</span></label>
+              <input type="text" id="login-username" name="username" autocomplete="username" placeholder="username" />
+              <label for="login-password">Password · <span class="es">contraseña</span></label>
+              <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="••••••••" />
+              <div id="login-error" class="login-error" style="display:none;"></div>
+              <button type="submit" class="btn-login" id="login-submit">Sign in →</button>
+            </form>
+          </div>
+          <div class="gate-side">
+            <div class="crest-mark">
+              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(243,236,220,.75)" stroke-width=".8">
+                <circle cx="12" cy="12" r="10"/>
+                <path d="M4 12 L20 12 M12 4 L12 20"/>
+                <circle cx="12" cy="12" r="1.4" fill="rgba(243,236,220,.7)" stroke="none"/>
+              </svg>
+            </div>
+            <h3>Una sesión nueva <span class="em">comienza aquí</span>.</h3>
+            <p>A new session begins here. Your access is logged and tied to your portal credentials.</p>
+            <div class="stamp">Confidencial</div>
+          </div>
+        </div>
+      </div>
+
+      <div id="main-section" style="display: none;">
+        <!-- Tab bar -->
+        <div class="tab-bar">
+          <button class="tab-btn active" id="tab-btn-clients" data-tab="clients" data-num="§01">
+            Client Documents
+            <span class="tab-count" id="clients-count" style="display:none;"></span>
+          </button>
+          <button class="tab-btn" id="tab-btn-mail" data-tab="mail" data-num="§02">
+            Mail Sorting
+            <span class="tab-count" id="mail-count" style="display:none;"></span>
+          </button>
+        </div>
+
+        <!-- ── Client Documents pane ────────────────────────────── -->
+        <div id="tab-clients" class="tab-pane">
+          <div class="toolbar">
+            <h2>Customers <span class="es-label">— clientes</span> <span class="total" id="total-count"></span></h2>
+            <div class="toolbar-right">
+              <input type="search" id="search" class="search" placeholder="Search by name…" />
+              <a href="#" class="btn-primary" id="new-customer">+ New case</a>
+            </div>
+          </div>
+          <div id="list-container"></div>
+        </div>
+
+        <!-- ── Mail Sorting pane ─────────────────────────────────── -->
+        <div id="tab-mail" class="tab-pane" style="display:none;">
+          <div class="mail-toolbar">
+            <h2>USCIS Mail <span class="es-label">— correo</span> <span class="total" id="mail-total-count"></span></h2>
+            <div class="toolbar-right">
+              <button class="btn-primary" id="upload-mail-btn">+ Upload mail scan</button>
+            </div>
+          </div>
+          <div id="mail-error-slot"></div>
+          <div id="mail-calendar-wrap"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Client Documents upload modal ────────────────────────── -->
+    <div id="upload-modal" class="modal-backdrop" style="display:none;">
+      <div class="modal">
+        <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+        <span class="smallcaps" style="color: var(--terracotta);">Intake · §A</span>
+        <h2 style="margin-top: 8px;">Upload customer documents</h2>
+        <p class="modal-help">Drop any mix of <b>passports, birth certs, marriage certs, green cards/EADs, intake forms, W-2s, paystubs, tax returns</b>. The AI will classify each one and pull customer info into a new contact card.</p>
+
+        <label class="dropzone" id="dropzone">
+          <input type="file" id="file-input" multiple accept=".pdf,.jpg,.jpeg,.png,.heic" />
+          <span class="icon">⌇</span>
+          <div class="label">Drop files here or click to choose</div>
+          <div class="hint">PDF · JPG · PNG · HEIC — multi-select OK</div>
+        </label>
+
+        <div class="file-list" id="file-list"></div>
+        <div class="upload-status" id="upload-status"></div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="upload-cancel">Cancel</button>
+          <button class="btn-upload" id="upload-submit" disabled>Upload &amp; analyze</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Mail scan upload modal ────────────────────────────────── -->
+    <div id="mail-upload-modal" class="modal-backdrop" style="display:none;">
+      <div class="modal">
+        <button class="modal-close" id="mail-modal-close" aria-label="Close">&times;</button>
+        <span class="smallcaps" style="color: var(--terracotta);">USCIS Mail · §B</span>
+        <h2 style="margin-top: 8px;">Upload USCIS mail scan</h2>
+        <p class="modal-help">Upload a single PDF scan containing one or more USCIS notices. The AI will identify each client's mail, extract key information, and create individual PDFs. <b>Processing takes 30–90 seconds.</b></p>
+
+        <label class="dropzone" id="mail-dropzone">
+          <input type="file" id="mail-file-input" accept=".pdf" />
+          <span class="icon">✉</span>
+          <div class="label">Drop the mail scan PDF here or click to choose</div>
+          <div class="hint">PDF only — one scan file at a time</div>
+        </label>
+
+        <div class="file-list" id="mail-file-list"></div>
+        <div class="upload-status" id="mail-upload-status"></div>
+
+        <div class="modal-actions">
+          <button class="btn-cancel" id="mail-upload-cancel">Cancel</button>
+          <button class="btn-upload" id="mail-upload-submit" disabled>Upload &amp; sort</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    &copy; Katy Chavez Law
+    <span class="sep">·</span>
+    Staff Portal
+    <span class="sep">·</span>
+    <span class="es-label">despacho interno</span>
+  </footer>
+
+  <script
+    async
+    crossorigin="anonymous"
+    data-clerk-publishable-key="pk_test_ZGVjZW50LXNlYWhvcnNlLTc4LmNsZXJrLmFjY291bnRzLmRldiQ"
+    src="https://decent-seahorse-78.clerk.accounts.dev/npm/@clerk/clerk-js@5/dist/clerk.browser.js"
+    type="text/javascript"
+  ></script>
+  <script>
+    const N8N_BASE = 'https://n8n.katychavez.com';
+    const LS_SECRET = 'kcl_portal_secret';
+
+    const gate = document.getElementById('gate');
+    const dashboard = document.getElementById('dashboard');
+    const userSlot = document.getElementById('user-slot');
+    const headerSub = document.getElementById('header-sub');
+    const errorSlot = document.getElementById('error-slot');
+    const loginFormSection = document.getElementById('login-form-section');
+    const mainSection = document.getElementById('main-section');
+    const searchInput = document.getElementById('search');
+    const listContainer = document.getElementById('list-container');
+    const totalCount = document.getElementById('total-count');
+
+    // Clerk gate temporarily disabled — dev instance hits needs_client_trust.
+    const REQUIRE_CLERK = false;
+
+    let signInMounted = false;
+    let searchTimer = null;
+
+    // ── Date in crest ────────────────────────────────────────────────
+    (function setCrestDate(){
+      const el = document.getElementById('crest-date');
+      if (!el) return;
+      const d = new Date();
+      const months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      el.textContent = String(d.getDate()).padStart(2,'0') + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+    })();
+
+    // ── Init ─────────────────────────────────────────────────────────
+    async function init() {
+      if (REQUIRE_CLERK) {
+        while (typeof window.Clerk === 'undefined') { await new Promise(r => setTimeout(r, 40)); }
+        await window.Clerk.load();
+        renderAuth();
+        window.Clerk.addListener(renderAuth);
+      } else {
+        showDashboard();
+      }
+    }
+
+    function renderAuth() {
+      if (window.Clerk && window.Clerk.user) {
+        showDashboard();
+      } else {
+        gate.style.display = 'grid';
+        dashboard.style.display = 'none';
+        headerSub.textContent = 'Sign in to view and manage client cases.';
+        userSlot.style.display = 'none';
+        if (!signInMounted) {
+          signInMounted = true;
+          window.Clerk.mountSignIn(document.getElementById('sign-in-mount'));
+        }
+      }
+    }
+
+    function showDashboard() {
+      gate.style.display = 'none';
+      dashboard.style.display = 'block';
+      headerSub.textContent = 'Search, edit, and upload customer documents.';
+      if (REQUIRE_CLERK && window.Clerk && window.Clerk.user) {
+        renderUserPill();
+      } else {
+        renderLogoutButton();
+      }
+      ensureSecretLoaded();
+    }
+
+    function renderUserPill() {
+      const u = window.Clerk.user;
+      const email = u.primaryEmailAddress?.emailAddress || u.id;
+      const initials = (email[0] || '?').toUpperCase();
+      userSlot.style.display = 'flex';
+      userSlot.innerHTML = '<div class="user-pill"><div class="avatar">' + initials + '</div><span>' + escapeHtml(email) + '</span></div><button class="btn-signout" id="signout-btn">Sign out</button>';
+      document.getElementById('signout-btn').addEventListener('click', () => window.Clerk.signOut());
+    }
+
+    function ensureSecretLoaded() {
+      const cached = localStorage.getItem(LS_SECRET);
+      if (cached) {
+        loginFormSection.style.display = 'none';
+        mainSection.style.display = 'block';
+        const hash = window.location.hash.replace('#', '');
+        activateTab(hash === 'mail' ? 'mail' : 'clients');
+      } else {
+        loginFormSection.style.display = 'block';
+        mainSection.style.display = 'none';
+      }
+    }
+
+    document.getElementById('login-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      await doLogin();
+    });
+
+    async function doLogin() {
+      const username = document.getElementById('login-username').value.trim();
+      const password = document.getElementById('login-password').value.trim();
+      const loginError = document.getElementById('login-error');
+      const loginSubmit = document.getElementById('login-submit');
+      if (!username || !password) return;
+      loginError.style.display = 'none';
+      loginSubmit.disabled = true;
+      loginSubmit.textContent = 'Signing in…';
+      try {
+        const res = await fetch(N8N_BASE + '/webhook/portal-auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ username, password }),
+        });
+        const data = await res.json();
+        if (!data.valid || !data.token) {
+          loginError.textContent = 'Incorrect username or password.';
+          loginError.style.display = 'block';
+          return;
+        }
+        localStorage.setItem(LS_SECRET, data.token);
+        renderLogoutButton();
+        ensureSecretLoaded();
+      } catch (err) {
+        loginError.textContent = 'Sign-in failed: ' + escapeHtml(err.message);
+        loginError.style.display = 'block';
+      } finally {
+        loginSubmit.disabled = false;
+        loginSubmit.textContent = 'Sign in →';
+      }
+    }
+
+    // ── Tab management ───────────────────────────────────────────────
+    function activateTab(tabId) {
+      const tabs = ['clients', 'mail'];
+      tabs.forEach(id => {
+        const btn = document.getElementById('tab-btn-' + id);
+        const pane = document.getElementById('tab-' + id);
+        if (id === tabId) {
+          btn.classList.add('active');
+          pane.style.display = 'block';
+        } else {
+          btn.classList.remove('active');
+          pane.style.display = 'none';
+        }
+      });
+      window.location.hash = tabId === 'clients' ? '' : tabId;
+
+      if (tabId === 'clients' && listContainer.innerHTML === '') loadCustomers();
+      if (tabId === 'mail' && mailCalendarWrap.innerHTML === '') loadMailCalendar();
+    }
+
+    document.getElementById('tab-btn-clients').addEventListener('click', () => activateTab('clients'));
+    document.getElementById('tab-btn-mail').addEventListener('click', () => activateTab('mail'));
+
+    // ── API helper ───────────────────────────────────────────────────
+    async function api(path, body) {
+      const secret = localStorage.getItem(LS_SECRET);
+      if (!secret) throw new Error('Portal secret not set');
+      const res = await fetch(N8N_BASE + path, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Portal-Secret': secret,
+        },
+        body: JSON.stringify(body || {}),
+      });
+      if (res.status === 401 || res.status === 403) {
+        localStorage.removeItem(LS_SECRET);
+        throw new Error('Authentication failed. Please sign in again.');
+      }
+      if (!res.ok) {
+        const t = await res.text();
+        throw new Error('API ' + res.status + ': ' + t.slice(0, 200));
+      }
+      return res.json();
+    }
+
+    // ── Client Documents tab ─────────────────────────────────────────
+    async function loadCustomers() {
+      const q = searchInput.value.trim();
+      listContainer.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading customers…</div></div>';
+      errorSlot.innerHTML = '';
+      try {
+        const data = await api('/webhook/portal-list', { search: q, limit: 100, offset: 0 });
+        renderCustomers(data);
+      } catch (e) {
+        errorSlot.innerHTML = '<div class="error-box">' + escapeHtml(e.message) + '</div>';
+        listContainer.innerHTML = '';
+        if (e.message.indexOf('Authentication failed') >= 0) ensureSecretLoaded();
+      }
+    }
+
+    function renderCustomers(data) {
+      const persons = data.persons || [];
+      totalCount.textContent = data.total > 0 ? '(' + data.total + ')' : '';
+
+      if (persons.length === 0) {
+        const qLabel = searchInput.value ? ' matching "' + escapeHtml(searchInput.value) + '"' : '';
+        listContainer.innerHTML = '<div class="cust-empty"><span class="icon">⌇</span><div>No customers yet' + qLabel + '.</div></div>';
+        return;
+      }
+
+      const viewed = getViewedSet();
+      const cards = persons.map(p => {
+        const displayName = p.name_passport
+          || p.name_alternate
+          || ((p.name_given || '') + ' ' + (p.name_family || '')).trim()
+          || '(no name)';
+        const caseLbl = cleanCaseLabel(p.case_label || '(no case)');
+        const docs = p.doc_count || 0;
+        const isNew = !viewed.has(p.id);
+        const badge = isNew ? '<span class="new-badge">NEW</span>' : '';
+
+        return '<a href="/portal/customer.html?id=' + encodeURIComponent(p.id) + '" class="cust-card">'
+          + '<div class="cust-head">'
+          + '<span class="case-label">' + escapeHtml(caseLbl) + badge + '</span>'
+          + '<span class="doc-pill">' + docs + ' doc' + (docs === 1 ? '' : 's') + '</span>'
+          + '</div>'
+          + '<h3>' + escapeHtml(displayName) + '</h3>'
+          + '<div class="meta"><span class="email">' + escapeHtml(p.email || '—') + '</span></div>'
+          + '</a>';
+      }).join('');
+
+      listContainer.innerHTML = '<div class="cust-grid">' + cards + '</div>';
+    }
+
+    searchInput.addEventListener('input', () => {
+      clearTimeout(searchTimer);
+      searchTimer = setTimeout(loadCustomers, 300);
+    });
+
+    // ── Mail Calendar tab ─────────────────────────────────────────────
+    const mailCalendarWrap = document.getElementById('mail-calendar-wrap');
+    const mailErrorSlot = document.getElementById('mail-error-slot');
+    const mailTotalCount = document.getElementById('mail-total-count');
+
+    let calYear = new Date().getFullYear();
+    let calMonth = new Date().getMonth() + 1;
+    let calData = null;
+    let calSelectedDate = null;
+
+    async function loadMailCalendar(year, month) {
+      year = year || calYear;
+      month = month || calMonth;
+      calYear = year;
+      calMonth = month;
+      calSelectedDate = null;
+      mailCalendarWrap.innerHTML = '<div class="loading-state"><div class="spinner"></div><div>Loading mail…</div></div>';
+      mailErrorSlot.innerHTML = '';
+      try {
+        const data = await api('/webhook/mail-calendar', { year: year, month: month });
+        calData = data;
+        const totalItems = Object.values(data.batches_by_date || {}).reduce(function(sum, batches) {
+          return sum + batches.reduce(function(s, b) { return s + (b.item_count || 0); }, 0);
+        }, 0);
+        mailTotalCount.textContent = totalItems > 0 ? '(' + totalItems + ')' : '';
+        renderCalendar();
+      } catch (e) {
+        mailErrorSlot.innerHTML = '<div class="error-box">' + escapeHtml(e.message) + '</div>';
+        mailCalendarWrap.innerHTML = '';
+        if (e.message.indexOf('Authentication failed') >= 0) ensureSecretLoaded();
+      }
+    }
+
+    function renderCalendar() {
+      if (!calData) return;
+      var byDate = calData.batches_by_date || {};
+      var year = calData.year;
+      var month = calData.month;
+
+      var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      var monthNamesEs = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+      var monthLabel = monthNames[month - 1] + ' ' + year;
+      var monthLabelEs = monthNamesEs[month - 1];
+
+      var firstDay = new Date(year, month - 1, 1).getDay();
+      var daysInMonth = new Date(year, month, 0).getDate();
+      var prevMonthDays = new Date(year, month - 1, 0).getDate();
+      var today = new Date();
+      var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+      var cells = '';
+      var dows = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+      cells += dows.map(function(d) { return '<div class="cal-dow">' + d + '</div>'; }).join('');
+
+      for (var pi = firstDay - 1; pi >= 0; pi--) {
+        cells += '<div class="cal-day other-month"><span class="cal-day-num">' + (prevMonthDays - pi) + '</span></div>';
+      }
+      for (var dd = 1; dd <= daysInMonth; dd++) {
+        var dateStr = year + '-' + String(month).padStart(2, '0') + '-' + String(dd).padStart(2, '0');
+        var hasMail = !!byDate[dateStr];
+        var itemCount = hasMail
+          ? byDate[dateStr].reduce(function(s,b){ return s + (b.item_count || 0); }, 0)
+          : 0;
+        var isToday = dateStr === todayStr;
+        var isSelected = dateStr === calSelectedDate;
+        var cls = 'cal-day' + (hasMail ? ' has-mail' : '') + (isToday ? ' today' : '') + (isSelected ? ' selected' : '');
+        var dotHtml = hasMail ? '<div class="cal-dot">' + itemCount + ' notice' + (itemCount === 1 ? '' : 's') + '</div>' : '';
+        var clickAttr = hasMail ? ' data-date="' + dateStr + '"' : '';
+        cells += '<div class="' + cls + '"' + clickAttr + '><span class="cal-day-num">' + dd + '</span>' + dotHtml + '</div>';
+      }
+      var totalCells = Math.ceil((firstDay + daysInMonth) / 7) * 7;
+      for (var ni = firstDay + daysInMonth, nd = 1; ni < totalCells; ni++, nd++) {
+        cells += '<div class="cal-day other-month"><span class="cal-day-num">' + nd + '</span></div>';
+      }
+
+      var prevYear = year, prevMonth = month - 1;
+      if (prevMonth === 0) { prevMonth = 12; prevYear--; }
+      var nextYear = year, nextMonth = month + 1;
+      if (nextMonth === 13) { nextMonth = 1; nextYear++; }
+
+      var detailHtml = calSelectedDate ? buildCalendarDetail(calSelectedDate) : '';
+
+      mailCalendarWrap.innerHTML =
+        '<div class="cal-wrap">'
+        + '<div class="cal-header">'
+        + '<button class="cal-nav" id="cal-prev">←</button>'
+        + '<h3>' + monthLabel + ' <span class="es-label">— ' + monthLabelEs + '</span></h3>'
+        + '<button class="cal-nav" id="cal-next">→</button>'
+        + '</div>'
+        + '<div class="cal-grid">' + cells + '</div>'
+        + detailHtml
+        + '</div>';
+
+      document.getElementById('cal-prev').addEventListener('click', function() {
+        loadMailCalendar(prevYear, prevMonth);
+      });
+      document.getElementById('cal-next').addEventListener('click', function() {
+        loadMailCalendar(nextYear, nextMonth);
+      });
+      mailCalendarWrap.querySelectorAll('.cal-day.has-mail').forEach(function(el) {
+        el.addEventListener('click', function() {
+          calSelectedDate = el.dataset.date;
+          renderCalendar();
+        });
+      });
+    }
+
+    function buildCalendarDetail(dateStr) {
+      var byDate = calData ? (calData.batches_by_date || {}) : {};
+      var batches = byDate[dateStr] || [];
+      if (batches.length === 0) return '';
+      var secret = localStorage.getItem(LS_SECRET);
+      var formatted = formatDate(dateStr);
+      var batchHtml = batches.map(function(batch) {
+        var title = '<span class="cal-batch-title">Scan · ' + escapeHtml(batch.original_filename || 'unknown') + '  ·  ' + (batch.item_count || 0) + ' notice' + ((batch.item_count || 0) === 1 ? '' : 's') + '</span>';
+        var rows = (batch.items || []).map(function(item) {
+          var name = item.client_name || '(unknown client)';
+          var type = item.notice_type || 'other';
+          var dlUrl = N8N_BASE + '/webhook/mail-file?id=' + encodeURIComponent(item.id) + '&token=' + encodeURIComponent(secret || '');
+          return '<div class="cal-mail-row">'
+            + '<div class="cal-mail-name">' + escapeHtml(name) + '</div>'
+            + '<span class="notice-badge ' + escapeHtml(type) + '">' + noticeBadgeLabel(type) + '</span>'
+            + '<a href="' + dlUrl + '" class="cal-download" target="_blank">Download PDF</a>'
+            + '</div>';
+        }).join('');
+        return '<div class="cal-batch">' + title + rows + '</div>';
+      }).join('');
+      return '<div class="cal-detail"><div class="cal-detail-header">Mail for ' + escapeHtml(formatted) + '</div>' + batchHtml + '</div>';
+    }
+
+    function noticeBadgeLabel(type) {
+      var labels = {
+        biometrics_notice: 'Biometrics',
+        approval_notice: 'Approval',
+        receipt_notice: 'Receipt',
+        rfe: 'RFE',
+        transfer_notice: 'Transfer',
+        rejection: 'Rejection',
+        card_production_ordered: 'Card Ordered',
+        other: 'Other',
+      };
+      return labels[type] || type || 'Unknown';
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return null;
+      var d = new Date(dateStr + 'T00:00:00');
+      if (isNaN(d)) return dateStr;
+      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+    }
+
+    // ── Client Documents upload modal ────────────────────────────────
+    const uploadModal = document.getElementById('upload-modal');
+    const dropzone = document.getElementById('dropzone');
+    const fileInput = document.getElementById('file-input');
+    const fileList = document.getElementById('file-list');
+    const uploadStatus = document.getElementById('upload-status');
+    const uploadSubmit = document.getElementById('upload-submit');
+    let pendingFiles = [];
+    let uploading = false;
+
+    function openUploadModal() {
+      pendingFiles = [];
+      uploading = false;
+      uploadStatus.className = 'upload-status';
+      uploadStatus.innerHTML = '';
+      fileInput.value = '';
+      renderPendingFiles();
+      uploadModal.style.display = 'flex';
+    }
+
+    function closeUploadModal() {
+      if (uploading) return;
+      uploadModal.style.display = 'none';
+    }
+
+    function renderPendingFiles() {
+      uploadSubmit.disabled = pendingFiles.length === 0 || uploading;
+      if (pendingFiles.length === 0) { fileList.innerHTML = ''; return; }
+      fileList.innerHTML = pendingFiles.map((f, i) =>
+        '<div class="file-row">'
+        + '<span class="file-name">' + escapeHtml(f.name) + '</span>'
+        + '<span class="file-size">' + Math.max(1, Math.round(f.size / 1024)) + ' KB</span>'
+        + '<button class="file-remove" data-idx="' + i + '" aria-label="Remove">&times;</button>'
+        + '</div>'
+      ).join('');
+      fileList.querySelectorAll('.file-remove').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+          e.preventDefault();
+          if (uploading) return;
+          pendingFiles.splice(parseInt(btn.dataset.idx, 10), 1);
+          renderPendingFiles();
+        });
+      });
+    }
+
+    function addFiles(fl) {
+      for (const f of fl) { if (f && f.size > 0) pendingFiles.push(f); }
+      renderPendingFiles();
+    }
+
+    document.getElementById('new-customer').addEventListener('click', (e) => { e.preventDefault(); openUploadModal(); });
+    document.getElementById('modal-close').addEventListener('click', closeUploadModal);
+    document.getElementById('upload-cancel').addEventListener('click', closeUploadModal);
+    uploadModal.addEventListener('click', (e) => { if (e.target === uploadModal) closeUploadModal(); });
+    fileInput.addEventListener('change', () => addFiles(fileInput.files));
+    dropzone.addEventListener('dragover', (e) => { e.preventDefault(); dropzone.classList.add('drag-over'); });
+    dropzone.addEventListener('dragleave', () => dropzone.classList.remove('drag-over'));
+    dropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropzone.classList.remove('drag-over');
+      if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+    });
+
+    uploadSubmit.addEventListener('click', async () => {
+      if (pendingFiles.length === 0 || uploading) return;
+      uploading = true;
+      uploadSubmit.disabled = true;
+      uploadStatus.className = 'upload-status info';
+      uploadStatus.innerHTML = '<span class="spinner"></span>Uploading ' + pendingFiles.length + ' file' + (pendingFiles.length === 1 ? '' : 's') + ' and analyzing with AI… this can take 30–90 seconds.';
+
+      try {
+        const fd = new FormData();
+        pendingFiles.forEach(f => fd.append('files', f, f.name));
+        fd.append('uploadedAt', new Date().toISOString());
+
+        const res = await fetch(N8N_BASE + '/webhook/portal-submit', { method: 'POST', body: fd });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error('Server returned ' + res.status + ': ' + t.slice(0, 200));
+        }
+        const data = await res.json();
+        if (!data || !data.success) throw new Error('Upload returned no success flag: ' + JSON.stringify(data).slice(0, 200));
+
+        const personIds = (data.case && data.case.person_ids) || [];
+        const fileCount = (data.summary && data.summary.files) || pendingFiles.length;
+        const analyzed = (data.summary && data.summary.analyzed) || 0;
+
+        if (personIds.length > 0) {
+          uploadStatus.innerHTML = '✓ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' (' + analyzed + ' analyzed, ' + personIds.length + ' person' + (personIds.length === 1 ? '' : 's') + ' created). Opening customer card…';
+          setTimeout(() => { window.location.href = '/portal/customer.html?id=' + encodeURIComponent(personIds[0]); }, 900);
+        } else {
+          uploadStatus.innerHTML = '⚠ Uploaded ' + fileCount + ' file' + (fileCount === 1 ? '' : 's') + ' but no customer info was extracted. Refreshing list…';
+          uploading = false;
+          setTimeout(() => { closeUploadModal(); loadCustomers(); }, 1500);
+        }
+      } catch (err) {
+        uploadStatus.className = 'upload-status error';
+        uploadStatus.innerHTML = 'Upload failed: ' + escapeHtml(err.message);
+        uploading = false;
+        uploadSubmit.disabled = pendingFiles.length === 0;
+      }
+    });
+
+    // ── Mail scan upload modal ────────────────────────────────────────
+    const mailUploadModal = document.getElementById('mail-upload-modal');
+    const mailDropzone = document.getElementById('mail-dropzone');
+    const mailFileInput = document.getElementById('mail-file-input');
+    const mailFileList = document.getElementById('mail-file-list');
+    const mailUploadStatus = document.getElementById('mail-upload-status');
+    const mailUploadSubmit = document.getElementById('mail-upload-submit');
+    let mailPendingFile = null;
+    let mailUploading = false;
+
+    function openMailModal() {
+      mailPendingFile = null;
+      mailUploading = false;
+      mailUploadStatus.className = 'upload-status';
+      mailUploadStatus.innerHTML = '';
+      mailFileInput.value = '';
+      renderMailPendingFile();
+      mailUploadModal.style.display = 'flex';
+    }
+
+    function closeMailModal() {
+      if (mailUploading) return;
+      mailUploadModal.style.display = 'none';
+    }
+
+    function renderMailPendingFile() {
+      mailUploadSubmit.disabled = !mailPendingFile || mailUploading;
+      if (!mailPendingFile) { mailFileList.innerHTML = ''; return; }
+      const f = mailPendingFile;
+      mailFileList.innerHTML = '<div class="file-row">'
+        + '<span class="file-name">' + escapeHtml(f.name) + '</span>'
+        + '<span class="file-size">' + Math.max(1, Math.round(f.size / 1024)) + ' KB</span>'
+        + '<button class="file-remove" id="mail-file-remove" aria-label="Remove">&times;</button>'
+        + '</div>';
+      document.getElementById('mail-file-remove').addEventListener('click', (e) => {
+        e.preventDefault();
+        if (mailUploading) return;
+        mailPendingFile = null;
+        renderMailPendingFile();
+      });
+    }
+
+    document.getElementById('upload-mail-btn').addEventListener('click', openMailModal);
+    document.getElementById('mail-modal-close').addEventListener('click', closeMailModal);
+    document.getElementById('mail-upload-cancel').addEventListener('click', closeMailModal);
+    mailUploadModal.addEventListener('click', (e) => { if (e.target === mailUploadModal) closeMailModal(); });
+
+    mailFileInput.addEventListener('change', () => {
+      if (mailFileInput.files && mailFileInput.files[0]) {
+        mailPendingFile = mailFileInput.files[0];
+        renderMailPendingFile();
+      }
+    });
+    mailDropzone.addEventListener('dragover', (e) => { e.preventDefault(); mailDropzone.classList.add('drag-over'); });
+    mailDropzone.addEventListener('dragleave', () => mailDropzone.classList.remove('drag-over'));
+    mailDropzone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      mailDropzone.classList.remove('drag-over');
+      const f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+      if (f && f.type === 'application/pdf') { mailPendingFile = f; renderMailPendingFile(); }
+    });
+
+    mailUploadSubmit.addEventListener('click', async () => {
+      if (!mailPendingFile || mailUploading) return;
+      mailUploading = true;
+      mailUploadSubmit.disabled = true;
+      mailUploadStatus.className = 'upload-status info';
+      mailUploadStatus.innerHTML = '<span class="spinner"></span>Uploading scan and analyzing with AI… this can take 30–90 seconds for a large batch.';
+
+      try {
+        const fd = new FormData();
+        fd.append('file', mailPendingFile, mailPendingFile.name);
+
+        const res = await fetch(N8N_BASE + '/webhook/mail-ingest', { method: 'POST', body: fd });
+        if (!res.ok) {
+          const t = await res.text();
+          throw new Error('Server returned ' + res.status + ': ' + t.slice(0, 200));
+        }
+        const data = await res.json();
+        if (!data || !data.success) throw new Error('Ingest returned no success flag: ' + JSON.stringify(data).slice(0, 200));
+
+        const count = data.item_count || 0;
+        mailUploadStatus.innerHTML = '✓ Processed ' + count + ' client notice' + (count === 1 ? '' : 's') + '. Refreshing mail list…';
+        mailUploading = false;
+        setTimeout(() => { closeMailModal(); loadMailCalendar(); }, 1200);
+      } catch (err) {
+        mailUploadStatus.className = 'upload-status error';
+        mailUploadStatus.innerHTML = 'Upload failed: ' + escapeHtml(err.message);
+        mailUploading = false;
+        mailUploadSubmit.disabled = false;
+      }
+    });
+
+    // ── Utilities ────────────────────────────────────────────────────
+    function escapeHtml(s) {
+      if (s === null || s === undefined) return '';
+      return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    }
+
+    function cleanCaseLabel(label) {
+      return String(label || '').replace(/\s*\(Job\s+\d+\)\s*$/i, '').trim() || label;
+    }
+
+    function getViewedSet() {
+      try {
+        const arr = JSON.parse(localStorage.getItem('kcl_viewed_customers') || '[]');
+        return new Set(Array.isArray(arr) ? arr : []);
+      } catch (e) { return new Set(); }
+    }
+
+    function renderLogoutButton() {
+      const hasSecret = !!localStorage.getItem(LS_SECRET);
+      if (hasSecret) {
+        userSlot.style.display = 'flex';
+        userSlot.innerHTML = '<button class="btn-signout" id="logout-btn">Log out</button>';
+        document.getElementById('logout-btn').addEventListener('click', () => {
+          if (!confirm('Log out? This clears your portal session on this browser.')) return;
+          localStorage.removeItem(LS_SECRET);
+          window.location.reload();
+        });
+      } else {
+        userSlot.style.display = 'none';
+        userSlot.innerHTML = '';
+      }
+    }
+
+    init();
+  </script>
+</body>
+</html>

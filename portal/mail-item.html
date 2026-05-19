@@ -3,112 +3,496 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mail Item | Katy Chavez Law</title>
+  <title>Mail Notice · Katy Chavez Law</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <meta name="robots" content="noindex, nofollow" />
   <style>
     :root {
-      --terracotta: #C9674F;
-      --terracotta-light: #E8896E;
-      --terracotta-pale: #F5DDD7;
-      --sage: #6A8F72;
-      --sage-pale: #E4EEE6;
-      --gold: #D4A84B;
-      --gold-pale: #F5EDD8;
-      --navy: #2B3A52;
-      --navy-mid: #4A5E78;
-      --cream: #FDFAF5;
-      --warm-white: #FFFEF9;
-      --text-dark: #2B2B2B;
-      --text-mid: #555;
-      --text-light: #888;
-      --border: #E8E0D4;
+      --terracotta:        #b85a3f;
+      --terracotta-soft:   #d5836a;
+      --terracotta-wash:   #f1d9cf;
+      --sage:              #5d7e63;
+      --sage-soft:         #9bb39f;
+      --sage-wash:         #e0ebe1;
+      --gold:              #c79633;
+      --gold-soft:         #e0bd6a;
+      --gold-wash:         #f0e2bd;
+      --indigo:            #1f3a52;
+      --indigo-wash:       #d8e3ec;
+      --navy:              #1e2d40;
+      --navy-mid:          #44546d;
+      --navy-soft:         #6c7a93;
+
+      --paper:             #f3ecdc;
+      --paper-2:           #ebe2cd;
+      --paper-card:        #fbf6e9;
+      --paper-card-2:      #fefaf0;
+
+      --ink:               #1c1916;
+      --ink-soft:          #5a544b;
+      --ink-mute:          #8d8678;
+
+      --rule:              #d6c8ad;
+      --rule-soft:         #e3d7bd;
+      --rule-hard:         #948261;
+
+      --r-sm:              6px;
+      --r-md:              10px;
+      --r-lg:              14px;
+      --r-xl:              20px;
+
+      --shadow-card:       0 1px 0 rgba(28,25,22,.03), 0 18px 40px -22px rgba(28,25,22,.18);
+
+      --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1 0 0 0 0 .09 0 0 0 0 .07 0 0 0 .32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
+      --grid:              radial-gradient(circle at 1px 1px, rgba(28,25,22,.07) 1px, transparent 0);
     }
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: 'Nunito', sans-serif; background: var(--cream); color: var(--text-dark); min-height: 100vh; display: flex; flex-direction: column; }
+    html, body { min-height: 100%; }
+    body {
+      font-family: 'DM Sans', 'Helvetica Neue', system-ui, sans-serif;
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: var(--ink);
+      background: var(--paper);
+      background-image: var(--noise), var(--grid);
+      background-size: 160px 160px, 22px 22px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
+    }
 
-    nav { background: var(--warm-white); border-bottom: 3px solid var(--navy); position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 12px rgba(0,0,0,0.07); }
-    .nav-inner { max-width: 1100px; margin: 0 auto; padding: 0 20px; display: flex; align-items: center; justify-content: space-between; height: 68px; gap: 12px; }
-    .nav-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
-    .nav-brand-text { display: flex; flex-direction: column; line-height: 1.2; }
-    .nav-logo { width: 44px; height: 44px; border-radius: 50%; object-fit: cover; object-position: center top; border: 2px solid var(--navy); }
-    .nav-brand .name { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--navy); font-weight: 700; }
-    .nav-brand .tagline { font-size: 0.65rem; color: var(--navy-mid); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
-    .nav-right { display: flex; align-items: center; gap: 14px; }
+    h1, h2, h3, h4, .serif, .card-title, #header-name {
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
+      font-variation-settings: "opsz" 60, "SOFT" 100, "WONK" 0;
+      font-feature-settings: "ss01","kern";
+    }
+    #header-name { font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 0; }
+    .card-title { font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 0; }
+    .appt-title { font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 0; }
 
-    .page-header { background: linear-gradient(135deg, var(--navy) 0%, var(--navy-mid) 100%); padding: 36px 24px 48px; color: #fff; position: relative; overflow: hidden; }
-    .page-header::after { content: ''; position: absolute; bottom: -40px; right: -40px; width: 220px; height: 220px; border-radius: 50%; background: rgba(255,255,255,0.06); }
-    .page-header-inner { max-width: 1100px; margin: 0 auto; position: relative; z-index: 1; }
-    .back-link { display: inline-flex; align-items: center; gap: 6px; color: rgba(255,255,255,0.75); text-decoration: none; font-size: 0.88rem; font-weight: 600; margin-bottom: 16px; transition: color 0.15s; }
-    .back-link:hover { color: #fff; }
-    .page-header h1 { font-family: 'Playfair Display', serif; font-size: clamp(1.5rem, 3.5vw, 2rem); margin-bottom: 8px; }
-    .header-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; opacity: 0.9; font-size: 0.9rem; }
+    .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
 
-    .notice-badge { display: inline-block; font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.09em; padding: 4px 12px; border-radius: 12px; white-space: nowrap; }
-    .notice-badge.biometrics_notice   { background: #dbeafe; color: #1e40af; }
-    .notice-badge.approval_notice     { background: #dcfce7; color: #166534; }
-    .notice-badge.receipt_notice      { background: var(--gold-pale); color: #6b5a2e; }
-    .notice-badge.rfe                 { background: #fef9c3; color: #713f12; }
-    .notice-badge.transfer_notice     { background: #f3e8ff; color: #6b21a8; }
-    .notice-badge.rejection           { background: #fee2e2; color: #991b1b; }
-    .notice-badge.card_production_ordered { background: var(--sage-pale); color: #2d5a34; }
-    .notice-badge.other               { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+    a { color: inherit; }
+    button { font-family: inherit; }
 
-    main { flex: 1; padding: 32px 24px 56px; max-width: 1100px; margin: -28px auto 0; width: 100%; }
+    /* ==================== NAV ==================== */
+    nav {
+      background: rgba(251,246,233,.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--rule);
+      position: sticky; top: 0; z-index: 100;
+    }
+    .nav-inner {
+      max-width: 1180px; margin: 0 auto;
+      padding: 0 28px;
+      display: flex; align-items: center; justify-content: space-between;
+      height: 64px; gap: 18px;
+    }
+    .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
+    .seal {
+      width: 46px; height: 46px;
+      border-radius: 50%;
+      display: grid; place-items: center;
+      background: var(--paper-card);
+      overflow: hidden;
+      box-shadow: 0 2px 8px -2px rgba(28,25,22,.15);
+    }
+    .seal img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .nav-brand .name {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 18, "SOFT" 100, "WONK" 0;
+      font-size: 19px; font-weight: 500;
+      color: var(--navy);
+      letter-spacing: .005em;
+      line-height: 1;
+    }
+    .nav-brand .tagline {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9.5px;
+      color: var(--ink-soft);
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      margin-top: 5px;
+      display: block;
+    }
+    .nav-brand-text { display: flex; flex-direction: column; line-height: 1; }
+    .nav-right { display: flex; align-items: center; gap: 12px; }
 
-    .card { background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 24px 28px; margin-bottom: 20px; }
-    .card-title { font-family: 'Playfair Display', serif; color: var(--navy); font-size: 1.1rem; margin-bottom: 16px; padding-bottom: 10px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 8px; }
-    .card-title .icon { font-size: 1.1rem; }
+    #user-slot { display: none; align-items: center; gap: 10px; }
+    .user-pill {
+      display: flex; align-items: center; gap: 9px;
+      font-size: 13px; color: var(--navy);
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      padding: 5px 12px 5px 5px;
+      border-radius: 999px;
+    }
+    .user-pill .avatar {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: var(--terracotta);
+      color: #fff;
+      display: grid; place-items: center;
+      font-size: 12px; font-weight: 700;
+    }
+    .btn-signout {
+      background: transparent;
+      border: 1px solid var(--rule);
+      color: var(--navy-mid);
+      padding: 6px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12.5px;
+      font-weight: 500;
+    }
+    .btn-signout:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-wash); }
 
-    .field-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; }
-    .field-group { display: flex; flex-direction: column; gap: 4px; }
-    .field-label { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-light); }
-    .field-value { font-size: 0.95rem; color: var(--text-dark); font-weight: 600; }
-    .field-value.empty { color: var(--text-light); font-weight: 400; font-style: italic; }
+    /* ==================== PAGE HEADER ==================== */
+    .page-header {
+      padding: 36px 28px;
+      position: relative; overflow: hidden;
+      border-bottom: 1px solid var(--rule);
+    }
+    .page-header-inner {
+      max-width: 1180px; margin: 0 auto;
+      position: relative; z-index: 2;
+      display: grid; grid-template-columns: 1fr auto; align-items: end; gap: 28px;
+    }
+    .back-link {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      color: var(--navy-mid);
+      text-decoration: none;
+      padding: 8px 14px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--rule);
+      background: var(--paper-card);
+      margin-bottom: 18px;
+      transition: background .15s, color .15s, border-color .15s, transform .1s;
+    }
+    .back-link:hover { background: var(--terracotta-wash); color: var(--terracotta); border-color: var(--terracotta-soft); transform: translateX(-2px); }
 
-    /* Biometrics appointment box */
-    .appt-box { background: #dbeafe; border: 1px solid #bfdbfe; border-radius: 12px; padding: 20px 24px; }
-    .appt-box .appt-title { font-family: 'Playfair Display', serif; color: #1e40af; font-size: 1rem; margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
-    .appt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-bottom: 14px; }
-    .appt-field-label { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #3b82f6; }
-    .appt-field-value { font-size: 0.94rem; color: #1e3a8a; font-weight: 600; }
-    .appt-bring { margin-top: 10px; }
-    .appt-bring .appt-field-label { margin-bottom: 6px; display: block; }
-    .appt-bring p { font-size: 0.9rem; color: #1e3a8a; line-height: 1.6; white-space: pre-wrap; }
+    #header-name {
+      font-size: clamp(30px, 4.5vw, 46px);
+      font-weight: 400;
+      line-height: 1;
+      letter-spacing: -.02em;
+      color: var(--ink);
+      margin: 0;
+    }
+    .header-meta {
+      display: flex; align-items: center; gap: 12px; flex-wrap: wrap;
+      margin-top: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--ink-soft);
+      letter-spacing: .04em;
+    }
+    .header-meta > span:not(.notice-badge) {
+      padding: 4px 0;
+    }
 
-    /* Summary */
-    .summary-text { font-size: 0.97rem; line-height: 1.7; color: var(--text-dark); }
+    .crest-logo {
+      width: 96px; height: 96px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 8px 28px -10px rgba(28,25,22,.32);
+    }
+    @media (max-width: 880px) {
+      .page-header-inner { grid-template-columns: 1fr; }
+      .crest-logo { width: 72px; height: 72px; }
+    }
 
-    /* PDF download */
-    .btn-download { display: inline-flex; align-items: center; gap: 8px; background: var(--navy); color: #fff; padding: 12px 22px; border-radius: 8px; border: none; cursor: pointer; font-family: 'Nunito', sans-serif; font-weight: 700; font-size: 0.9rem; text-decoration: none; transition: background 0.15s; }
-    .btn-download:hover { background: var(--navy-mid); }
-    .btn-download:disabled { background: var(--border); color: var(--text-light); cursor: not-allowed; }
-    .btn-download-note { font-size: 0.82rem; color: var(--text-light); margin-top: 8px; }
+    /* ==================== NOTICE BADGES (warm paper palette) ==================== */
+    .notice-badge {
+      display: inline-flex; align-items: center;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 10.5px;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 999px;
+      letter-spacing: .06em;
+      white-space: nowrap;
+      border: 1px solid currentColor;
+    }
+    .notice-badge.biometrics_notice         { color: #1f3a6b; background: rgba(31,58,107,.08); }
+    .notice-badge.approval_notice           { color: #2d5a34; background: rgba(45,90,52,.10); }
+    .notice-badge.receipt_notice            { color: #6b5a2e; background: var(--gold-wash); }
+    .notice-badge.rfe                       { color: #8a4a14; background: rgba(199,150,51,.18); }
+    .notice-badge.transfer_notice           { color: #5a2e8a; background: rgba(90,46,138,.08); }
+    .notice-badge.rejection                 { color: #8a2418; background: rgba(184,90,63,.12); }
+    .notice-badge.card_production_ordered   { color: #2d5a34; background: var(--sage-wash); }
+    .notice-badge.other                     { color: var(--ink-soft); background: var(--paper-card-2); }
 
-    /* Batch info footer */
-    .batch-meta { font-size: 0.82rem; color: var(--text-light); padding-top: 8px; }
+    /* ==================== MAIN ==================== */
+    main {
+      flex: 1;
+      max-width: 1180px; width: 100%;
+      margin: 0 auto;
+      padding: 32px 28px 56px;
+    }
 
-    .loading-state { text-align: center; padding: 80px 24px; color: var(--text-mid); }
-    .loading-state .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--terracotta); border-radius: 50%; animation: spin 0.7s linear infinite; margin-bottom: 14px; }
+    .card {
+      background: var(--paper-card);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-xl);
+      padding: 28px 32px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-card);
+    }
+    .card-title {
+      color: var(--navy);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 18px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--rule);
+      display: flex; align-items: center; gap: 12px;
+      letter-spacing: -.01em;
+    }
+    .card-title .icon {
+      font-size: 16px;
+      opacity: .7;
+    }
+
+    .field-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 22px 28px;
+    }
+    .field-group { display: flex; flex-direction: column; gap: 6px; }
+    .field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--ink-mute);
+    }
+    .field-value {
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
+      font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 0;
+      font-size: 17px;
+      color: var(--ink);
+      font-weight: 500;
+      letter-spacing: -.005em;
+    }
+    .field-value.empty {
+      color: var(--ink-mute);
+      font-weight: 400;
+      font-style: italic;
+      font-family: 'Fraunces', serif;
+    }
+
+    /* ==================== BIOMETRICS APPT BOX ==================== */
+    .appt-box {
+      background:
+        linear-gradient(180deg, var(--indigo-wash), rgba(216,227,236,.5)),
+        var(--paper-card);
+      border: 1px solid #b8c8d8;
+      border-left: 4px solid var(--indigo);
+      border-radius: var(--r-xl);
+      padding: 24px 28px;
+      margin-bottom: 18px;
+      box-shadow: var(--shadow-card);
+    }
+    .appt-title {
+      color: var(--indigo);
+      font-size: 22px;
+      font-weight: 400;
+      margin-bottom: 18px;
+      display: flex; align-items: center; gap: 12px;
+      letter-spacing: -.01em;
+    }
+    .appt-title .icon { font-size: 16px; opacity: .8; }
+    .appt-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px 28px;
+      margin-bottom: 16px;
+    }
+    .appt-field-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px;
+      font-weight: 500;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: #5673a0;
+    }
+    .appt-field-value {
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
+      font-variation-settings: "opsz" 24, "SOFT" 100, "WONK" 0;
+      font-size: 17px;
+      color: var(--indigo);
+      font-weight: 500;
+      margin-top: 4px;
+      letter-spacing: -.005em;
+    }
+    .appt-bring {
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px dotted #b8c8d8;
+    }
+    .appt-bring .appt-field-label {
+      margin-bottom: 8px;
+      display: block;
+    }
+    .appt-bring p {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      color: var(--indigo);
+      line-height: 1.65;
+      white-space: pre-wrap;
+    }
+
+    /* ==================== SUMMARY ==================== */
+    .summary-text {
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
+      font-variation-settings: "opsz" 18, "SOFT" 100, "WONK" 0;
+      font-size: 16.5px;
+      line-height: 1.7;
+      color: var(--ink);
+    }
+
+    /* ==================== DOWNLOAD BUTTON ==================== */
+    .btn-download {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--navy);
+      color: #fbf6e9;
+      padding: 13px 26px;
+      border-radius: var(--r-md);
+      border: 1px solid var(--navy);
+      cursor: pointer;
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-decoration: none;
+      transition: background .15s, border-color .15s, box-shadow .15s, transform .1s;
+    }
+    .btn-download:hover { background: var(--terracotta); border-color: var(--terracotta); box-shadow: 0 6px 20px -8px rgba(184,90,63,.5); }
+    .btn-download:active { transform: translateY(1px); }
+    .btn-download:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; box-shadow: none; transform: none; }
+    .btn-download-note {
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13px;
+      color: var(--ink-soft);
+      line-height: 1.55;
+    }
+    .btn-download-note code {
+      font-family: 'JetBrains Mono', monospace;
+      background: var(--paper-card-2);
+      border: 1px solid var(--rule);
+      padding: 2px 8px;
+      border-radius: var(--r-sm);
+      font-size: 11.5px;
+      color: var(--navy);
+    }
+
+    /* ==================== BATCH META ==================== */
+    .batch-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11.5px;
+      color: var(--ink-mute);
+      letter-spacing: .04em;
+      padding: 12px 4px 0;
+      text-align: center;
+    }
+
+    /* ==================== LOADING / ERROR ==================== */
+    .loading-state {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--ink-soft);
+      font-family: 'Fraunces', serif;
+      font-style: italic;
+      font-size: 18px;
+    }
+    .loading-state .spinner {
+      display: inline-block;
+      width: 28px; height: 28px;
+      border: 2px solid var(--rule);
+      border-top-color: var(--terracotta);
+      border-radius: 50%;
+      animation: spin .8s linear infinite;
+      margin-bottom: 16px;
+      vertical-align: middle;
+    }
     @keyframes spin { to { transform: rotate(360deg); } }
 
-    .error-box { background: #f5dcd9; border-left: 4px solid #b3392e; color: #b3392e; padding: 16px 20px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
-    .not-found { text-align: center; padding: 80px 24px; color: var(--text-mid); }
-    .not-found h2 { font-family: 'Playfair Display', serif; color: var(--navy); margin-bottom: 10px; }
+    .error-box {
+      background: var(--terracotta-wash);
+      border-left: 3px solid var(--terracotta);
+      color: #6b2a18;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      border-radius: var(--r-md);
+    }
 
-    footer { background: var(--navy); color: #c8d8f0; padding: 20px 24px; text-align: center; font-size: 0.82rem; }
+    .not-found {
+      text-align: center;
+      padding: 80px 24px;
+      color: var(--ink-soft);
+    }
+    .not-found h2 {
+      font-family: 'Fraunces', serif;
+      font-variation-settings: "opsz" 60, "SOFT" 100, "WONK" 0;
+      font-size: 30px;
+      color: var(--navy);
+      margin-bottom: 12px;
+      font-weight: 400;
+    }
+    .not-found a { color: var(--terracotta); }
+
+    /* ==================== FOOTER ==================== */
+    footer {
+      background: var(--navy);
+      color: rgba(243,236,220,.7);
+      padding: 18px 28px;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      border-top: 1px solid var(--navy);
+    }
+    footer .sep { margin: 0 12px; color: rgba(243,236,220,.3); }
+
+    /* scrollbar */
+    ::-webkit-scrollbar { width: 9px; height: 9px; }
+    ::-webkit-scrollbar-thumb { background: var(--rule); border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--rule-hard); }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::selection { background: var(--navy); color: var(--paper); }
+
+    @media (max-width: 660px) {
+      .nav-inner { padding: 0 18px; }
+      main { padding: 24px 18px 40px; }
+      .page-header { padding: 28px 18px; }
+      .card, .appt-box { padding: 22px 22px; }
+    }
   </style>
 </head>
 <body>
   <nav>
     <div class="nav-inner">
       <a href="/" class="nav-brand">
-        <img src="/katynewheadshot.jpg" alt="Katy Chavez" class="nav-logo" />
+        <div class="seal" aria-hidden="true">
+          <img src="/katychavez-logo.png" alt="Katy Chavez Law" />
+        </div>
         <div class="nav-brand-text">
           <span class="name">Katy Chavez Law</span>
-          <span class="tagline">Portal</span>
+          <span class="tagline">Staff Portal</span>
         </div>
       </a>
       <div class="nav-right">
@@ -119,9 +503,14 @@
 
   <header class="page-header" id="page-header">
     <div class="page-header-inner">
-      <a href="/portal/index.html#mail" class="back-link">&#8592; Back to Mail Sorting</a>
-      <h1 id="header-name">USCIS Mail Notice</h1>
-      <div class="header-meta" id="header-meta"></div>
+      <div>
+        <a href="/portal/index.html#mail" class="back-link">← Back to Mail Sorting</a>
+        <h1 id="header-name">USCIS Mail Notice</h1>
+        <div class="header-meta" id="header-meta"></div>
+      </div>
+      <div class="crest">
+        <img src="/katychavez-logo.png" alt="Katy Chavez Law" class="crest-logo" />
+      </div>
     </div>
   </header>
 
@@ -135,7 +524,9 @@
   </main>
 
   <footer>
-    &copy; Katy Chavez Law &middot; Staff Portal
+    &copy; Katy Chavez Law
+    <span class="sep">·</span>
+    Staff Portal
   </footer>
 
   <script>
@@ -231,7 +622,7 @@
         || ((item.client_last_name || '') + (item.client_first_name ? ', ' + item.client_first_name : ''))
         || 'Unknown Client';
       document.getElementById('header-name').textContent = clientName;
-      document.title = clientName + ' | Mail Notice | Katy Chavez Law';
+      document.title = clientName + ' · Mail Notice · Katy Chavez Law';
 
       const noticeType = item.notice_type || 'other';
       const metaEl = document.getElementById('header-meta');
@@ -245,7 +636,7 @@
 
       // Case Details card
       sections.push('<div class="card">'
-        + '<div class="card-title"><span class="icon">📋</span> Case Details</div>'
+        + '<div class="card-title"><span class="icon">▦</span> Case Details</div>'
         + '<div class="field-grid">'
         + fieldHtml('Receipt Number', item.receipt_number)
         + fieldHtml('A-Number', item.a_number)
@@ -260,7 +651,7 @@
           ? '<div class="appt-bring"><span class="appt-field-label">What to Bring</span><p>' + escapeHtml(item.appointment_bring) + '</p></div>'
           : '';
         sections.push('<div class="appt-box">'
-          + '<div class="appt-title"><span>📅</span> Biometrics Appointment</div>'
+          + '<div class="appt-title"><span class="icon">◷</span> Biometrics Appointment</div>'
           + '<div class="appt-grid">'
           + (item.appointment_date ? '<div class="field-group"><div class="appt-field-label">Date</div><div class="appt-field-value">' + escapeHtml(formatDate(item.appointment_date)) + '</div></div>' : '')
           + (item.appointment_time ? '<div class="field-group"><div class="appt-field-label">Time</div><div class="appt-field-value">' + escapeHtml(item.appointment_time) + '</div></div>' : '')
@@ -273,7 +664,7 @@
       // Summary card
       if (item.summary) {
         sections.push('<div class="card">'
-          + '<div class="card-title"><span class="icon">💬</span> Summary</div>'
+          + '<div class="card-title"><span class="icon">❝</span> Summary</div>'
           + '<p class="summary-text">' + escapeHtml(item.summary) + '</p>'
           + '</div>');
       }
@@ -315,8 +706,8 @@
     function buildPdfCard(item, pdfBase64, batch) {
       if (pdfBase64) {
         return '<div class="card">'
-          + '<div class="card-title"><span class="icon">📄</span> Individual PDF</div>'
-          + '<button class="btn-download" id="pdf-download-btn">&#8681; Download client PDF</button>'
+          + '<div class="card-title"><span class="icon">⬇</span> Individual PDF</div>'
+          + '<button class="btn-download" id="pdf-download-btn">↓ Download client PDF</button>'
           + '</div>';
       }
       // No individual PDF — offer the original batch scan as fallback

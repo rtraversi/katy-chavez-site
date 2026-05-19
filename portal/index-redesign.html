@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Despacho · Katy Chavez Law</title>
+  <title>Portal · Katy Chavez Law</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
@@ -127,18 +127,18 @@
     }
     .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
     .seal {
-      width: 40px; height: 40px;
-      border: 1.2px solid var(--navy);
+      width: 46px; height: 46px;
       border-radius: 50%;
       display: grid; place-items: center;
       background: var(--paper-card);
       position: relative;
+      overflow: hidden;
+      box-shadow: 0 2px 8px -2px rgba(28,25,22,.15);
     }
-    .seal svg { width: 22px; height: 22px; }
-    .seal::after {
-      content:""; position:absolute; inset:-4px;
-      border: 1px solid var(--navy); opacity:.12;
-      border-radius: 50%;
+    .seal img {
+      width: 100%; height: 100%;
+      object-fit: cover;
+      display: block;
     }
     .nav-brand .wordmark { display: flex; flex-direction: column; line-height: 1; }
     .nav-brand .name {
@@ -258,13 +258,15 @@
       100% { box-shadow: 0 0 0 0 rgba(184,90,63,0); }
     }
 
-    /* compass mark in corner */
-    .page-header::before {
-      content: "";
-      position: absolute; right: -60px; top: -60px;
-      width: 380px; height: 380px;
-      background: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><g fill='none' stroke='%231e2d40' stroke-width='.35' opacity='.10'><circle cx='50' cy='50' r='48'/><circle cx='50' cy='50' r='38'/><circle cx='50' cy='50' r='28'/><circle cx='50' cy='50' r='18'/><path d='M50 2 L50 98 M2 50 L98 50 M14 14 L86 86 M14 86 L86 14' stroke-width='.25'/></g></svg>") center/contain no-repeat;
-      pointer-events: none; z-index: 1;
+    .crest-logo {
+      width: 112px; height: 112px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 6px;
+      box-shadow: 0 8px 28px -10px rgba(28,25,22,.32);
+    }
+    @media (max-width: 880px) {
+      .crest-logo { width: 80px; height: 80px; }
     }
 
     /* ==================== MAIN ==================== */
@@ -332,16 +334,13 @@
       background-size: 22px 22px;
       opacity: .12;
     }
-    .gate-side .crest-mark {
-      width: 58px; height: 58px;
-      border: 1px solid rgba(243,236,220,.4);
+    .gate-side-logo {
+      width: 96px; height: 96px;
       border-radius: 50%;
-      display: grid; place-items: center;
-      background: rgba(243,236,220,.05);
-      margin-bottom: 18px;
-      position: relative;
+      display: block;
+      margin-bottom: 20px;
+      box-shadow: 0 10px 30px -8px rgba(0,0,0,.5);
     }
-    .gate-side .crest-mark svg { width: 36px; height: 36px; }
     .gate-side h3 {
       font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
@@ -1156,17 +1155,11 @@
     <div class="nav-inner">
       <a href="/" class="nav-brand">
         <div class="seal" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" style="color: var(--navy);">
-            <path d="M5 4 L5 18 L9 22 L9 8 Z" fill="currentColor" opacity=".18"/>
-            <path d="M19 4 L19 18 L15 22 L15 8 Z" fill="currentColor" opacity=".18"/>
-            <path d="M5 4 L19 4 L15 8 L9 8 Z" stroke="currentColor"/>
-            <path d="M5 18 L9 22 L15 22 L19 18 L15 8 L9 8 Z" stroke="currentColor"/>
-            <line x1="12" y1="11" x2="12" y2="19" stroke="currentColor" stroke-width=".6"/>
-          </svg>
+          <img src="/katychavez-logo.png" alt="Katy Chavez Law" />
         </div>
         <div class="wordmark">
           <span class="name">Katy Chavez Law</span>
-          <span class="tagline">Despacho · Staff Portal</span>
+          <span class="tagline">Staff Portal</span>
         </div>
       </a>
       <div class="nav-right">
@@ -1178,11 +1171,12 @@
   <header class="page-header">
     <div class="page-header-inner">
       <div class="crown">
-        <span class="eyebrow">Acceso restringido · Staff only</span>
-        <h1 class="rise d1">El <span class="em">despacho</span>.</h1>
-        <p class="sub rise d2"><span class="es">Casos, correos, expedientes.</span> &nbsp;<b id="header-sub">Sign in to view and manage client cases.</b></p>
+        <span class="eyebrow">Staff Only</span>
+        <h1 class="rise d1">Case<span class="em">work</span>.</h1>
+        <p class="sub rise d2"><b id="header-sub">Sign in to view and manage client cases.</b></p>
       </div>
       <div class="crest rise d3" id="crest-meta">
+        <img src="/katychavez-logo.png" alt="Katy Chavez Law" class="crest-logo" />
         <div class="row">
           <span>Today</span>
           <b id="crest-date">—</b>
@@ -1203,23 +1197,14 @@
           <span class="smallcaps">§01 — Sign in</span>
         </div>
         <h2>Staff <span class="em">sign in</span></h2>
-        <p>This portal is restricted to authorized Katy Chavez Law staff. <span class="es">Solo personal autorizado.</span></p>
+        <p>This portal is restricted to authorized Katy Chavez Law staff.</p>
         <div id="sign-in-mount"></div>
-        <!-- The login form is moved into the gate panel so the unauthenticated screen is the whole experience.
-             The original DOM places it inside #dashboard > #login-form-section; we keep that for the JS, then duplicate visually here. -->
       </div>
       <div class="gate-side">
-        <div class="crest-mark">
-          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(243,236,220,.75)" stroke-width=".8">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M4 12 L20 12 M12 4 L12 20"/>
-            <path d="M6.5 6.5 L17.5 17.5 M17.5 6.5 L6.5 17.5" stroke-width=".5" opacity=".7"/>
-            <circle cx="12" cy="12" r="1.4" fill="rgba(243,236,220,.7)" stroke="none"/>
-          </svg>
-        </div>
-        <h3>Cada expediente <span class="em">cuenta una historia</span>.</h3>
-        <p>Every file is a story — a journey, a family, a hearing date that won't move. Sign in to pick up where you left off. We hold the work; the firm holds the trust.</p>
-        <div class="stamp">Confidencial</div>
+        <img src="/katychavez-logo.png" alt="Katy Chavez Law" class="gate-side-logo" />
+        <h3>Every file is a <span class="em">story</span>.</h3>
+        <p>A journey, a family, a hearing date that won't move. Sign in to pick up where you left off.</p>
+        <div class="stamp">Confidential</div>
       </div>
     </div>
 
@@ -1235,27 +1220,21 @@
               <span class="smallcaps">§01 — Sign in</span>
             </div>
             <h2>Staff <span class="em">sign in</span></h2>
-            <p>Enter your portal credentials to continue. <span class="es">Ingresa tus credenciales.</span></p>
+            <p>Enter your portal credentials to continue.</p>
             <form id="login-form" class="login-form" autocomplete="on">
-              <label for="login-username">Username · <span class="es">usuario</span></label>
+              <label for="login-username">Username</label>
               <input type="text" id="login-username" name="username" autocomplete="username" placeholder="username" />
-              <label for="login-password">Password · <span class="es">contraseña</span></label>
+              <label for="login-password">Password</label>
               <input type="password" id="login-password" name="password" autocomplete="current-password" placeholder="••••••••" />
               <div id="login-error" class="login-error" style="display:none;"></div>
               <button type="submit" class="btn-login" id="login-submit">Sign in →</button>
             </form>
           </div>
           <div class="gate-side">
-            <div class="crest-mark">
-              <svg viewBox="0 0 24 24" fill="none" stroke="rgba(243,236,220,.75)" stroke-width=".8">
-                <circle cx="12" cy="12" r="10"/>
-                <path d="M4 12 L20 12 M12 4 L12 20"/>
-                <circle cx="12" cy="12" r="1.4" fill="rgba(243,236,220,.7)" stroke="none"/>
-              </svg>
-            </div>
-            <h3>Una sesión nueva <span class="em">comienza aquí</span>.</h3>
-            <p>A new session begins here. Your access is logged and tied to your portal credentials.</p>
-            <div class="stamp">Confidencial</div>
+            <img src="/katychavez-logo.png" alt="Katy Chavez Law" class="gate-side-logo" />
+            <h3>A new session <span class="em">begins here</span>.</h3>
+            <p>Your access is logged and tied to your portal credentials.</p>
+            <div class="stamp">Confidential</div>
           </div>
         </div>
       </div>
@@ -1276,7 +1255,7 @@
         <!-- ── Client Documents pane ────────────────────────────── -->
         <div id="tab-clients" class="tab-pane">
           <div class="toolbar">
-            <h2>Customers <span class="es-label">— clientes</span> <span class="total" id="total-count"></span></h2>
+            <h2>Customers <span class="total" id="total-count"></span></h2>
             <div class="toolbar-right">
               <input type="search" id="search" class="search" placeholder="Search by name…" />
               <a href="#" class="btn-primary" id="new-customer">+ New case</a>
@@ -1288,7 +1267,7 @@
         <!-- ── Mail Sorting pane ─────────────────────────────────── -->
         <div id="tab-mail" class="tab-pane" style="display:none;">
           <div class="mail-toolbar">
-            <h2>USCIS Mail <span class="es-label">— correo</span> <span class="total" id="mail-total-count"></span></h2>
+            <h2>USCIS Mail <span class="total" id="mail-total-count"></span></h2>
             <div class="toolbar-right">
               <button class="btn-primary" id="upload-mail-btn">+ Upload mail scan</button>
             </div>
@@ -1354,8 +1333,6 @@
     &copy; Katy Chavez Law
     <span class="sep">·</span>
     Staff Portal
-    <span class="sep">·</span>
-    <span class="es-label">despacho interno</span>
   </footer>
 
   <script
@@ -1634,9 +1611,7 @@
       var month = calData.month;
 
       var monthNames = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      var monthNamesEs = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
       var monthLabel = monthNames[month - 1] + ' ' + year;
-      var monthLabelEs = monthNamesEs[month - 1];
 
       var firstDay = new Date(year, month - 1, 1).getDay();
       var daysInMonth = new Date(year, month, 0).getDate();
@@ -1680,7 +1655,7 @@
         '<div class="cal-wrap">'
         + '<div class="cal-header">'
         + '<button class="cal-nav" id="cal-prev">←</button>'
-        + '<h3>' + monthLabel + ' <span class="es-label">— ' + monthLabelEs + '</span></h3>'
+        + '<h3>' + monthLabel + '</h3>'
         + '<button class="cal-nav" id="cal-next">→</button>'
         + '</div>'
         + '<div class="cal-grid">' + cells + '</div>'

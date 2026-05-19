@@ -6,7 +6,7 @@
   <title>Despacho · Katy Chavez Law</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,300..700;1,6..72,300..700&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..700,0..100,0..1;1,9..144,300..700,0..100,0..1&family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <meta name="robots" content="noindex, nofollow" />
   <style>
     :root {
@@ -36,13 +36,20 @@
       --ink-soft:          #5a544b;
       --ink-mute:          #8d8678;
 
-      /* Rules */
-      --rule:              #c8baa0;
-      --rule-soft:         #ddd1b5;
-      --rule-hard:         #1c1916;
+      /* Rules — softened, no more pure-black hairlines */
+      --rule:              #d6c8ad;
+      --rule-soft:         #e3d7bd;
+      --rule-hard:         #948261;
 
-      --shadow-card:       0 1px 0 rgba(28,25,22,.04), 0 24px 50px -28px rgba(28,25,22,.22);
-      --shadow-modal:      0 30px 80px -20px rgba(28,25,22,.45);
+      /* Radius scale — softer corners throughout */
+      --r-sm:              6px;
+      --r-md:              10px;
+      --r-lg:              14px;
+      --r-xl:              20px;
+      --r-2xl:             24px;
+
+      --shadow-card:       0 1px 0 rgba(28,25,22,.03), 0 18px 40px -22px rgba(28,25,22,.18);
+      --shadow-modal:      0 30px 80px -20px rgba(28,25,22,.38);
 
       --noise: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='160' height='160'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .1 0 0 0 0 .09 0 0 0 0 .07 0 0 0 .32 0'/></filter><rect width='100%25' height='100%25' filter='url(%23n)'/></svg>");
       --grid:              radial-gradient(circle at 1px 1px, rgba(28,25,22,.07) 1px, transparent 0);
@@ -66,15 +73,26 @@
 
     /* ==================== type helpers ==================== */
     .serif {
-      font-family: 'Newsreader', 'Times New Roman', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-feature-settings: "ss01","kern";
+      font-variation-settings: "opsz" 36, "SOFT" 100, "WONK" 0;
+    }
+    /* Make Fraunces soft + warm wherever it appears */
+    h1, h2, h3, .cust-card h3, .cal-mail-name, .cal-detail-header,
+    .gate-side h3, .gate-panel h2, .cal-header h3, .modal h2, .page-header h1 {
+      font-variation-settings: "opsz" 96, "SOFT" 100, "WONK" 0;
+    }
+    .page-header h1 { font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 0; }
+    .cust-card h3, .cal-mail-name { font-variation-settings: "opsz" 28, "SOFT" 100, "WONK" 0; }
+    .es, .es-label, .nav-brand .name, footer .es-label {
+      font-variation-settings: "opsz" 18, "SOFT" 100, "WONK" 0;
     }
     .mono {
       font-family: 'JetBrains Mono', ui-monospace, monospace;
       font-feature-settings: "ss02","zero","cv11";
     }
     .es {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-style: italic;
       color: var(--ink-mute);
       font-weight: 400;
@@ -100,12 +118,7 @@
       border-bottom: 1px solid var(--rule);
       position: sticky; top: 0; z-index: 100;
     }
-    nav::after {
-      /* second hairline */
-      content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 3px;
-      background: linear-gradient(180deg, var(--rule) 0 1px, transparent 1px 2px, var(--rule) 2px 3px);
-      pointer-events: none;
-    }
+    /* removed double-hairline under nav — softer single rule reads cleaner */
     .nav-inner {
       max-width: 1280px; margin: 0 auto;
       padding: 0 28px;
@@ -114,22 +127,22 @@
     }
     .nav-brand { display: flex; align-items: center; gap: 14px; text-decoration: none; }
     .seal {
-      width: 38px; height: 38px;
+      width: 40px; height: 40px;
       border: 1.2px solid var(--navy);
+      border-radius: 50%;
       display: grid; place-items: center;
       background: var(--paper-card);
       position: relative;
-      transform: rotate(-3deg);
     }
-    .seal svg { width: 24px; height: 24px; }
+    .seal svg { width: 22px; height: 22px; }
     .seal::after {
-      content:""; position:absolute; inset:-3px;
-      border: 1px solid var(--navy); opacity:.16;
-      transform: rotate(4deg);
+      content:""; position:absolute; inset:-4px;
+      border: 1px solid var(--navy); opacity:.12;
+      border-radius: 50%;
     }
     .nav-brand .wordmark { display: flex; flex-direction: column; line-height: 1; }
     .nav-brand .name {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-size: 19px; font-weight: 500;
       color: var(--navy);
       letter-spacing: .005em;
@@ -195,10 +208,10 @@
       letter-spacing: .22em; text-transform: uppercase;
     }
     .page-header .eyebrow::after {
-      content: ""; width: 56px; height: 1px; background: var(--rule-hard);
+      content: ""; width: 56px; height: 1px; background: var(--rule);
     }
     .page-header h1 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-size: clamp(38px, 5vw, 64px);
       font-weight: 400;
       line-height: .96;
@@ -211,7 +224,7 @@
       color: var(--terracotta);
     }
     .page-header .sub {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-style: italic;
       font-size: 18px;
       color: var(--ink-soft);
@@ -228,7 +241,7 @@
     }
     .page-header .crest .row { display: flex; gap: 18px; align-items: baseline; }
     .page-header .crest .row b {
-      color: var(--navy); font-family: 'Newsreader', serif;
+      color: var(--navy); font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-size: 16px; font-weight: 500; letter-spacing: -.005em; text-transform: none;
     }
     .page-header .crest .row b.accent { color: var(--terracotta); }
@@ -273,19 +286,10 @@
     .gate-panel {
       background: var(--paper-card);
       border: 1px solid var(--rule);
-      padding: 36px 36px 32px;
+      border-radius: var(--r-xl);
+      padding: 38px 38px 34px;
       position: relative;
       box-shadow: var(--shadow-card);
-    }
-    .gate-panel::before {
-      /* top corner notch */
-      content: "";
-      position: absolute; top: 0; right: 0;
-      width: 36px; height: 36px;
-      background:
-        linear-gradient(225deg, var(--paper) 50%, transparent 50%);
-      border-left: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
     }
     .gate-panel .label-row {
       display: flex; align-items: center; gap: 10px;
@@ -293,7 +297,7 @@
     }
     .gate-panel .label-row .smallcaps { color: var(--terracotta); }
     .gate-panel h2 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       font-size: 36px;
       line-height: 1;
@@ -314,10 +318,12 @@
         linear-gradient(180deg, rgba(30,45,64,.96), rgba(30,45,64,.88)),
         radial-gradient(circle at 30% 80%, rgba(199,150,51,.18), transparent 60%);
       color: #f3ecdc;
-      padding: 36px 32px;
+      padding: 38px 34px;
       position: relative;
       overflow: hidden;
       border: 1px solid var(--rule);
+      border-radius: var(--r-xl);
+      box-shadow: var(--shadow-card);
     }
     .gate-side::before {
       content: "";
@@ -327,8 +333,9 @@
       opacity: .12;
     }
     .gate-side .crest-mark {
-      width: 56px; height: 56px;
+      width: 58px; height: 58px;
       border: 1px solid rgba(243,236,220,.4);
+      border-radius: 50%;
       display: grid; place-items: center;
       background: rgba(243,236,220,.05);
       margin-bottom: 18px;
@@ -336,7 +343,7 @@
     }
     .gate-side .crest-mark svg { width: 36px; height: 36px; }
     .gate-side h3 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       font-size: 28px;
       letter-spacing: -.01em;
@@ -354,14 +361,17 @@
       position: absolute;
       bottom: 22px; right: 22px;
       transform: rotate(-8deg);
-      border: 2px double rgba(224,189,106,.55);
-      color: rgba(224,189,106,.7);
-      padding: 6px 12px;
-      font-family: 'Newsreader', serif;
+      border: 1.5px solid rgba(224,189,106,.55);
+      border-radius: 999px;
+      color: rgba(224,189,106,.78);
+      padding: 7px 18px;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
+      font-variation-settings: "opsz" 18, "SOFT" 100, "WONK" 0;
       font-weight: 500;
-      font-size: 13px;
-      letter-spacing: .18em;
+      font-size: 12px;
+      letter-spacing: .22em;
       text-transform: uppercase;
+      background: rgba(243,236,220,.04);
     }
 
     /* Sign-in form */
@@ -383,10 +393,10 @@
     }
     .login-form input[type=text],
     .login-form input[type=password] {
-      padding: 11px 14px;
+      padding: 12px 16px;
       background: var(--paper);
       border: 1px solid var(--rule);
-      border-radius: 0;
+      border-radius: var(--r-md);
       font-size: 15px;
       transition: border-color .15s, background .15s, box-shadow .15s;
     }
@@ -394,35 +404,35 @@
       outline: none;
       border-color: var(--terracotta);
       background: var(--paper-card-2);
-      box-shadow: 0 0 0 3px rgba(184,90,63,.12);
+      box-shadow: 0 0 0 4px rgba(184,90,63,.14);
     }
     .login-error {
       background: var(--terracotta-wash);
       border-left: 3px solid var(--terracotta);
       color: var(--terracotta);
-      padding: 9px 14px;
+      padding: 10px 14px;
       font-size: 13px;
       margin-top: 6px;
+      border-radius: var(--r-md);
     }
     .btn-login {
-      margin-top: 12px;
-      padding: 13px 20px;
+      margin-top: 14px;
+      padding: 13px 22px;
       background: var(--navy);
       color: #fbf6e9;
       border: 1px solid var(--navy);
-      border-radius: 0;
+      border-radius: var(--r-md);
       font-family: 'DM Sans', sans-serif;
       font-size: 13px;
       font-weight: 600;
-      letter-spacing: .12em;
-      text-transform: uppercase;
+      letter-spacing: .08em;
       cursor: pointer;
-      transition: background .15s, color .15s, transform .1s;
+      transition: background .15s, color .15s, transform .1s, box-shadow .15s;
       position: relative;
     }
-    .btn-login:hover { background: var(--terracotta); border-color: var(--terracotta); }
+    .btn-login:hover { background: var(--terracotta); border-color: var(--terracotta); box-shadow: 0 6px 20px -8px rgba(184,90,63,.5); }
     .btn-login:active { transform: translateY(1px); }
-    .btn-login:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; transform: none; }
+    .btn-login:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; transform: none; box-shadow: none; }
 
     /* Hidden Clerk mount (we don't use it but the JS expects the node) */
     #sign-in-mount { display: none; }
@@ -432,18 +442,16 @@
 
     .tab-bar {
       display: flex; align-items: stretch;
-      gap: 0;
-      border-bottom: 1px solid var(--rule-hard);
+      gap: 6px;
       margin-bottom: 0;
-      padding-left: 0;
+      padding-left: 4px;
     }
     .tab-btn {
       font-family: 'DM Sans', sans-serif;
-      font-size: 12.5px;
+      font-size: 13px;
       font-weight: 600;
-      letter-spacing: .14em;
-      text-transform: uppercase;
-      padding: 14px 22px 12px;
+      letter-spacing: .04em;
+      padding: 12px 22px 14px;
       border: 1px solid transparent;
       border-bottom: 0;
       background: transparent;
@@ -452,6 +460,7 @@
       display: flex; align-items: center; gap: 10px;
       position: relative;
       margin-bottom: -1px;
+      border-radius: var(--r-md) var(--r-md) 0 0;
       transition: color .15s, background .15s;
     }
     .tab-btn::before {
@@ -463,17 +472,17 @@
       letter-spacing: .12em;
       font-weight: 500;
     }
-    .tab-btn:hover { color: var(--navy); background: var(--paper-card); }
+    .tab-btn:hover { color: var(--navy); background: rgba(251,246,233,.6); }
     .tab-btn.active {
       color: var(--navy);
       background: var(--paper-card);
-      border-color: var(--rule-hard);
+      border-color: var(--rule);
       border-bottom-color: var(--paper-card);
     }
     .tab-btn.active::before { color: var(--terracotta); }
     .tab-btn .tab-count {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 500;
       letter-spacing: 0;
       color: var(--ink-soft);
@@ -484,19 +493,12 @@
 
     .tab-pane {
       background: var(--paper-card);
-      border: 1px solid var(--rule-hard);
-      border-top: 0;
-      padding: 28px 28px 32px;
+      border: 1px solid var(--rule);
+      border-radius: var(--r-xl);
+      border-top-left-radius: 0;
+      padding: 32px 32px 36px;
       position: relative;
       box-shadow: var(--shadow-card);
-    }
-    .tab-pane::before {
-      /* perforation along top of pane */
-      content: "";
-      position: absolute; left: 0; right: 0; top: -1px; height: 1px;
-      background-image: linear-gradient(to right, var(--rule-hard) 50%, transparent 50%);
-      background-size: 6px 1px;
-      opacity: .5;
     }
 
     /* ---------- toolbar (shared by both tabs) ---------- */
@@ -508,7 +510,7 @@
       border-bottom: 1px solid var(--rule);
     }
     .toolbar h2, .mail-toolbar h2 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       font-size: 28px;
       color: var(--navy);
@@ -516,7 +518,7 @@
       display: flex; align-items: baseline; gap: 12px;
     }
     .toolbar h2 .es-label, .mail-toolbar h2 .es-label {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-style: italic;
       font-size: 15px;
       color: var(--ink-mute);
@@ -531,46 +533,47 @@
     }
     .toolbar-right { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
     .search {
-      padding: 9px 14px 9px 36px;
+      padding: 10px 16px 10px 38px;
       border: 1px solid var(--rule);
       background: var(--paper-card-2);
       font-family: 'DM Sans', sans-serif;
       font-size: 14px;
       min-width: 280px;
-      border-radius: 0;
+      border-radius: var(--r-md);
       background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235a544b' stroke-width='1.6'><circle cx='11' cy='11' r='7'/><path d='m20 20-3.5-3.5'/></svg>");
       background-repeat: no-repeat;
-      background-position: 12px center;
+      background-position: 14px center;
       transition: border-color .15s, box-shadow .15s;
     }
     .search:focus {
       outline: none;
       border-color: var(--terracotta);
-      box-shadow: 0 0 0 3px rgba(184,90,63,.12);
+      box-shadow: 0 0 0 4px rgba(184,90,63,.14);
     }
     .btn-primary {
       background: var(--navy);
       color: #fbf6e9;
-      padding: 10px 18px;
+      padding: 11px 20px;
       border: 1px solid var(--navy);
-      border-radius: 0;
+      border-radius: var(--r-md);
       cursor: pointer;
       font-family: 'DM Sans', sans-serif;
       font-weight: 600;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      font-size: 12.5px;
+      letter-spacing: .06em;
       text-decoration: none;
       display: inline-flex; align-items: center; gap: 8px;
-      transition: background .15s, color .15s;
+      transition: background .15s, color .15s, box-shadow .15s, transform .1s;
       white-space: nowrap;
     }
-    .btn-primary:hover { background: var(--terracotta); border-color: var(--terracotta); }
+    .btn-primary:hover { background: var(--terracotta); border-color: var(--terracotta); box-shadow: 0 6px 20px -8px rgba(184,90,63,.5); }
+    .btn-primary:active { transform: translateY(1px); }
 
     /* ---------- customer "case file" cards ---------- */
     .cust-empty, .mail-empty {
       background: var(--paper-card-2);
       border: 1px dashed var(--rule);
+      border-radius: var(--r-lg);
       padding: 56px 28px;
       text-align: center;
       color: var(--ink-soft);
@@ -582,45 +585,38 @@
 
     .cust-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-      gap: 0;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 14px;
     }
     .cust-card {
       background: var(--paper-card-2);
       border: 1px solid var(--rule);
-      border-top: 0; border-left: 0;
-      padding: 18px 20px 18px 24px;
+      border-radius: var(--r-lg);
+      padding: 18px 22px 18px 24px;
       text-decoration: none;
       color: inherit;
       display: block;
       position: relative;
-      transition: background .15s, transform .12s;
-    }
-    .cust-grid .cust-card:first-child,
-    .cust-grid .cust-card:nth-child(n+1) { border-top: 1px solid var(--rule); }
-    @media (min-width: 661px) {
-      .cust-grid { grid-template-columns: repeat(2, 1fr); }
-      .cust-grid .cust-card:nth-child(2n+1) { border-left: 1px solid var(--rule); }
-    }
-    @media (min-width: 1001px) {
-      .cust-grid { grid-template-columns: repeat(3, 1fr); }
-      .cust-grid .cust-card:nth-child(2n+1) { border-left: 0; }
-      .cust-grid .cust-card:nth-child(3n+1) { border-left: 1px solid var(--rule); }
+      overflow: hidden;
+      transition: background .15s, transform .15s, box-shadow .2s, border-color .15s;
     }
     .cust-card::before {
       /* terracotta vertical stroke */
       content: "";
-      position: absolute; left: 0; top: 18px; bottom: 18px;
-      width: 3px;
+      position: absolute; left: 0; top: 14px; bottom: 14px;
+      width: 4px;
       background: var(--terracotta);
-      opacity: .65;
+      opacity: .7;
+      border-radius: 0 4px 4px 0;
+      transition: opacity .15s, width .15s;
     }
     .cust-card:hover {
       background: var(--paper-card);
-      z-index: 2;
-      box-shadow: inset 0 0 0 1px var(--terracotta);
+      border-color: var(--terracotta-soft);
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px -16px rgba(184,90,63,.35), 0 2px 0 rgba(28,25,22,.02);
     }
-    .cust-card:hover::before { opacity: 1; width: 4px; }
+    .cust-card:hover::before { opacity: 1; width: 6px; }
 
     .cust-card .cust-head {
       display: flex; align-items: center; justify-content: space-between;
@@ -641,22 +637,24 @@
       color: #fbf6e9;
       font-family: 'JetBrains Mono', monospace;
       font-size: 9px;
-      padding: 2px 7px;
+      padding: 2px 8px;
       letter-spacing: .14em;
       font-weight: 500;
+      border-radius: 999px;
     }
     .cust-card .doc-pill {
       font-family: 'JetBrains Mono', monospace;
       font-size: 10.5px;
       font-weight: 500;
-      padding: 2px 9px;
+      padding: 3px 11px;
       background: var(--gold-wash);
       color: #6b5a2e;
       border: 1px solid var(--gold-soft);
+      border-radius: 999px;
       letter-spacing: .04em;
     }
     .cust-card h3 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       font-size: 22px;
       color: var(--navy);
@@ -681,7 +679,7 @@
       border-bottom: 1px solid var(--rule);
     }
     .cal-header h3 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       font-size: 24px;
       color: var(--navy);
@@ -689,7 +687,7 @@
       display: flex; align-items: baseline; gap: 12px;
     }
     .cal-header h3 .es-label {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-style: italic;
       font-size: 14px;
       color: var(--ink-mute);
@@ -698,8 +696,8 @@
       background: transparent;
       border: 1px solid var(--rule);
       color: var(--navy-mid);
-      width: 34px; height: 34px;
-      border-radius: 0;
+      width: 36px; height: 36px;
+      border-radius: var(--r-md);
       cursor: pointer;
       font-size: 14px;
       display: grid; place-items: center;
@@ -711,9 +709,7 @@
     .cal-grid {
       display: grid;
       grid-template-columns: repeat(7, 1fr);
-      gap: 0;
-      border-left: 1px solid var(--rule);
-      border-top: 1px solid var(--rule);
+      gap: 6px;
     }
     .cal-dow {
       text-align: left;
@@ -723,38 +719,42 @@
       color: var(--ink-mute);
       text-transform: uppercase;
       letter-spacing: .18em;
-      padding: 8px 10px;
-      border-right: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule-hard);
-      background: var(--paper-card-2);
+      padding: 4px 10px 10px;
+      background: transparent;
     }
     .cal-day {
       min-height: 78px;
       background: var(--paper-card-2);
-      border-right: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
+      border: 1px solid var(--rule-soft);
+      border-radius: var(--r-md);
       padding: 8px 10px;
       cursor: default;
       display: flex; flex-direction: column;
       align-items: flex-start;
       gap: 6px;
       position: relative;
-      transition: background .15s;
+      transition: background .15s, transform .12s, border-color .15s, box-shadow .15s;
     }
     .cal-day.other-month {
-      background: repeating-linear-gradient(135deg, var(--paper-card-2) 0 6px, var(--paper-card) 6px 12px);
-      opacity: .55;
+      background: transparent;
+      border-color: transparent;
+      opacity: .4;
     }
-    .cal-day.has-mail { cursor: pointer; }
-    .cal-day.has-mail:hover { background: var(--sage-wash); }
+    .cal-day.has-mail { cursor: pointer; border-color: var(--sage-soft); }
+    .cal-day.has-mail:hover {
+      background: var(--sage-wash);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px -10px rgba(93,126,99,.5);
+    }
     .cal-day.selected {
       background: var(--sage-wash);
-      box-shadow: inset 0 0 0 2px var(--sage);
+      border-color: var(--sage);
+      box-shadow: 0 0 0 2px var(--sage), 0 6px 16px -10px rgba(93,126,99,.5);
     }
     .cal-day.today .cal-day-num {
       background: var(--terracotta);
       color: #fbf6e9;
-      width: 22px; height: 22px;
+      width: 24px; height: 24px;
       display: inline-flex; align-items: center; justify-content: center;
       border-radius: 50%;
       padding: 0;
@@ -794,7 +794,7 @@
       border-top: 1px solid var(--rule);
     }
     .cal-detail-header {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       font-size: 22px;
       color: var(--navy);
@@ -810,9 +810,10 @@
     .cal-batch {
       background: var(--paper-card-2);
       border: 1px solid var(--rule);
-      border-left: 3px solid var(--sage);
-      padding: 16px 22px;
-      margin-bottom: 10px;
+      border-left: 4px solid var(--sage);
+      border-radius: var(--r-lg);
+      padding: 18px 24px;
+      margin-bottom: 12px;
     }
     .cal-batch-title {
       display: block;
@@ -831,7 +832,7 @@
     }
     .cal-mail-row:last-child { border-bottom: 0; }
     .cal-mail-name {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       color: var(--navy);
       font-size: 17px;
@@ -841,13 +842,13 @@
     .cal-download {
       background: transparent;
       color: var(--sage);
-      padding: 5px 12px;
+      padding: 6px 14px;
       border: 1px solid var(--sage);
+      border-radius: 999px;
       font-family: 'DM Sans', sans-serif;
-      font-size: 10.5px;
+      font-size: 11px;
       font-weight: 600;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      letter-spacing: .06em;
       text-decoration: none;
       white-space: nowrap;
       transition: background .15s, color .15s;
@@ -857,12 +858,11 @@
     .notice-badge {
       display: inline-flex; align-items: center;
       font-family: 'DM Sans', sans-serif;
-      font-size: 10px;
+      font-size: 10.5px;
       font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: .14em;
-      padding: 4px 10px;
-      border-radius: 0;
+      letter-spacing: .06em;
+      padding: 4px 11px;
+      border-radius: 999px;
       white-space: nowrap;
       border: 1px solid currentColor;
     }
@@ -880,7 +880,7 @@
       text-align: center;
       padding: 56px 28px;
       color: var(--ink-soft);
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-style: italic;
       font-size: 17px;
     }
@@ -903,6 +903,7 @@
       padding: 14px 18px;
       margin-bottom: 18px;
       font-size: 13.5px;
+      border-radius: var(--r-md);
     }
 
     /* ==================== MODAL ==================== */
@@ -920,35 +921,27 @@
       background: var(--paper-card-2);
       box-shadow: var(--shadow-modal);
       width: 100%; max-width: 640px;
-      padding: 32px 36px 28px;
+      padding: 34px 38px 30px;
       position: relative;
-      border: 1px solid var(--rule-hard);
-    }
-    .modal::before {
-      content: "";
-      position: absolute; top: 0; right: 0;
-      width: 32px; height: 32px;
-      background:
-        linear-gradient(225deg, var(--paper) 50%, transparent 50%);
-      border-left: 1px solid var(--rule-hard);
-      border-bottom: 1px solid var(--rule-hard);
+      border: 1px solid var(--rule);
+      border-radius: var(--r-2xl);
     }
     .modal-close {
-      position: absolute; top: 12px; right: 44px;
+      position: absolute; top: 14px; right: 14px;
       background: transparent;
       border: 1px solid var(--rule);
-      width: 32px; height: 32px;
+      width: 34px; height: 34px;
       font-size: 18px;
       line-height: 1;
       color: var(--ink-soft);
       cursor: pointer;
-      border-radius: 0;
+      border-radius: 50%;
       display: grid; place-items: center;
-      transition: border-color .15s, color .15s;
+      transition: border-color .15s, color .15s, background .15s;
     }
-    .modal-close:hover { border-color: var(--terracotta); color: var(--terracotta); }
+    .modal-close:hover { border-color: var(--terracotta); color: var(--terracotta); background: var(--terracotta-wash); }
     .modal h2 {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 400;
       color: var(--navy);
       font-size: 30px;
@@ -966,10 +959,11 @@
 
     .dropzone {
       border: 1.5px dashed var(--rule);
-      padding: 38px 22px;
+      border-radius: var(--r-lg);
+      padding: 40px 22px;
       text-align: center;
       background: var(--paper);
-      transition: border-color .15s, background .15s;
+      transition: border-color .15s, background .15s, transform .15s;
       cursor: pointer;
       display: block;
       position: relative;
@@ -978,6 +972,7 @@
       border-color: var(--terracotta);
       background: var(--terracotta-wash);
     }
+    .dropzone.drag-over { transform: scale(1.01); }
     .dropzone .icon {
       font-size: 28px;
       display: block;
@@ -985,7 +980,7 @@
       color: var(--navy-mid);
     }
     .dropzone .label {
-      font-family: 'Newsreader', serif;
+      font-family: 'Fraunces', 'Iowan Old Style', serif;
       font-weight: 500;
       color: var(--navy);
       font-size: 18px;
@@ -1008,9 +1003,10 @@
     }
     .file-row {
       display: flex; align-items: center; gap: 12px;
-      padding: 9px 12px;
+      padding: 10px 14px;
       background: var(--paper);
       border: 1px solid var(--rule-soft);
+      border-radius: var(--r-md);
       font-size: 13px;
     }
     .file-row .file-name {
@@ -1039,10 +1035,11 @@
 
     .upload-status {
       margin-top: 18px;
-      padding: 14px 16px;
+      padding: 14px 18px;
       font-size: 13.5px;
       display: none;
       border-left: 3px solid;
+      border-radius: var(--r-md);
     }
     .upload-status.info {
       background: var(--gold-wash);
@@ -1078,14 +1075,13 @@
       background: transparent;
       border: 1px solid var(--rule);
       color: var(--navy-mid);
-      padding: 11px 20px;
+      padding: 11px 22px;
       font-family: 'DM Sans', sans-serif;
       font-weight: 600;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      font-size: 12.5px;
+      letter-spacing: .06em;
       cursor: pointer;
-      border-radius: 0;
+      border-radius: var(--r-md);
       transition: border-color .15s, color .15s;
     }
     .btn-cancel:hover { border-color: var(--ink-soft); color: var(--ink); }
@@ -1093,18 +1089,18 @@
       background: var(--navy);
       color: #fbf6e9;
       border: 1px solid var(--navy);
-      padding: 11px 22px;
+      padding: 11px 24px;
       font-family: 'DM Sans', sans-serif;
       font-weight: 600;
-      font-size: 12px;
-      letter-spacing: .14em;
-      text-transform: uppercase;
+      font-size: 12.5px;
+      letter-spacing: .06em;
       cursor: pointer;
-      border-radius: 0;
-      transition: background .15s, border-color .15s;
+      border-radius: var(--r-md);
+      transition: background .15s, border-color .15s, box-shadow .15s, transform .1s;
     }
-    .btn-upload:hover { background: var(--terracotta); border-color: var(--terracotta); }
-    .btn-upload:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; }
+    .btn-upload:hover { background: var(--terracotta); border-color: var(--terracotta); box-shadow: 0 6px 20px -8px rgba(184,90,63,.5); }
+    .btn-upload:active { transform: translateY(1px); }
+    .btn-upload:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; box-shadow: none; transform: none; }
 
     /* ==================== FOOTER ==================== */
     footer {
@@ -1119,7 +1115,7 @@
       border-top: 1px solid var(--navy);
     }
     footer .sep { margin: 0 12px; color: rgba(243,236,220,.3); }
-    footer .es-label { font-family: 'Newsreader', serif; font-style: italic; text-transform: none; letter-spacing: 0; color: rgba(243,236,220,.45); font-size: 13px; }
+    footer .es-label { font-family: 'Fraunces', 'Iowan Old Style', serif; font-style: italic; text-transform: none; letter-spacing: 0; color: rgba(243,236,220,.45); font-size: 13px; }
 
     /* ==================== entrance reveal ==================== */
     .rise { opacity: 0; transform: translateY(8px); animation: rise .7s cubic-bezier(.2,.7,.2,1) forwards; }

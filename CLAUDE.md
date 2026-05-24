@@ -81,6 +81,7 @@ POSTGRES_DB=kcl_portal
 PORTAL_USER=…
 PORTAL_PASS=…
 PORTAL_SECRET=…
+ZAPIER_PRIMA_HOOK=https://hooks.zapier.com/hooks/catch/…  # portal-prima-push
 ```
 
 Three n8n env vars matter for Code nodes:
@@ -170,6 +171,7 @@ Updates flow: edit the `.workflow.ts` file → push via `mcp__claude_ai_n8n__upd
 | mail-ingest | `WxijwOWgZ3dTm3J6` | POST `/webhook/mail-ingest` | none (public — scan upload form) |
 | mail-list | `s9px1YlEI7eJlBPk` | POST `/webhook/mail-list` | headerAuth `X-Portal-Secret` |
 | mail-get | `eAUb4gNHZ0Y0YMZ8` | POST `/webhook/mail-get` | headerAuth `X-Portal-Secret` |
+| portal-prima-push | (assign after deploy) | POST `/webhook/portal-prima-push` | headerAuth `X-Portal-Secret` |
 
 n8n credentials configured (all in n8n UI, never in git):
 - `Portal Postgres` — connects to `postgres:5432`

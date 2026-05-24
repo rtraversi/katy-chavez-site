@@ -426,6 +426,34 @@
     .btn-save:active { transform: translateY(1px); }
     .btn-save:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; box-shadow: none; transform: none; }
 
+    /* ==================== PRIMA.LAW PUSH ==================== */
+    .prima-bar { display: flex; align-items: center; gap: 10px; margin-right: auto; }
+    .btn-prima {
+      background: var(--sage);
+      color: #fbf6e9;
+      padding: 11px 22px;
+      border: 1px solid var(--sage);
+      border-radius: var(--r-md);
+      font-family: 'DM Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      letter-spacing: .04em;
+      cursor: pointer;
+      transition: background .15s, border-color .15s, box-shadow .15s, transform .1s;
+    }
+    .btn-prima:hover { background: var(--terracotta); border-color: var(--terracotta); box-shadow: 0 6px 20px -8px rgba(184,90,63,.5); }
+    .btn-prima:active { transform: translateY(1px); }
+    .btn-prima:disabled { background: var(--rule); border-color: var(--rule); color: var(--ink-mute); cursor: not-allowed; box-shadow: none; transform: none; }
+    .prima-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: .04em;
+      color: var(--ink-soft);
+    }
+    .prima-status.loading { color: var(--gold); font-weight: 600; }
+    .prima-status.ok  { color: var(--sage); font-weight: 600; }
+    .prima-status.err { color: var(--terracotta); font-weight: 600; }
+
     /* ==================== DOCS LIST ==================== */
     .docs-list { display: flex; flex-direction: column; gap: 12px; }
     .doc-row {
@@ -907,6 +935,10 @@
         + '</div></div>';
 
       const saveBar = '<div class="save-bar">'
+        + '<div class="prima-bar">'
+        + '<span class="prima-status" id="prima-status"></span>'
+        + '<button class="btn-prima" id="prima-btn" title="Push this client record to Prima.law">↑ Prima.law</button>'
+        + '</div>'
         + '<span class="save-status" id="save-status">No changes</span>'
         + '<button class="btn-save" id="save-btn" disabled>Save changes</button>'
         + '</div>';
@@ -925,6 +957,7 @@
       bindTabs();
       bindFieldEdits();
       document.getElementById('save-btn').addEventListener('click', savePerson);
+      document.getElementById('prima-btn').addEventListener('click', pushToPrima);
     }
 
     function renderEditableTab(id, fieldDefs, person, provMap) {
@@ -997,6 +1030,26 @@
       } catch (e) {
         status.textContent = 'Save failed: ' + e.message;
         status.className = 'save-status err';
+        btn.disabled = false;
+      }
+    }
+
+    async function pushToPrima() {
+      const status = document.getElementById('prima-status');
+      const btn = document.getElementById('prima-btn');
+      if (!personId) return;
+      btn.disabled = true;
+      status.textContent = 'Pushing…';
+      status.className = 'prima-status loading';
+      try {
+        await api('/webhook/portal-prima-push', { person_id: personId });
+        status.textContent = '✓ Sent to Prima.law';
+        status.className = 'prima-status ok';
+        setTimeout(() => { status.textContent = ''; status.className = 'prima-status'; }, 7000);
+      } catch (e) {
+        status.textContent = 'Push failed: ' + e.message;
+        status.className = 'prima-status err';
+      } finally {
         btn.disabled = false;
       }
     }

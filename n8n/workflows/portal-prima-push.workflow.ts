@@ -3,6 +3,8 @@
 // Endpoint: POST https://n8n.katychavez.com/webhook/portal-prima-push
 // Auth:     headerAuth X-Portal-Secret ("Portal API Secret" cred in n8n)
 // Body:     { person_id: UUID }
+// Trigger:  Manual — staff clicks "↑ Prima.law" on the customer card after review.
+//           Never fires automatically on save.
 //
 // Flow:
 //   1. Fetch full person record from Postgres via portal_get()
@@ -10,62 +12,109 @@
 //   3. POST the payload to the Zapier webhook (ZAPIER_PRIMA_HOOK env var)
 //   4. Respond with { success, person_id, primaPayload }
 //
-// The Zapier Zap handles SearchContact → Update (if found) or Create (if not).
-// See docs below for Zap setup.
+// The Zapier Zap handles dedup (SearchContact by phone → Update or Create)
+// and then creates the phone number record linked to the contact.
 //
 // Required env on VPS (/opt/kcl-n8n/.env):
 //   ZAPIER_PRIMA_HOOK=https://hooks.zapier.com/hooks/catch/XXXXXXX/XXXXXXX/
 //
-// ── Zapier Zap Setup ────────────────────────────────────────────────────────
+// ── Dedup strategy ───────────────────────────────────────────────────────────
+// Search PRIMARY by phone number — attorneys use phone as the primary
+// client lookup in Prima.law. Not email-first because clients don't always
+// have email, but all clients have a phone number.
+// If phone search returns a match → Update that contact.
+// If no match → Create new contact.
+// Note: If a family member shares the same phone as the primary client,
+// staff should verify the match in Prima.law before pushing (rare edge case).
+//
+// ── Which persons to push ────────────────────────────────────────────────────
+// Push ONE person at a time — staff opens that person's card and clicks the
+// button. The BENEFICIARY is always the primary person on a case.
+// Push the beneficiary first. Related persons (petitioner, spouse) can be
+// pushed individually from their own cards.
+//
+// RELATIONSHIP LINKING IN PRIMA.LAW:
+// Prima.law has a relationship manager, but its Zapier actions for family
+// members (new_family_member / update_family_member) expose NO configurable
+// parameters — they cannot be used as write actions from Zapier.
+// The only automated relationship option is the `relatedContactId` field on
+// CreateNewContact, which links a new contact to an existing one by Prima.law
+// contact ID. We don't yet store Prima.law IDs in KCL, so this is a
+// manual step for now: after pushing a beneficiary and a petitioner, link
+// them in Prima.law's UI (People → Relationships tab).
+// Future enhancement: add a `prima_contact_id` column to the persons table
+// so KCL can pass relatedContactId automatically when pushing related persons.
+//
+// ── Zapier Zap Setup ─────────────────────────────────────────────────────────
 //
 // Create ONE Zap in your Zapier account:
 //
-//   Trigger:  Webhooks by Zapier → Catch Hook
-//             Copy the webhook URL → paste as ZAPIER_PRIMA_HOOK in VPS .env
+//   Step 1 — TRIGGER
+//     Webhooks by Zapier → Catch Hook
+//     Copy the webhook URL → paste as ZAPIER_PRIMA_HOOK in VPS .env
+//     Turn on the Zap, then test-fire from the portal to confirm receipt.
 //
-//   Step 2:   Prima.law → Search Contact
-//             • Email: {{data__email}}   (leave blank to skip if no email)
-//             • First Name: {{data__firstName}}
-//             • Last Name:  {{data__lastName}}
+//   Step 2 — SEARCH (phone-first dedup)
+//     Prima.law → Search Contact
+//       Phone Number: {{data__phone}}
+//       Last Name:    {{data__lastName}}   ← secondary check
+//     This returns the contact's ID if found.
 //
-//   Step 3:   Paths by Zapier (requires Professional plan)
-//     Path A — "Contact exists"
+//   Step 3 — PATHS (requires Zapier Professional plan)
+//
+//     Path A — "Contact found"
 //       Rule: Step 2 · Contact ID · (Text) Exists
 //       Action: Prima.law → Update Contact
-//               Contact ID: {{2. Contact ID}}
-//               Map all other fields from {{data__*}} same as Path B below
+//         Contact ID:  {{2. Contact ID}}
+//         firstName:   {{data__firstName}}
+//         lastName:    {{data__lastName}}
+//         email:       {{data__email}}
+//         birthDate:   {{data__birthDate}}
+//         sex:         {{data__sex}}
+//         alienNumber:              {{data__alienNumber}}
+//         socialSecurityNumber:     {{data__socialSecurityNumber}}
+//         i94Number:                {{data__i94Number}}
+//         pobCity:                  {{data__pobCity}}
+//         pobState:                 {{data__pobState}}
+//         pobCountry:               {{data__pobCountry}}
+//         citizenship:              {{data__citizenship}}
+//         currentImmigrationStatus: {{data__currentImmigrationStatus}}
+//         dateOfLastEntryToUs:      {{data__dateOfLastEntryToUs}}
+//         othersNamesUsed:          {{data__othersNamesUsed}}
+//         lprExp:                   {{data__lprExp}}
+//         classAdmissionLpr:        {{data__classAdmissionLpr}}
+//
 //     Path B — "New contact"
 //       Rule: Step 2 · Contact ID · (Text) Does not exist
 //       Action: Prima.law → Create New Contact
-//               firstName: {{data__firstName}}
-//               lastName:  {{data__lastName}}
-//               email:     {{data__email}}
-//               birthDate: {{data__birthDate}}          (mm-dd-yyyy)
-//               sex:       {{data__sex}}                (male/female)
-//               alienNumber:           {{data__alienNumber}}
-//               socialSecurityNumber:  {{data__socialSecurityNumber}}
-//               i94Number:             {{data__i94Number}}
-//               pobCity:               {{data__pobCity}}
-//               pobState:              {{data__pobState}}
-//               pobCountry:            {{data__pobCountry}}
-//               citizenship:           {{data__citizenship}}
-//               currentImmigrationStatus: {{data__currentImmigrationStatus}}
-//               dateOfLastEntryToUs:   {{data__dateOfLastEntryToUs}}
-//               othersNamesUsed:       {{data__othersNamesUsed}}
-//               lprExp:                {{data__lprExp}}
-//               classAdmissionLpr:     {{data__classAdmissionLpr}}
+//         (same field mapping as Path A above)
 //
-//   Step 4 (optional, add to BOTH paths):
+//   Step 4 — PHONE (add inside BOTH Path A and Path B)
+//     Add a Filter first: Only continue if {{data__phone}} has value
 //     Prima.law → Create New Phone Number
-//       Contact ID: (from Create/Update step)
-//       Phone Number: {{data__phone}}
-//       Filter: only run if {{data__phone}} has value
+//       Contact ID:    {{3. Contact ID}}   ← from whichever Create/Update ran
+//       Number:        {{data__phone}}
+//       Type:          mobile              ← hard-code; immigration clients use mobile
+//       Best time:     {{data__phoneAvailableAt}}  (leave blank unless added later)
+//     NOTE: This creates a new phone record each push. Prima.law deduplicates
+//     phone numbers on its side, but verify this doesn't double-add on updates.
 //
-// ── Starter-plan fallback (no Paths) ────────────────────────────────────────
-// If you don't have Paths, use a single "Create New Contact" action after
-// a Filter step:  "Only continue if: Step 2 · Contact ID · Does not exist"
-// This prevents duplicates; existing contacts won't be updated (manual update
-// in Prima.law until you upgrade to Professional plan).
+// ── Starter-plan fallback (no Paths) ─────────────────────────────────────────
+// If you don't have Paths, use two separate Zaps sharing NO webhook URL:
+//   Zap 1 "Create":  Webhook → Search Contact → Filter (Contact ID does NOT exist)
+//                    → Create New Contact → Create New Phone Number
+//   Zap 2 "Update":  (separate webhook URL) → Update Contact → (update phone)
+//   Then add a second env var ZAPIER_PRIMA_UPDATE_HOOK and modify the Code node
+//   below to call the appropriate URL based on... actually, without a search step
+//   in n8n, you can't know which to call. Simplest Starter fallback:
+//   → Just use Zap 1 (Create with Filter). No auto-update; staff updates manually.
+//   → Upgrade to Professional when the volume warrants it.
+//
+// ── Address note ─────────────────────────────────────────────────────────────
+// KCL stores current_address as free text. Prima.law's CreateNewAddress action
+// requires separate city/state/zip fields. Address is NOT pushed automatically.
+// Staff can add it manually in Prima.law, or a future enhancement can parse
+// the address string (regex for US addresses or an address-parsing npm package).
 //
 // ── Workflow ID ──────────────────────────────────────────────────────────────
 // Assign after first deploy to n8n: (TBD)

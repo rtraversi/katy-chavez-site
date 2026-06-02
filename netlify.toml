@@ -13,6 +13,52 @@
   to = "/portal/admin.html"
   status = 200
 
+# Common URL patterns crawlers/visitors guess at — redirect to homepage.
+[[redirects]]
+  from = "/home"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/about-us"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/about"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/contact-us"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/contact"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/immigration"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/criminal-law"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/traffic-&-dwi"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/reviews"
+  to = "/"
+  status = 301
+
 # Security headers — applied to every response.
 [[headers]]
   for = "/*"

@@ -13,6 +13,20 @@
   to = "/portal/admin.html"
   status = 200
 
+# Short payment links → Converge hosted payment page. 302 (not 301) so browsers
+# don't cache it: when the Converge link is rotated, update the token here only.
+[[redirects]]
+  from = "/pay"
+  to = "https://www.convergepay.com/hosted-payments?ssl_txn_auth_token=LCxuaAkLQOKs5PNp0bf5mwAAAaEwj3mF"
+  status = 302
+  force = true
+
+[[redirects]]
+  from = "/pago"
+  to = "https://www.convergepay.com/hosted-payments?ssl_txn_auth_token=LCxuaAkLQOKs5PNp0bf5mwAAAaEwj3mF"
+  status = 302
+  force = true
+
 # Common URL patterns crawlers/visitors guess at — redirect to homepage.
 [[redirects]]
   from = "/home"
